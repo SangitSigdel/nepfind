@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
 import TextField from "@mui/material/TextField";
-import { getUserName } from "../utils/checkCookies";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -19,14 +18,16 @@ const InputWrapper = styled.div`
 export const Login = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getUserName && navigate("/chat");
-  });
-
   const [userName, setUserName] = useState<string>("");
 
-  const handleClick = () => {
-    Cookies.set("userName", userName, { expires: 7 });
+  useEffect(() => {
+    if (Cookies.get("userName")) {
+      navigate("/chat");
+    }
+  });
+
+  const handleClick = async () => {
+    await Cookies.set("userName", userName, { expires: 7 });
     navigate("/chat");
   };
 
