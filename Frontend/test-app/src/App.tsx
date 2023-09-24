@@ -1,24 +1,21 @@
-import { Button } from "@mui/material";
-import React from "react";
-import TextField from "@mui/material/TextField";
-import styled from "styled-components";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Chat, Login } from "./components";
 
-const InputWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-  gap: 20px;
-`;
+import { Helmet } from "react-helmet";
+import { title } from "./utils/constants";
 
-function App() {
+export const App = () => {
   return (
-    <InputWrapper>
-      <TextField required id="outlined-required" label="User Name" />
-      <Button variant="contained">Start</Button>
-    </InputWrapper>
+    <BrowserRouter>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="chat" element={<Chat />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
