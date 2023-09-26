@@ -26,8 +26,8 @@ export const Login = () => {
     }
   });
 
-  const handleClick = async () => {
-    await Cookies.set("userName", userName, { expires: 7 });
+  const handleClick = () => {
+    Cookies.set("userName", userName, { expires: 7 });
     navigate("/chat");
   };
 
