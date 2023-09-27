@@ -68,10 +68,6 @@ export const Chat = () => {
     },
   ];
 
-  const handleClick = (message: string) => {
-    setChatMessages([...chatMessages, { message, sender: "user" }]);
-  };
-
   const SelectUser = () => {
     return (
       <SelectUserWrapper>
@@ -89,6 +85,7 @@ export const Chat = () => {
 
   const ChatScreen = () => {
     const [message, setMessage] = useState<string>("");
+
     return (
       <ChatScreenWrapper>
         {chatMessages.map((chat, index) => {
@@ -114,9 +111,19 @@ export const Chat = () => {
             onChange={(e) => {
               setMessage(e.target.value);
             }}
+            autoFocus={true}
             fullWidth={true}
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              e.ctrlKey &&
+              setChatMessages([...chatMessages, { message, sender: "user" }])
+            }
           />
-          <IconButton onClick={(e) => handleClick(message)}>
+          <IconButton
+            onClick={() =>
+              setChatMessages([...chatMessages, { message, sender: "user" }])
+            }
+          >
             <SendIcon />
           </IconButton>
         </Box>
