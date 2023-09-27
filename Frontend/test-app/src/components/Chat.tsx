@@ -27,17 +27,16 @@ const ChatWrapper = styled.div`
 `;
 
 const ChatScreenWrapper = styled.div`
-  display: flex;
-  gap: 20px;
   align-self: flex-end;
-  padding: 2em;
   width: 100%;
+  margin-bottom: 2rem;
+  padding: 20px;
 `;
 
 export const Chat = () => {
   const navigate = useNavigate();
 
-  const [chatMessages, setChatMessages] = useState<string[]>([]);
+  const [chatMessages, setChatMessages] = useState<string[]>([""]);
 
   useEffect(() => {
     if (!Cookies.get("userName")) {
@@ -64,7 +63,6 @@ export const Chat = () => {
     setChatMessages([...chatMessages, message]);
   };
 
-  console.log("The message are:", chatMessages);
   const SelectUser = () => {
     return (
       <SelectUserWrapper>
@@ -84,19 +82,33 @@ export const Chat = () => {
     const [message, setMessage] = useState<string>("");
     return (
       <ChatScreenWrapper>
-        <TextField
-          required
-          id="outlined-required"
-          label="Message"
-          value={message}
-          onChange={(e) => {
-            setMessage(e.target.value);
+        {chatMessages.map((chat, index) => (
+          <div key={index}>
+            <p>{chat}</p>
+          </div>
+        ))}
+
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            gap: "2em",
           }}
-          fullWidth={true}
-        />
-        <IconButton onClick={(e) => handleClick(message)}>
-          <SendIcon />
-        </IconButton>
+        >
+          <TextField
+            required
+            id="outlined-required"
+            label="Message"
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+            }}
+            fullWidth={true}
+          />
+          <IconButton onClick={(e) => handleClick(message)}>
+            <SendIcon />
+          </IconButton>
+        </Box>
       </ChatScreenWrapper>
     );
   };
