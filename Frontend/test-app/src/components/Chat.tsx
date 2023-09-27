@@ -33,10 +33,19 @@ const ChatScreenWrapper = styled.div`
   padding: 20px;
 `;
 
+const MessagesWrapper = styled.div<{ from: "user" | "other" }>`
+  text-align: ${(props) => props.from === "other" && "right"};
+`;
+
+type chatMessages = {
+  message: string;
+  sender: "user" | "other";
+};
+
 export const Chat = () => {
   const navigate = useNavigate();
 
-  const [chatMessages, setChatMessages] = useState<string[]>([""]);
+  const [chatMessages, setChatMessages] = useState<chatMessages[]>([]);
 
   useEffect(() => {
     if (!Cookies.get("userName")) {
@@ -79,11 +88,13 @@ export const Chat = () => {
 
     return (
       <ChatScreenWrapper>
-        {chatMessages.map((chat, index) => (
-          <div key={index}>
-            <p>{chat}</p>
-          </div>
-        ))}
+        {chatMessages.map((chat, index) => {
+          return (
+            <MessagesWrapper from={chat.sender} key={index}>
+              <p>{chat.message}</p>
+            </MessagesWrapper>
+          );
+        })}
 
         <Box
           sx={{
@@ -105,11 +116,13 @@ export const Chat = () => {
             onKeyDown={(e) =>
               e.key === "Enter" &&
               e.ctrlKey &&
-              setChatMessages([...chatMessages, message])
+              setChatMessages([...chatMessages, { message, sender: "user" }])
             }
           />
           <IconButton
-            onClick={() => setChatMessages([...chatMessages, message])}
+            onClick={() =>
+              setChatMessages([...chatMessages, { message, sender: "user" }])
+            }
           >
             <SendIcon />
           </IconButton>
