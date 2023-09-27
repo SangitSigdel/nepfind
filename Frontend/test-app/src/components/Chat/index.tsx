@@ -1,14 +1,17 @@
-import { Box, IconButton, TextField } from "@mui/material";
+import { Box, IconButton, Menu, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 import Cookies from "js-cookie";
+import Drawer from "@mui/material/Drawer";
+import MenuIcon from "@mui/icons-material/Menu";
 import SendIcon from "@mui/icons-material/Send";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SelectUserWrapper = styled.div`
-  width: 15%;
+const SelectUserWrapper = styled.div<{ drawerOpen: boolean }>`
+  width: ${(param) => !param.drawerOpen && "15%"};
+  padding-right: 20px;
   p {
     font-size: 18px;
     margin: 0.2em;
@@ -16,9 +19,9 @@ const SelectUserWrapper = styled.div`
 
   background-color: #3f0e40;
   color: #ffff;
-  height: 100vh;
-  padding-left: 2em;
   padding-top: 20px;
+  height: calc(100vh - 20px);
+  padding-left: 2em;
 `;
 
 const ChatWrapper = styled.div`
@@ -30,7 +33,6 @@ const ChatScreenWrapper = styled.div`
   align-self: flex-end;
   width: 100%;
   margin-bottom: 2rem;
-  padding: 20px;
 `;
 
 const MessagesWrapper = styled.div<{ from: "user" | "other" }>`
@@ -46,6 +48,8 @@ export const Chat = () => {
   const navigate = useNavigate();
 
   const [chatMessages, setChatMessages] = useState<chatMessages[]>([]);
+
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!Cookies.get("userName")) {
@@ -70,7 +74,7 @@ export const Chat = () => {
 
   const SelectUser = () => {
     return (
-      <SelectUserWrapper>
+      <SelectUserWrapper drawerOpen={drawerOpen}>
         {onlineUsers.map((el, index) => (
           <div key={index}>
             <p>{el.user}</p>
@@ -99,8 +103,7 @@ export const Chat = () => {
         <Box
           sx={{
             display: "flex",
-            width: "100%",
-            gap: "2em",
+            paddingLeft: "2rem",
           }}
         >
           <TextField
@@ -108,6 +111,7 @@ export const Chat = () => {
             id="outlined-required"
             label="Message"
             value={message}
+            sx={{ width: "85%" }}
             onChange={(e) => {
               setMessage(e.target.value);
             }}
@@ -131,21 +135,54 @@ export const Chat = () => {
     );
   };
 
+  const MobileView = () => {
+    return (
+      <div>
+        {!drawerOpen ? (
+          <IconButton onClick={() => setDrawerOpen(true)}>
+            <MenuIcon />
+          </IconButton>
+        ) : (
+          <Drawer
+            anchor="left"
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            sx={{ width: "100%" }}
+          >
+            <SelectUser />
+          </Drawer>
+        )}
+
+        <Box
+          component="div"
+          sx={{ position: "absolute", bottom: "0", width: "100%" }}
+        >
+          <ChatScreen />
+        </Box>
+      </div>
+    );
+  };
+
   return (
-    <Box
-      component="div"
-      sx={{
-        display: {
-          xs: "none",
-          sm: "block",
-        },
-        height: "100vh",
-      }}
-    >
-      <ChatWrapper>
-        <SelectUser />
-        <ChatScreen />
-      </ChatWrapper>
-    </Box>
+    <>
+      <Box
+        component="div"
+        sx={{
+          display: {
+            xs: "none",
+            sm: "block",
+          },
+          height: "100vh",
+        }}
+      >
+        <ChatWrapper>
+          <SelectUser />
+          <ChatScreen />
+        </ChatWrapper>
+      </Box>
+      <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
+        <MobileView />
+      </Box>
+    </>
   );
 };
