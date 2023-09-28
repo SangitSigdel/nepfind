@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, TextField } from "@mui/material";
+import { Box, Container, IconButton, Menu, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 import Cookies from "js-cookie";
@@ -92,52 +92,52 @@ export const Chat = () => {
 
     return (
       <ChatScreenWrapper>
-        {chatMessages.map((chat, index) => {
-          return (
-            <MessagesWrapper from={chat.sender} key={index}>
-              <p>{chat.message}</p>
-            </MessagesWrapper>
-          );
-        })}
+        <Container maxWidth={"xl"}>
+          {chatMessages.map((chat, index) => {
+            return (
+              <MessagesWrapper from={chat.sender} key={index}>
+                <p>{chat.message}</p>
+              </MessagesWrapper>
+            );
+          })}
 
-        <Box
-          sx={{
-            display: "flex",
-            paddingLeft: "2rem",
-          }}
-        >
-          <TextField
-            required
-            id="outlined-required"
-            label="Message"
-            value={message}
-            sx={{ width: "85%" }}
-            onChange={(e) => {
-              setMessage(e.target.value);
+          <Box
+            sx={{
+              display: "flex",
             }}
-            autoFocus={true}
-            fullWidth={true}
-            onKeyDown={(e) =>
-              e.key === "Enter" &&
-              e.ctrlKey &&
-              setChatMessages([...chatMessages, { message, sender: "user" }])
-            }
-          />
-          <IconButton
-            onClick={() =>
-              setChatMessages([...chatMessages, { message, sender: "user" }])
-            }
           >
-            <SendIcon />
-          </IconButton>
-        </Box>
+            <TextField
+              required
+              id="outlined-required"
+              label="Message"
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              autoFocus={true}
+              fullWidth={true}
+              onKeyDown={(e) =>
+                e.key === "Enter" &&
+                e.ctrlKey &&
+                setChatMessages([...chatMessages, { message, sender: "user" }])
+              }
+            />
+            <IconButton
+              onClick={() =>
+                setChatMessages([...chatMessages, { message, sender: "user" }])
+              }
+            >
+              <SendIcon />
+            </IconButton>
+          </Box>
+        </Container>
       </ChatScreenWrapper>
     );
   };
 
   const MobileView = () => {
     return (
-      <div>
+      <Container fixed>
         {!drawerOpen ? (
           <IconButton onClick={() => setDrawerOpen(true)}>
             <MenuIcon />
@@ -152,14 +152,26 @@ export const Chat = () => {
             <SelectUser />
           </Drawer>
         )}
-
         <Box
           component="div"
-          sx={{ position: "absolute", bottom: "0", width: "100%" }}
+          sx={{
+            position: "absolute",
+            bottom: "0",
+            width: "90%",
+          }}
         >
           <ChatScreen />
         </Box>
-      </div>
+      </Container>
+    );
+  };
+
+  const WebView = () => {
+    return (
+      <ChatWrapper>
+        <SelectUser />
+        <ChatScreen />
+      </ChatWrapper>
     );
   };
 
@@ -175,10 +187,7 @@ export const Chat = () => {
           height: "100vh",
         }}
       >
-        <ChatWrapper>
-          <SelectUser />
-          <ChatScreen />
-        </ChatWrapper>
+        <WebView />
       </Box>
       <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
         <MobileView />
