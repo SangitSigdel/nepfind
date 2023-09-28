@@ -13,6 +13,7 @@ const ChatScreenWrapper = styled.div`
 
 const MessagesWrapper = styled.div<{ from: "user" | "other" }>`
   text-align: ${(props) => props.from === "other" && "right"};
+  padding: 10px;
 `;
 
 export type ChatScreenProps = {
