@@ -25,7 +25,7 @@ export const MobileChatView = ({
           onClose={() => setDrawerOpen(false)}
           sx={{ width: "100%" }}
         >
-          <ChatUsers />
+          {/* <ChatUsers /> */}
         </Drawer>
       )}
       <Box

@@ -1,4 +1,5 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+
 import dotenv from "dotenv";
 import http from "http";
 
@@ -6,26 +7,32 @@ dotenv.config();
 
 const server = http.createServer();
 
+interface CustomSocket extends Socket {
+  username?: string;
+}
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.URL,
+    origin: "http://localhost:3000",
   },
 });
 
-io.use((socket, next) => {
-  const username = socket.handshake.auth.username;
-  if (!username) next(new Error("invalid username"));
-  (socket as any).username = username;
+io.use((socket: CustomSocket, next) => {
+  const username = socket.handshake.auth.userName as string;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  socket.username = username;
   next();
 });
 
-io.on("connection", (socket) => {
-  // fetch users
+io.on("connection", (socket: CustomSocket) => {
+  // fetch existing users
   const users = [];
   for (let [id, socket] of io.of("/").sockets) {
     users.push({
       userID: id,
-      username: (socket as any).username,
+      username: (socket as CustomSocket).username,
     });
   }
   socket.emit("users", users);
@@ -33,7 +40,7 @@ io.on("connection", (socket) => {
   // notify existing users
   socket.broadcast.emit("user connected", {
     userID: socket.id,
-    username: (socket as any).username,
+    username: (socket as CustomSocket).username,
   });
 
   // forward the private message to the right recipient
@@ -44,7 +51,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  // notify users on disconnection
+  // notify users upon disconnection
   socket.on("disconnect", () => {
     socket.broadcast.emit("user disconnected", socket.id);
   });

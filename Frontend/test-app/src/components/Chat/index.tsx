@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
+import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import { MobileChatView } from "./MobileChatView";
+import socket from "../../utils/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +26,46 @@ export const Chat = () => {
 
   const [chatMessages, setChatMessages] = useState<chatMessagesType[]>([]);
 
+  const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
+
   useEffect(() => {
-    if (!Cookies.get("userName")) {
+    const userName = Cookies.get("userName");
+    if (!userName) {
       navigate("/");
+    } else {
+      socket.connect();
+      socket.auth = { userName };
+
+      socket.on("users", (users) => {
+        console.log("The user is: ", users);
+        users.map((el: { userID: string; username: string }) => {
+          setChatUsers((prev) => {
+            return [...prev, { user: el.username, status: "online" }];
+          });
+        });
+      });
+
+      socket.on(
+        "user connected",
+        (user: { username: string; userID: string }) => {
+          setChatUsers((prev) => {
+            return [...prev, { user: user.username, status: "online" }];
+          });
+        }
+      );
+
+      socket.on("connect_error", (err) => {
+        if (err.message == "invalid username") {
+          Cookies.remove("userName");
+          navigate("/");
+        }
+      });
     }
+    return () => {
+      socket.off("connect_error");
+      socket.off("users");
+      socket.off("user connected");
+    };
   }, [navigate]);
 
   return (
@@ -43,7 +81,7 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <ChatUsers />
+          <ChatUsers users={chatUsers} />
           <ChatScreen
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}
@@ -51,12 +89,12 @@ export const Chat = () => {
         </ChatWrapper>
       </Box>
 
-      <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
+      {/* <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
         <MobileChatView
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}
-        />
-      </Box>
+        /> */}
+      {/* </Box> */}
     </>
   );
 };

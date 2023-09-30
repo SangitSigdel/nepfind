@@ -14,25 +14,15 @@ const SelectUserWrapper = styled.div`
   padding-left: 2em;
 `;
 
-export const ChatUsers = () => {
-  const onlineUsers = [
-    {
-      user: "Player 1 (yourself)",
-      status: "online",
-    },
-    {
-      user: "Player 2",
-      status: "online",
-    },
-    {
-      user: "Player 3",
-      status: "online",
-    },
-  ];
+export type ChatUsersType = {
+  user: string;
+  status: string;
+};
 
+export const ChatUsers = ({ users }: { users: ChatUsersType[] }) => {
   return (
     <SelectUserWrapper>
-      {onlineUsers.map((el, index) => (
+      {users.map((el, index) => (
         <div key={index}>
           <p>{el.user}</p>
           <p style={{ color: "#d1d1d1", marginBottom: "20px" }}>{el.status}</p>
