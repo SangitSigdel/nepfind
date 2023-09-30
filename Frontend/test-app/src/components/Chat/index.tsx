@@ -54,8 +54,17 @@ export const Chat = () => {
         }
       );
 
+      socket.on(
+        "user disconnected",
+        (user: { username: string; userID: string }) => {
+          setChatUsers((prev) => {
+            return prev.filter((prevUser) => prevUser.user !== user.username);
+          });
+        }
+      );
+
       socket.on("connect_error", (err) => {
-        if (err.message == "invalid username") {
+        if (err.message === "invalid username") {
           Cookies.remove("userName");
           navigate("/");
         }

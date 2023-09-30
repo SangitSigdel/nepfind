@@ -35,6 +35,7 @@ io.on("connection", (socket: CustomSocket) => {
       username: (socket as CustomSocket).username,
     });
   }
+
   socket.emit("users", users);
 
   // notify existing users
@@ -53,7 +54,10 @@ io.on("connection", (socket: CustomSocket) => {
 
   // notify users upon disconnection
   socket.on("disconnect", () => {
-    socket.broadcast.emit("user disconnected", socket.id);
+    socket.broadcast.emit("user disconnected", {
+      userID: socket.id,
+      username: socket.username,
+    });
   });
 });
 
