@@ -1,7 +1,7 @@
 import { Box, Container, IconButton, TextField } from "@mui/material";
+import { ChatMessagesType, CurrentChatWithType } from "./index";
 
 import SendIcon from "@mui/icons-material/Send";
-import { chatMessagesType } from "./index";
 import styled from "styled-components";
 import { useState } from "react";
 
@@ -11,24 +11,31 @@ const ChatScreenWrapper = styled.div`
   margin-bottom: 2rem;
 `;
 
-const MessagesWrapper = styled.div<{ from: "user" | "other" }>`
-  text-align: ${(props) => props.from === "other" && "right"};
+const MessagesWrapper = styled.div<{ from: string }>`
+  text-align: ${(props) => props.from !== "user" && "right"};
   padding: 10px;
 `;
 
 export type ChatScreenProps = {
-  chatMessages: chatMessagesType[];
-  setChatMessages: React.Dispatch<React.SetStateAction<chatMessagesType[]>>;
+  chatMessages: ChatMessagesType[];
+  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessagesType[]>>;
+  chatMessagesWith?: CurrentChatWithType;
+  sendPrivateMessage: (content: string) => void;
 };
 
 export const ChatScreen = ({
   chatMessages,
   setChatMessages,
+  chatMessagesWith,
+  sendPrivateMessage,
 }: ChatScreenProps) => {
   const [message, setMessage] = useState<string>("");
 
   return (
     <ChatScreenWrapper>
+      <h1>
+        {chatMessagesWith ? chatMessagesWith.username : " Please select user"}
+      </h1>
       <Container maxWidth={"xl"}>
         {chatMessages.map((chat, index) => {
           return (
@@ -62,6 +69,8 @@ export const ChatScreen = ({
           />
           <IconButton
             onClick={() => {
+              console.log("I was clicked");
+              sendPrivateMessage(message);
               setChatMessages([...chatMessages, { message, sender: "user" }]);
               setMessage("");
             }}

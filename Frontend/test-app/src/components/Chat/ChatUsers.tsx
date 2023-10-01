@@ -1,3 +1,6 @@
+import { Dispatch, SetStateAction } from "react";
+
+import { CurrentChatWithType } from "./index";
 import styled from "styled-components";
 
 const SelectUserWrapper = styled.div`
@@ -17,13 +20,28 @@ const SelectUserWrapper = styled.div`
 export type ChatUsersType = {
   user: string;
   status: string;
+  userId: string;
 };
 
-export const ChatUsers = ({ users }: { users: ChatUsersType[] }) => {
+type ChatUsersProps = {
+  users: ChatUsersType[];
+  setCurrentChatWith: Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >;
+  currentChatWith?: CurrentChatWithType;
+};
+
+export const ChatUsers = ({ users, setCurrentChatWith }: ChatUsersProps) => {
   return (
     <SelectUserWrapper>
       {users.map((el, index) => (
-        <div key={index}>
+        <div
+          key={index}
+          style={{ cursor: "pointer" }}
+          onClick={() =>
+            setCurrentChatWith({ username: el.user, userID: el.userId })
+          }
+        >
           <p>{el.user}</p>
           <p style={{ color: "#d1d1d1", marginBottom: "20px" }}>{el.status}</p>
         </div>

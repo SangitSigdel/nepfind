@@ -16,17 +16,38 @@ const ChatWrapper = styled.div`
   flex-direction: row;
 `;
 
-export type chatMessagesType = {
+export type ChatMessagesType = {
   message: string;
-  sender: "user" | "other";
+  sender: string;
+};
+
+type ServerMessageContent = {
+  content: string;
+  from: string;
+  userName: string;
+};
+
+export type CurrentChatWithType = {
+  username: string;
+  userID: string;
 };
 
 export const Chat = () => {
   const navigate = useNavigate();
 
-  const [chatMessages, setChatMessages] = useState<chatMessagesType[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
 
   const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
+
+  const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+
+  const sendPrivateMessage = (content: string) => {
+    console.log("I am sending private message");
+    socket.emit("private message", {
+      content: content,
+      to: currentChatWith?.userID,
+    });
+  };
 
   useEffect(() => {
     const userName = Cookies.get("userName");
@@ -40,7 +61,10 @@ export const Chat = () => {
         console.log("The user is: ", users);
         users.map((el: { userID: string; username: string }) => {
           setChatUsers((prev) => {
-            return [...prev, { user: el.username, status: "online" }];
+            return [
+              ...prev,
+              { user: el.username, status: "online", userId: el.userID },
+            ];
           });
         });
       });
@@ -49,7 +73,10 @@ export const Chat = () => {
         "user connected",
         (user: { username: string; userID: string }) => {
           setChatUsers((prev) => {
-            return [...prev, { user: user.username, status: "online" }];
+            return [
+              ...prev,
+              { user: user.username, status: "online", userId: user.userID },
+            ];
           });
         }
       );
@@ -63,6 +90,14 @@ export const Chat = () => {
         }
       );
 
+      socket.on("private message", (msgContent: ServerMessageContent) => {
+        console.log("I am getting private message");
+        setChatMessages([
+          ...chatMessages,
+          { message: msgContent.content, sender: msgContent.userName },
+        ]);
+      });
+
       socket.on("connect_error", (err) => {
         if (err.message === "invalid username") {
           Cookies.remove("userName");
@@ -74,6 +109,7 @@ export const Chat = () => {
       socket.off("connect_error");
       socket.off("users");
       socket.off("user connected");
+      socket.off("private message");
     };
   }, [navigate]);
 
@@ -90,10 +126,16 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <ChatUsers users={chatUsers} />
+          <ChatUsers
+            users={chatUsers}
+            setCurrentChatWith={setCurrentChatWith}
+            currentChatWith={currentChatWith}
+          />
           <ChatScreen
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}
+            chatMessagesWith={currentChatWith}
+            sendPrivateMessage={sendPrivateMessage}
           />
         </ChatWrapper>
       </Box>

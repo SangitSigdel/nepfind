@@ -49,6 +49,7 @@ io.on("connection", (socket: CustomSocket) => {
     socket.to(to).emit("private message", {
       content,
       from: socket.id,
+      userName: socket.username,
     });
   });
 
