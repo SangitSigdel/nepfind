@@ -42,7 +42,6 @@ export const Chat = () => {
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
   const sendPrivateMessage = (content: string) => {
-    console.log("I am sending private message");
     socket.emit("private message", {
       content: content,
       to: currentChatWith?.userID,
@@ -58,7 +57,6 @@ export const Chat = () => {
       socket.auth = { userName };
 
       socket.on("users", (users) => {
-        console.log("The user is: ", users);
         users.map((el: { userID: string; username: string }) => {
           setChatUsers((prev) => {
             return [
@@ -91,11 +89,16 @@ export const Chat = () => {
       );
 
       socket.on("private message", (msgContent: ServerMessageContent) => {
-        console.log("I am getting private message");
-        setChatMessages([
-          ...chatMessages,
-          { message: msgContent.content, sender: msgContent.userName },
-        ]);
+        // setChatMessages([
+        //   ...chatMessages,
+        //   { message: msgContent.content, sender: msgContent.userName },
+        // ]);
+        setChatMessages((prevMessages) => {
+          return [
+            ...prevMessages,
+            { message: msgContent.content, sender: msgContent.userName },
+          ];
+        });
       });
 
       socket.on("connect_error", (err) => {

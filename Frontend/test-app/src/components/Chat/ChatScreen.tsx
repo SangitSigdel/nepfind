@@ -34,7 +34,9 @@ export const ChatScreen = ({
   return (
     <ChatScreenWrapper>
       <h1>
-        {chatMessagesWith ? chatMessagesWith.username : " Please select user"}
+        {chatMessagesWith
+          ? chatMessagesWith.username
+          : " Please select user to continue"}
       </h1>
       <Container maxWidth={"xl"}>
         {chatMessages.map((chat, index) => {
@@ -45,39 +47,44 @@ export const ChatScreen = ({
           );
         })}
 
-        <Box
-          sx={{
-            display: "flex",
-          }}
-        >
-          <TextField
-            required
-            id="outlined-required"
-            label="Message"
-            value={message}
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-            autoFocus={true}
-            fullWidth={true}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && e.ctrlKey) {
-                setChatMessages([...chatMessages, { message, sender: "user" }]);
-                setMessage("");
-              }
-            }}
-          />
-          <IconButton
-            onClick={() => {
-              console.log("I was clicked");
-              sendPrivateMessage(message);
-              setChatMessages([...chatMessages, { message, sender: "user" }]);
-              setMessage("");
+        {chatMessagesWith && (
+          <Box
+            sx={{
+              display: "flex",
             }}
           >
-            <SendIcon />
-          </IconButton>
-        </Box>
+            <TextField
+              required
+              id="outlined-required"
+              label="Message"
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              autoFocus={true}
+              fullWidth={true}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && e.ctrlKey) {
+                  sendPrivateMessage(message);
+                  setChatMessages([
+                    ...chatMessages,
+                    { message, sender: "user" },
+                  ]);
+                  setMessage("");
+                }
+              }}
+            />
+            <IconButton
+              onClick={() => {
+                sendPrivateMessage(message);
+                setChatMessages([...chatMessages, { message, sender: "user" }]);
+                setMessage("");
+              }}
+            >
+              <SendIcon />
+            </IconButton>
+          </Box>
+        )}
       </Container>
     </ChatScreenWrapper>
   );
