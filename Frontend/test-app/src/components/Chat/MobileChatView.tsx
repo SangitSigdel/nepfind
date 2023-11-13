@@ -10,6 +10,7 @@ import { useState } from "react";
 export const MobileChatView = ({
   chatMessages,
   setChatMessages,
+  sendPrivateMessage,
 }: ChatScreenProps) => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   return (
@@ -25,7 +26,7 @@ export const MobileChatView = ({
           onClose={() => setDrawerOpen(false)}
           sx={{ width: "100%" }}
         >
-          <ChatUsers />
+          {/* <ChatUsers /> */}
         </Drawer>
       )}
       <Box
@@ -39,6 +40,7 @@ export const MobileChatView = ({
         <ChatScreen
           chatMessages={chatMessages}
           setChatMessages={setChatMessages}
+          sendPrivateMessage={sendPrivateMessage}
         />
       </Box>
     </Container>
