@@ -111,27 +111,31 @@ export const deleteUserChat = async (
   try {
     const user = await UserModel.findById(req.params.id);
 
-    const userChat = user?.messages.map((msg) =>
-      msg.chats.filter((chat) => chat.chat_id === chatId)
+    const userChats = user?.messages.find(
+      (message) => message.user_id === chatUserId
     );
+
+    const userChat = userChats?.chats.find((chat) => chat.chat_id === chatId);
 
     if (!userChat) {
       res.status(400).send({
         message: "sorry no chat found",
       });
-    }
+    } else {
+      user?.messages
+        .filter((message) => message.user_id === chatUserId)
+        .forEach((message) => {
+          message.chats = message.chats.filter(
+            (chat) => chat.chat_id !== chatId
+          );
+        });
 
-    user?.messages
-      .filter((message) => message.user_id === chatUserId)
-      .forEach((message) => {
-        message.chats = message.chats.filter((chat) => chat.chat_id !== chatId);
+      await user?.save();
+
+      res.status(200).send({
+        message: "selected chat deleted successfully",
       });
-
-    await user?.save();
-
-    res.status(200).send({
-      message: "selected chat deleted successfully",
-    });
+    }
   } catch (error) {
     res.status(400).send({
       message: error,
