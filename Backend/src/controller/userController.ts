@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import UserModel, { ChatMessage, IUser, UserChats } from "../model/chatModel";
 
-// creating a new user
 export const createUser = async (
   req: Request,
   res: Response,
@@ -138,7 +137,6 @@ export const deleteUserChat = async (
   }
 };
 
-// edit user Chats
 export const editUserChat = async (
   req: Request,
   res: Response,
