@@ -20,8 +20,6 @@ export const createUser = async (
   }
 };
 
-// some problem detected on getUserChats...................below
-
 export const getUserChats = async (
   req: Request,
   res: Response,
@@ -46,7 +44,6 @@ export const getUserChats = async (
   }
 };
 
-// Handling user Chats
 export const createUserChat = async (
   req: Request,
   res: Response,
@@ -98,8 +95,6 @@ export const createUserChat = async (
   }
 };
 
-// deleting user chats
-
 export const deleteUserChat = async (
   req: Request,
   res: Response,
@@ -143,7 +138,6 @@ export const deleteUserChat = async (
   }
 };
 
-// edit user Chats
 export const editUserChat = async (
   req: Request,
   res: Response,
