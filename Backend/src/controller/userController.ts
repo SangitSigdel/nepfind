@@ -70,7 +70,9 @@ export const createUserChat = async (
       message: "sorry no user found",
     });
   } else {
-    const chat = user.messages.find((chat) => chat.user_id === chatUserId);
+    const chat = user.messages.find(
+      (message) => message.user_id === chatUserId
+    );
 
     if (chat) {
       if (chat.chats.length > 0) {
@@ -78,10 +80,7 @@ export const createUserChat = async (
         chatData.chat_id = chat_id;
         chat.chats.push(chatData);
       } else {
-        user.messages.push({
-          user_id: chatUserId,
-          chats: [chatData],
-        });
+        chat.chats.push(chatData);
       }
     } else {
       user.messages.push({
@@ -109,24 +108,37 @@ export const deleteUserChat = async (
   const { chatUserId, chatId }: { chatUserId: string; chatId: number } =
     req.body;
 
-  const user = await UserModel.findById(req.params.id);
+  try {
+    const user = await UserModel.findById(req.params.id);
 
-  if (!user) {
-    res.status(400).send({
-      message: "sorry no user found",
-    });
-  } else {
-    user.messages
-      .filter((message) => message.user_id === chatUserId)
-      .forEach((message) => {
-        message.chats = message.chats.filter((chat) => chat.chat_id !== chatId);
+    const userChats = user?.messages.find(
+      (message) => message.user_id === chatUserId
+    );
+
+    const userChat = userChats?.chats.find((chat) => chat.chat_id === chatId);
+
+    if (!userChat) {
+      res.status(400).send({
+        message: "sorry no chat found",
       });
+    } else {
+      user?.messages
+        .filter((message) => message.user_id === chatUserId)
+        .forEach((message) => {
+          message.chats = message.chats.filter(
+            (chat) => chat.chat_id !== chatId
+          );
+        });
 
-    await user.save();
+      await user?.save();
 
-    res.status(200).send({
-      status: "selected message deleted successfully",
-      message: user,
+      res.status(200).send({
+        message: "selected chat deleted successfully",
+      });
+    }
+  } catch (error) {
+    res.status(400).send({
+      message: error,
     });
   }
 };
@@ -163,7 +175,7 @@ export const editUserChat = async (
     await user.save();
 
     res.status(200).send({
-      status: "selected message deleted successfully",
+      status: "selected message updated successfully",
       message: user,
     });
   }
