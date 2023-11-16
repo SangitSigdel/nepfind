@@ -26,19 +26,21 @@ export const getUserChats = async (
 ) => {
   const { chatUserId } = req.body;
 
-  const user = await UserModel.findById(req.params.id);
+  try {
+    const user = await UserModel.findById(req.params.id);
+    if (user) {
+      const messages = user.messages.filter(
+        (message) => message.user_id === chatUserId
+      );
 
-  if (!user) {
+      res.status(200).send({
+        status: "success",
+        messages,
+      });
+    }
+  } catch (error) {
     res.status(400).send({
-      message: "sorry user not found",
-    });
-  } else {
-    const chats = user.messages.find(
-      (message) => (message.user_id = chatUserId)
-    );
-    res.status(200).send({
-      status: "success",
-      chats,
+      error,
     });
   }
 };
