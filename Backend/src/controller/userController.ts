@@ -34,7 +34,7 @@ export const getUserChats = async (
       message: "sorry user not found",
     });
   } else {
-    const chats = user.messages.find(
+    const chats = user.messages.filter(
       (message) => (message.user_id = chatUserId)
     );
     res.status(200).send({
@@ -138,6 +138,7 @@ export const deleteUserChat = async (
   }
 };
 
+// edit user Chats
 export const editUserChat = async (
   req: Request,
   res: Response,
