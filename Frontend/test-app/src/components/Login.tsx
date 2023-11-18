@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
 import TextField from "@mui/material/TextField";
+import api from "../utils/axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -21,14 +22,40 @@ export const Login = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    if (Cookies.get("userName")) {
-      navigate("/chat");
-    }
+    const fetchUser = async () => {
+      const userName = Cookies.get("userName");
+      if (userName) {
+        try {
+          const user = await api.get(`/user/${userName}`);
+          user.status === 200 ? navigate("/chat") : navigate("/");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
+    fetchUser();
   });
 
-  const handleClick = () => {
-    Cookies.set("userName", userName, { expires: 7 });
-    navigate("/chat");
+  const handleClick = async () => {
+    try {
+      const user = await api.get(`/user/${userName}`);
+      if (user.data.status === "success") {
+        alert("username already taken. Please input a new name");
+      } else {
+        try {
+          await api.post("/user/signup", {
+            user_id: userName,
+            user_name: userName,
+          });
+          Cookies.set("userName", userName, { expires: 7 });
+          navigate("/chat");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
