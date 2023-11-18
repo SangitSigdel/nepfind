@@ -12,7 +12,7 @@ export interface UserChats {
 }
 
 export interface IUser extends Document {
-  user_id: number;
+  user_id: string;
   user_name: string;
   status: "online" | "offline";
   messages: UserChats[];
@@ -35,7 +35,7 @@ const userChatsSchema: Schema<UserChats> = new Schema({
 
 const userSchema: Schema<IUser> = new Schema({
   user_id: {
-    type: Number,
+    type: String,
     required: [true, "A user id is required"],
     unique: true,
   },
