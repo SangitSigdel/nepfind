@@ -19,6 +19,32 @@ export const createUser = async (
   }
 };
 
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserModel.find({ user_id: req.params.id });
+    if (user.length > 0) {
+      res.status(200).send({
+        status: "success",
+        message: "user found",
+        data: user,
+      });
+    } else {
+      res.status(200).send({
+        status: "failed",
+        message: "no user found",
+      });
+    }
+  } catch (error) {
+    res.status(400).send({
+      message: error,
+    });
+  }
+};
+
 export const getUserChats = async (
   req: Request,
   res: Response,
