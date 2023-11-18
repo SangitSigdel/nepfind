@@ -27,7 +27,7 @@ export const Login = () => {
       if (userName) {
         try {
           const user = await api.get(`/user/${userName}`);
-          user.status === 200 ? navigate("/chat") : navigate("/");
+          user.data.status === "success" && navigate("/chat");
         } catch (error) {
           console.log(error);
         }
