@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import UserModel from "../model/chatModel";
 import { io } from "../server";
 
 interface CustomSocket extends Socket {
@@ -44,10 +45,20 @@ export const socketConnect = () => {
 
     // notify users upon disconnection
     socket.on("disconnect", () => {
-      socket.broadcast.emit("user disconnected", {
-        userID: socket.id,
-        username: socket.username,
-      });
+      console.log("I am in disconnect");
+      try {
+        const user = UserModel.findOneAndUpdate(
+          { user_id: socket.username },
+          { online: false }
+        ).then(() => {
+          socket.broadcast.emit("user disconnected", {
+            userID: socket.id,
+            username: socket.username,
+          });
+        });
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 };

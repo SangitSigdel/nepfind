@@ -24,31 +24,23 @@ export const Login = () => {
   useEffect(() => {
     const userName = Cookies.get("userName");
     if (userName) {
-      const isuserOnline = async () => {
+      const checkUser = async () => {
         try {
-          const status: { data: { data: { online: boolean } } } = await api.get(
-            `/user/${userName}`
-          );
-          if (status.data.data.online) {
+          const user = await api.get(`/user/${userName}`);
+          if (user.data.data.online) {
             alert("sorry user already online");
           } else {
-            try {
-              const userStatus = await api.patch("/user/status/:id");
-              if (userStatus.status === 200) {
-                await api.patch(`/user/status/${userName}`);
-                navigate("/chat");
-              }
-            } catch (error) {
-              console.log(error);
-            }
+            const user = await api.patch(`/user/status/${userName}`);
+            user && navigate("/chat");
           }
         } catch (error) {
           console.log(error);
         }
       };
-      isuserOnline();
+      // isuserOnline
+      checkUser();
     }
-  }, []);
+  }, [navigate]);
 
   const handleClick = async () => {
     try {
