@@ -51,7 +51,7 @@ export const updateUserStatus = async (
 ) => {
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
-    console.log(`the ${user} hit the endpoint`);
+
     if (user) {
       user.online = true;
       user.save();
