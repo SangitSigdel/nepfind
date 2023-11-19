@@ -81,7 +81,7 @@ export const Chat = () => {
 
       socket.on(
         "user disconnected",
-        (user: { username: string; userID: string }) => {
+        async (user: { username: string; userID: string }) => {
           setChatUsers((prev) => {
             return prev.filter((prevUser) => prevUser.user !== user.username);
           });
