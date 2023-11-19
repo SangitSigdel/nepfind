@@ -57,7 +57,11 @@ export const Chat = () => {
       socket.auth = { userName };
 
       socket.on("users", (users) => {
-        users.map((el: { userID: string; username: string }) => {
+        const updatedUser = users.filter(
+          (user: { userID: string }) => user.userID !== socket.id
+        );
+
+        updatedUser.map((el: { userID: string; username: string }) => {
           setChatUsers((prev) => {
             return [
               ...prev,
@@ -81,7 +85,7 @@ export const Chat = () => {
 
       socket.on(
         "user disconnected",
-        async (user: { username: string; userID: string }) => {
+        (user: { username: string; userID: string }) => {
           setChatUsers((prev) => {
             return prev.filter((prevUser) => prevUser.user !== user.username);
           });
