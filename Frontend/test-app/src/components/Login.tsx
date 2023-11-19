@@ -88,7 +88,7 @@ export const Login = () => {
         id="outlined-required"
         label="User Name"
         onChange={(e) => {
-          setUserName(e.target.value);
+          setUserName(e.target.value.toLowerCase());
         }}
       />
       <Button variant="contained" onClick={handleClick}>
