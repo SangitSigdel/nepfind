@@ -17,7 +17,6 @@ export const socketConnect = () => {
   });
 
   io.on("connection", (socket: CustomSocket) => {
-    // fetch existing users
     const users = [];
     for (let [id, socket] of io.of("/").sockets) {
       users.push({
@@ -28,13 +27,11 @@ export const socketConnect = () => {
 
     socket.emit("users", users);
 
-    // notify existing users
     socket.broadcast.emit("user connected", {
       userID: socket.id,
       username: (socket as CustomSocket).username,
     });
 
-    // forward the private message to the right recipient
     socket.on("private message", ({ content, to }) => {
       socket.to(to).emit("private message", {
         content,
@@ -43,7 +40,6 @@ export const socketConnect = () => {
       });
     });
 
-    // notify users upon disconnection
     socket.on("disconnect", () => {
       try {
         const user = UserModel.findOneAndUpdate(
