@@ -19,7 +19,7 @@ export interface IUser extends Document {
 }
 
 const chatMessageSchema: Schema<ChatMessage> = new Schema({
-  chat_id: { type: Number, required: true, unique: true },
+  chat_id: { type: Number },
   message: String,
   dateTime: Date,
 });
@@ -27,8 +27,6 @@ const chatMessageSchema: Schema<ChatMessage> = new Schema({
 const userChatsSchema: Schema<UserChats> = new Schema({
   user_id: {
     type: String,
-    unique: true,
-    required: [true, "A user id is required"],
   },
   chats: [chatMessageSchema],
 });

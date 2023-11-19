@@ -45,7 +45,6 @@ export const socketConnect = () => {
 
     // notify users upon disconnection
     socket.on("disconnect", () => {
-      console.log("I am in disconnect");
       try {
         const user = UserModel.findOneAndUpdate(
           { user_id: socket.username },
