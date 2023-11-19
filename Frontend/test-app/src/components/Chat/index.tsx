@@ -6,6 +6,7 @@ import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import { MobileChatView } from "./MobileChatView";
+import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
@@ -81,7 +82,8 @@ export const Chat = () => {
 
       socket.on(
         "user disconnected",
-        (user: { username: string; userID: string }) => {
+        async (user: { username: string; userID: string }) => {
+          await api.patch(`/user/status/${userName}`);
           setChatUsers((prev) => {
             return prev.filter((prevUser) => prevUser.user !== user.username);
           });

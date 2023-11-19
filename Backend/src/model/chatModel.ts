@@ -14,7 +14,7 @@ export interface UserChats {
 export interface IUser extends Document {
   user_id: string;
   user_name: string;
-  status: "online" | "offline";
+  online: boolean;
   messages: UserChats[];
 }
 
@@ -43,9 +43,9 @@ const userSchema: Schema<IUser> = new Schema({
     type: String,
     required: [true, "A user name is required"],
   },
-  status: {
-    type: String,
-    default: "offline",
+  online: {
+    type: Boolean,
+    default: false,
   },
   messages: [userChatsSchema],
 });
