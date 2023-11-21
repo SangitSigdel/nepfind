@@ -17,11 +17,15 @@ describe("UserController", () => {
   });
 
   const signupUser = async () => {
-    const newUser = await request(app).post("/api/v1/user/signup").send({
-      user_id: "user1",
-      user_name: "user1",
-    });
-    return newUser;
+    try {
+      const newUser = await request(app).post("/api/v1/user/signup").send({
+        user_id: "user1",
+        user_name: "user1",
+      });
+      return newUser;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   test("GET /api/v1/user should return an empty array when no users are present", async () => {
@@ -37,8 +41,8 @@ describe("UserController", () => {
     const newUser = await signupUser();
     const sameNewUser = await signupUser();
 
-    expect(newUser.status).toBe(200);
-    expect(sameNewUser.status).toBe(400);
+    expect(newUser?.status).toBe(200);
+    expect(sameNewUser?.status).toBe(400);
   });
 
   test("PATCH '/api/v1/user/status/:id to set the status of the user online", async () => {
