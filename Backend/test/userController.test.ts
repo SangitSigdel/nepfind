@@ -3,27 +3,29 @@ import app from "../src/app";
 import mongoose from "mongoose";
 import request from "supertest";
 
-// Connect to the test database before running tests
 beforeAll(async () => {
   await mongoose.connect("mongodb://localhost:27017/testdb");
 });
 
-beforeEach(async () => {
-  // Clear the User collection before each test
-  await UserModel.deleteMany({});
-});
-
-// Disconnect from the test database after running tests
 afterAll(async () => {
   await mongoose.connection.close();
 });
 
 describe("UserController", () => {
-  test("GET /api/v1/user should return an empty array when no users are present", async () => {
+  beforeEach(async () => {
+    await UserModel.deleteMany({});
+  });
+
+  const signupUser = async () => {
     const newUser = await request(app).post("/api/v1/user/signup").send({
       user_id: "user1",
       user_name: "user1",
     });
+    return newUser;
+  };
+
+  test("GET /api/v1/user should return an empty array when no users are present", async () => {
+    await signupUser();
     const response2 = await request(app).get("/api/v1/user/user1");
     expect(response2.status).toBe(200);
 
@@ -32,16 +34,16 @@ describe("UserController", () => {
   });
 
   test("POST /api/v1/user/signup", async () => {
-    const newUser = await request(app).post("/api/v1/user/signup").send({
-      user_id: "sangit",
-      user_name: "sangit",
-    });
-    expect(newUser.status).toBe(200);
+    const newUser = await signupUser();
+    const sameNewUser = await signupUser();
 
-    const newUser2 = await request(app).post("/api/v1/user/signup").send({
-      user_id: "sangit",
-      user_name: "sangit",
-    });
-    expect(newUser2.status).toBe(400);
+    expect(newUser.status).toBe(200);
+    expect(sameNewUser.status).toBe(400);
+  });
+
+  test("PATCH '/api/v1/user/status/:id to set the status of the user online", async () => {
+    await signupUser();
+    const setStatus = await request(app).patch("/api/v1/user/status/user1");
+    expect(setStatus.body.online).toBe(true);
   });
 });

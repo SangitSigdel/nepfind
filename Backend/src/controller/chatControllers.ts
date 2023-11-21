@@ -9,7 +9,7 @@ export const getUserChats = async (
   const { chatUserId } = req.body;
 
   try {
-    const user = await UserModel.findById(req.params.id);
+    const user = await UserModel.findOne({ user_id: req.params.id });
     if (user) {
       const messages = user.messages.filter(
         (message) => message.user_id === chatUserId
@@ -37,7 +37,7 @@ export const createUserChat = async (
     chatMessage,
   }: { chatUserId: string; chatMessage: string } = req.body;
 
-  const user = await UserModel.findById(req.params.id);
+  const user = await UserModel.findOne({ user_id: req.params.id });
 
   const chatData: ChatMessage = {
     chat_id: 0,
@@ -72,7 +72,7 @@ export const createUserChat = async (
     await user.save();
 
     res.status(200).send({
-      status: "messege sent successfully",
+      status: "message sent successfully",
       message: user.messages,
     });
   }
@@ -87,7 +87,7 @@ export const deleteUserChat = async (
     req.body;
 
   try {
-    const user = await UserModel.findById(req.params.id);
+    const user = await UserModel.findOne({ user_id: req.params.id });
 
     const userChats = user?.messages.find(
       (message) => message.user_id === chatUserId
@@ -132,10 +132,10 @@ export const editUserChat = async (
     updatedMessage,
   }: { chatUserId: string; chatId: number; updatedMessage: string } = req.body;
 
-  const user = await UserModel.findById(req.params.id);
+  const user = await UserModel.findOne({ user_id: req.params.id });
 
   if (!user) {
-    res.status(400).send({
+    res.status(404).send({
       message: "sorry no user found",
     });
   } else {
