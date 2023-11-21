@@ -17,29 +17,36 @@ describe("Checks for Chat Controllers", () => {
   });
 
   const createNewUser = async () => {
-    const newUser = await request(app).post("/api/v1/user/signup").send({
-      user_id: "user123",
-      user_name: "user123",
-    });
-    return newUser;
+    try {
+      const newUser = await request(app).post("/api/v1/user/signup").send({
+        user_id: "user123",
+        user_name: "user123",
+      });
+      return newUser;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const createNewChat = async () => {
-    const newChat = await request(app).post("/api/v1/chat/user123").send({
-      chatUserId: "user2",
-      chatMessage: "Hello from user123",
-    });
-
-    return newChat;
+    try {
+      const newChat = await request(app).post("/api/v1/chat/user123").send({
+        chatUserId: "user2",
+        chatMessage: "Hello from user123",
+      });
+      return newChat;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   test("POST /api/v1/chat/:id should create a new chat", async () => {
     await createNewUser();
     const newChat = await createNewChat();
 
-    expect(newChat.status).toBe(200);
+    expect(newChat?.status).toBe(200);
 
-    expect(newChat.body.status).toBe("message sent successfully");
+    expect(newChat?.body.status).toBe("message sent successfully");
   });
 
   test("GET /api/v1/chat/:userId should get the all chats", async () => {
