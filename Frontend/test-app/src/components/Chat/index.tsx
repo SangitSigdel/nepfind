@@ -52,7 +52,6 @@ export const Chat = () => {
         chatUserId: currentChatWith?.username,
         chatMessage: content,
       });
-      console.log("I am here");
       socket.emit("private message", {
         content: content,
         to: currentChatWith?.userID,
@@ -67,6 +66,18 @@ export const Chat = () => {
     if (!userName) {
       navigate("/");
     } else {
+      if (currentChatWith) {
+        console.log("the current user is:", currentChatWith);
+        api
+          .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
+          .then((res) => {
+            //  Todo: define response type for this to prevent mistakes on data obtain
+            console.log("The data from backend is :", res.data);
+            setChatMessages(res.data.messages.chats);
+          })
+          .catch((err) => console.log(err));
+      }
+
       socket.connect();
       socket.auth = { userName };
 
@@ -135,7 +146,7 @@ export const Chat = () => {
       socket.off("user connected");
       socket.off("private message");
     };
-  }, [navigate]);
+  }, [navigate, currentChatWith]);
 
   return (
     <>

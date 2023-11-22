@@ -1,6 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-
 import { CurrentChatWithType } from "./index";
+import { Dispatch } from "react";
 import styled from "styled-components";
 
 const SelectUserWrapper = styled.div`

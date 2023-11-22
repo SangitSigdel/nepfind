@@ -6,7 +6,9 @@ export const getUserChats = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { chatUserId } = req.body;
+  const { chatUserId } = req.query;
+
+  console.log("I was here", chatUserId);
 
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
@@ -50,8 +52,6 @@ export const createUserChat = async (
 
   const setMessage = (user: IUser | null, messageByUser: boolean) => {
     const set_user_id = messageByUser ? toUser?.user_id : fromUser?.user_id;
-
-    console.log(set_user_id);
 
     const chat = user?.messages.find(
       (message) => message.user_id === set_user_id
