@@ -49,10 +49,10 @@ export const Chat = () => {
     const user = Cookies.get("userName");
     try {
       await api.post(`/chat/${user}`, {
-        chatUserId: currentChatWith,
+        chatUserId: currentChatWith?.username,
         chatMessage: content,
       });
-
+      console.log("I am here");
       socket.emit("private message", {
         content: content,
         to: currentChatWith?.userID,
@@ -69,18 +69,6 @@ export const Chat = () => {
     } else {
       socket.connect();
       socket.auth = { userName };
-
-      api
-        .get(`/chat/${userName}`, {
-          data: {
-            chatUserId: currentChatWith,
-          },
-        })
-        .then((res) => {
-          console.log("The chat message is", res.data.messages);
-          setChatMessages(res.data.messages);
-        })
-        .catch((err) => console.log(err));
 
       socket.on("users", (users) => {
         const updatedUser = users.filter(
