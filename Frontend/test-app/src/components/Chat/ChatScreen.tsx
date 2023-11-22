@@ -1,9 +1,11 @@
 import { Box, Container, IconButton, TextField } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from "./index";
+import { useEffect, useState } from "react";
 
+import Cookies from "js-cookie";
 import SendIcon from "@mui/icons-material/Send";
+import api from "../../utils/api";
 import styled from "styled-components";
-import { useState } from "react";
 
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
@@ -11,8 +13,8 @@ const ChatScreenWrapper = styled.div`
   margin-bottom: 2rem;
 `;
 
-const MessagesWrapper = styled.div<{ from: string }>`
-  text-align: ${(props) => props.from !== "user" && "right"};
+const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
+  text-align: ${(props) => !props.messageByUser && "right"};
   padding: 10px;
 `;
 
@@ -41,7 +43,7 @@ export const ChatScreen = ({
       <Container maxWidth={"xl"}>
         {chatMessages.map((chat, index) => {
           return (
-            <MessagesWrapper from={chat.sender} key={index}>
+            <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
               <p>{chat.message}</p>
             </MessagesWrapper>
           );
@@ -66,10 +68,6 @@ export const ChatScreen = ({
               onKeyDown={(e) => {
                 if (e.key === "Enter" && e.ctrlKey) {
                   sendPrivateMessage(message);
-                  setChatMessages([
-                    ...chatMessages,
-                    { message, sender: "user" },
-                  ]);
                   setMessage("");
                 }
               }}
@@ -77,7 +75,6 @@ export const ChatScreen = ({
             <IconButton
               onClick={() => {
                 sendPrivateMessage(message);
-                setChatMessages([...chatMessages, { message, sender: "user" }]);
                 setMessage("");
               }}
             >
