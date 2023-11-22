@@ -127,7 +127,7 @@ export const Chat = () => {
             },
           });
 
-          setChatMessages(newMessages.data.messages);
+          setChatMessages(newMessages.data.messages.chats);
         } catch (error) {
           console.log(error);
         }
@@ -146,7 +146,7 @@ export const Chat = () => {
       socket.off("user connected");
       socket.off("private message");
     };
-  }, [navigate, currentChatWith]);
+  }, [navigate, currentChatWith, chatMessages]);
 
   return (
     <>

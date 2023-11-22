@@ -14,7 +14,7 @@ const ChatScreenWrapper = styled.div`
 `;
 
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
-  text-align: ${(props) => props.messageByUser && "right"};
+  text-align: ${(props) => !props.messageByUser && "right"};
   padding: 10px;
 `;
 
