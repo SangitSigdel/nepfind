@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserModel, { ChatMessage } from "../model/chatModel";
+import UserModel, { ChatMessage, IUser } from "../model/chatModel";
 
 export const getUserChats = async (
   req: Request,
@@ -39,21 +39,23 @@ export const createUserChat = async (
 
   const user = await UserModel.findOne({ user_id: req.params.id });
 
+  const toUser = await UserModel.findOne({ user_id: chatUserId });
+
+  console.log(toUser);
+
   const chatData: ChatMessage = {
     chat_id: 0,
     message: chatMessage,
+    messageByUser: true,
     dateTime: new Date(),
   };
 
-  if (!user) {
-    res.status(400).send({
-      message: "sorry no user found",
-    });
-  } else {
-    const chat = user.messages.find(
+  const setMessage = (user: IUser | null, messageByUser: boolean) => {
+    const chat = user?.messages.find(
       (message) => message.user_id === chatUserId
     );
 
+    chatData.messageByUser = messageByUser;
     if (chat) {
       if (chat.chats.length > 0) {
         const chat_id = chat.chats[chat.chats.length - 1].chat_id + 1;
@@ -63,13 +65,23 @@ export const createUserChat = async (
         chat.chats.push(chatData);
       }
     } else {
-      user.messages.push({
+      user?.messages.push({
         user_id: chatUserId,
         chats: [chatData],
       });
     }
+  };
+
+  if (!user || !toUser) {
+    res.status(400).send({
+      message: "sorry no user found",
+    });
+  } else {
+    await setMessage(user, true);
+    await setMessage(toUser, false);
 
     await user.save();
+    await toUser.save();
 
     res.status(200).send({
       status: "message sent successfully",
