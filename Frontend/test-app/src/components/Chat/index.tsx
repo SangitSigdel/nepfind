@@ -6,6 +6,7 @@ import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import { MobileChatView } from "./MobileChatView";
+import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
@@ -17,8 +18,11 @@ const ChatWrapper = styled.div`
 `;
 
 export type ChatMessagesType = {
+  chat_id: number;
   message: string;
-  sender: string;
+  messageByUser: boolean;
+  dateTime?: string;
+  _id?: string;
 };
 
 type ServerMessageContent = {
@@ -41,11 +45,21 @@ export const Chat = () => {
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
-  const sendPrivateMessage = (content: string) => {
-    socket.emit("private message", {
-      content: content,
-      to: currentChatWith?.userID,
-    });
+  const sendPrivateMessage = async (content: string) => {
+    const user = Cookies.get("userName");
+    try {
+      await api.post(`/chat/${user}`, {
+        chatUserId: currentChatWith,
+        chatMessage: content,
+      });
+
+      socket.emit("private message", {
+        content: content,
+        to: currentChatWith?.userID,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -55,6 +69,18 @@ export const Chat = () => {
     } else {
       socket.connect();
       socket.auth = { userName };
+
+      api
+        .get(`/chat/${userName}`, {
+          data: {
+            chatUserId: currentChatWith,
+          },
+        })
+        .then((res) => {
+          console.log("The chat message is", res.data.messages);
+          setChatMessages(res.data.messages);
+        })
+        .catch((err) => console.log(err));
 
       socket.on("users", (users) => {
         const updatedUser = users.filter(
@@ -92,17 +118,20 @@ export const Chat = () => {
         }
       );
 
-      socket.on("private message", (msgContent: ServerMessageContent) => {
-        // setChatMessages([
-        //   ...chatMessages,
-        //   { message: msgContent.content, sender: msgContent.userName },
-        // ]);
-        setChatMessages((prevMessages) => {
-          return [
-            ...prevMessages,
-            { message: msgContent.content, sender: msgContent.userName },
-          ];
-        });
+      socket.on("private message", async (msgContent: ServerMessageContent) => {
+        const user = Cookies.get("userName");
+
+        try {
+          const newMessages = await api.get(`/chat/${user}`, {
+            params: {
+              chatUserId: currentChatWith,
+            },
+          });
+
+          setChatMessages(newMessages.data.messages);
+        } catch (error) {
+          console.log(error);
+        }
       });
 
       socket.on("connect_error", (err) => {

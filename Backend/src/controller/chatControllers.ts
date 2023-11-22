@@ -13,7 +13,7 @@ export const getUserChats = async (
     if (user) {
       const messages = user.messages.filter(
         (message) => message.user_id === chatUserId
-      );
+      )[0].chats;
 
       res.status(200).send({
         status: "success",
