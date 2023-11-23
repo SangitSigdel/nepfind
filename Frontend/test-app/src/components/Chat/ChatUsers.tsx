@@ -33,18 +33,21 @@ type ChatUsersProps = {
 export const ChatUsers = ({ users, setCurrentChatWith }: ChatUsersProps) => {
   return (
     <SelectUserWrapper>
-      {users.map((el, index) => (
-        <div
-          key={index}
-          style={{ cursor: "pointer" }}
-          onClick={() =>
-            setCurrentChatWith({ username: el.user, userID: el.userId })
-          }
-        >
-          <p>{el.user}</p>
-          <p style={{ color: "#d1d1d1", marginBottom: "20px" }}>{el.status}</p>
-        </div>
-      ))}
+      {users.length > 0 &&
+        users.map((el, index) => (
+          <div
+            key={index}
+            style={{ cursor: "pointer" }}
+            onClick={() =>
+              setCurrentChatWith({ username: el.user, userID: el.userId })
+            }
+          >
+            <p>{el.user}</p>
+            <p style={{ color: "#d1d1d1", marginBottom: "20px" }}>
+              {el.status}
+            </p>
+          </div>
+        ))}
     </SelectUserWrapper>
   );
 };

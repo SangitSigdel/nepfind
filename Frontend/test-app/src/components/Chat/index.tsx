@@ -44,6 +44,7 @@ type reducerStateType = {
 enum reducerTypes {
   initilizeChatForCurrentUser = "initilizeChatForCurrentChatUser",
   setChatMessages = "setChatMessages",
+  setChatUsers = "setChatUsers",
 }
 
 export const Chat = () => {
@@ -55,7 +56,7 @@ export const Chat = () => {
     currentChatWithtemp: { userID: "", username: "" },
   };
 
-  const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
+  // const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
@@ -79,14 +80,15 @@ export const Chat = () => {
 
       case "setChatMessages":
         return { ...state, chatMessages: action.payload };
+
+      case "setChatUsers":
+        return { ...state, chatUsers: action.payload };
       default:
         throw new Error("sorry the requested action type was not found");
     }
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
@@ -110,6 +112,7 @@ export const Chat = () => {
 
   useEffect(() => {
     const userName = Cookies.get("userName");
+
     if (!userName) {
       navigate("/");
     } else {
@@ -129,11 +132,11 @@ export const Chat = () => {
         );
 
         updatedUser.map((el: { userID: string; username: string }) => {
-          setChatUsers((prev) => {
-            return [
-              ...prev,
+          dispatch({
+            type: reducerTypes.setChatUsers,
+            payload: [
               { user: el.username, status: "online", userId: el.userID },
-            ];
+            ],
           });
         });
       });
@@ -141,11 +144,15 @@ export const Chat = () => {
       socket.on(
         "user connected",
         (user: { username: string; userID: string }) => {
-          setChatUsers((prev) => {
-            return [
-              ...prev,
-              { user: user.username, status: "online", userId: user.userID },
-            ];
+          dispatch({
+            type: reducerTypes.setChatUsers,
+            payload: [
+              {
+                user: user.username,
+                status: "online",
+                userId: user.userID,
+              },
+            ],
           });
         }
       );
@@ -153,8 +160,13 @@ export const Chat = () => {
       socket.on(
         "user disconnected",
         (user: { username: string; userID: string }) => {
-          setChatUsers((prev) => {
-            return prev.filter((prevUser) => prevUser.user !== user.username);
+          dispatch({
+            type: reducerTypes.setChatUsers,
+            payload: [
+              state.chatUsers.filter(
+                (prevUser: any) => prevUser.user !== user.username
+              ),
+            ],
           });
         }
       );
@@ -168,8 +180,6 @@ export const Chat = () => {
               chatUserId: currentChatWith?.username,
             },
           });
-
-          // setChatMessages(newMessages.data.messages.chats);
           dispatch({
             type: reducerTypes.setChatMessages,
             payload: newMessages.data.messages.chats,
@@ -192,7 +202,7 @@ export const Chat = () => {
       socket.off("user connected");
       socket.off("private message");
     };
-  }, [navigate, currentChatWith, dispatch]);
+  }, [navigate, currentChatWith, dispatch, state.chatUsers]);
 
   return (
     <>
@@ -208,7 +218,7 @@ export const Chat = () => {
       >
         <ChatWrapper>
           <ChatUsers
-            users={chatUsers}
+            users={state.chatUsers}
             setCurrentChatWith={setCurrentChatWith}
             currentChatWith={currentChatWith}
           />
@@ -219,13 +229,6 @@ export const Chat = () => {
           />
         </ChatWrapper>
       </Box>
-
-      {/* <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
-        <MobileChatView
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-        /> */}
-      {/* </Box> */}
     </>
   );
 };
