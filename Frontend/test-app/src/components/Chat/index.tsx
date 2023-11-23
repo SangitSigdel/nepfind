@@ -54,7 +54,10 @@ export const Chat = () => {
   const initialState: reducerStateType = {
     chatMessages: [],
     chatUsers: [],
-    currentChatWith: { userID: "", username: "" },
+    currentChatWith: {
+      username: "",
+      userID: "",
+    },
   };
 
   const reducer = (
@@ -69,6 +72,8 @@ export const Chat = () => {
             `/chat/${userName}?chatUserId=${state.currentChatWith?.username}`
           )
           .then((res) => {
+            console.log("the current chat with is", state.currentChatWith);
+
             dispatch({
               type: "setChatMessages",
               payload: res.data.messages.chats,
@@ -118,7 +123,7 @@ export const Chat = () => {
     if (!userName) {
       navigate("/");
     } else {
-      if (state.currentChatWith) {
+      if (state.currentChatWith.username) {
         dispatch({
           type: reducerTypes.initilizeChatForCurrentUser,
           payload: null,
