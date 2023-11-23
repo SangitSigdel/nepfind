@@ -21,7 +21,7 @@ export type ChatScreenProps = {
   reducerState: {
     chatMessages: any;
     chatUsers: ChatUsersType[];
-    currentChatWithtemp: CurrentChatWithType;
+    currentChatWith: CurrentChatWithType;
   };
   chatMessagesWith?: CurrentChatWithType;
   sendPrivateMessage: (content: string) => void;

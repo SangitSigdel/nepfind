@@ -1,5 +1,5 @@
 import { CurrentChatWithType } from "./index";
-import { Dispatch } from "react";
+import { reducerTypes } from "./index";
 import styled from "styled-components";
 
 const SelectUserWrapper = styled.div`
@@ -24,13 +24,17 @@ export type ChatUsersType = {
 
 type ChatUsersProps = {
   users: ChatUsersType[];
-  setCurrentChatWith: Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >;
+  reducerDispatch: React.Dispatch<{
+    type: string;
+    payload: any;
+  }>;
+  // setCurrentChatWith: Dispatch<
+  //   React.SetStateAction<CurrentChatWithType | undefined>
+  // >;
   currentChatWith?: CurrentChatWithType;
 };
 
-export const ChatUsers = ({ users, setCurrentChatWith }: ChatUsersProps) => {
+export const ChatUsers = ({ users, reducerDispatch }: ChatUsersProps) => {
   return (
     <SelectUserWrapper>
       {users.length > 0 &&
@@ -39,7 +43,10 @@ export const ChatUsers = ({ users, setCurrentChatWith }: ChatUsersProps) => {
             key={index}
             style={{ cursor: "pointer" }}
             onClick={() =>
-              setCurrentChatWith({ username: el.user, userID: el.userId })
+              reducerDispatch({
+                type: reducerTypes.setCurrentChatWith,
+                payload: { username: el.user, userID: el.userId },
+              })
             }
           >
             <p>{el.user}</p>

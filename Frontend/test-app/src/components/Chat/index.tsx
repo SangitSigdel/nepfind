@@ -38,13 +38,14 @@ export type CurrentChatWithType = {
 type reducerStateType = {
   chatMessages: ChatMessagesType[];
   chatUsers: ChatUsersType[];
-  currentChatWithtemp: CurrentChatWithType;
+  currentChatWith: CurrentChatWithType;
 };
 
-enum reducerTypes {
+export enum reducerTypes {
   initilizeChatForCurrentUser = "initilizeChatForCurrentChatUser",
   setChatMessages = "setChatMessages",
   setChatUsers = "setChatUsers",
+  setCurrentChatWith = "setCurrentChatWith",
 }
 
 export const Chat = () => {
@@ -53,12 +54,8 @@ export const Chat = () => {
   const initialState: reducerStateType = {
     chatMessages: [],
     chatUsers: [],
-    currentChatWithtemp: { userID: "", username: "" },
+    currentChatWith: { userID: "", username: "" },
   };
-
-  // const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
-
-  const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
   const reducer = (
     state: reducerStateType,
@@ -68,7 +65,9 @@ export const Chat = () => {
     switch (action.type) {
       case "initilizeChatForCurrentChatUser":
         api
-          .get(`/chat/${userName}?chatUserId=${currentChatWith?.username}`)
+          .get(
+            `/chat/${userName}?chatUserId=${state.currentChatWith?.username}`
+          )
           .then((res) => {
             dispatch({
               type: "setChatMessages",
@@ -83,6 +82,9 @@ export const Chat = () => {
 
       case "setChatUsers":
         return { ...state, chatUsers: action.payload };
+
+      case "setCurrentChatWith":
+        return { ...state, currentChatWith: action.payload };
       default:
         throw new Error("sorry the requested action type was not found");
     }
@@ -94,7 +96,7 @@ export const Chat = () => {
     const user = Cookies.get("userName");
     try {
       await api.post(`/chat/${user}`, {
-        chatUserId: currentChatWith?.username,
+        chatUserId: state.currentChatWith?.username,
         chatMessage: content,
       });
       dispatch({
@@ -103,7 +105,7 @@ export const Chat = () => {
       });
       socket.emit("private message", {
         content: content,
-        to: currentChatWith?.userID,
+        to: state.currentChatWith?.userID,
       });
     } catch (error) {
       console.log(error);
@@ -116,7 +118,7 @@ export const Chat = () => {
     if (!userName) {
       navigate("/");
     } else {
-      if (currentChatWith) {
+      if (state.currentChatWith) {
         dispatch({
           type: reducerTypes.initilizeChatForCurrentUser,
           payload: null,
@@ -177,7 +179,7 @@ export const Chat = () => {
         try {
           const newMessages = await api.get(`/chat/${user}`, {
             params: {
-              chatUserId: currentChatWith?.username,
+              chatUserId: state.currentChatWith?.username,
             },
           });
           dispatch({
@@ -202,7 +204,7 @@ export const Chat = () => {
       socket.off("user connected");
       socket.off("private message");
     };
-  }, [navigate, currentChatWith, dispatch, state.chatUsers]);
+  }, [navigate, state.currentChatWith, dispatch, state.chatUsers]);
 
   return (
     <>
@@ -219,12 +221,13 @@ export const Chat = () => {
         <ChatWrapper>
           <ChatUsers
             users={state.chatUsers}
-            setCurrentChatWith={setCurrentChatWith}
-            currentChatWith={currentChatWith}
+            // setCurrentChatWith={setCurrentChatWith}
+            reducerDispatch={dispatch}
+            currentChatWith={state.currentChatWith}
           />
           <ChatScreen
             reducerState={state}
-            chatMessagesWith={currentChatWith}
+            chatMessagesWith={state.currentChatWith}
             sendPrivateMessage={sendPrivateMessage}
           />
         </ChatWrapper>
