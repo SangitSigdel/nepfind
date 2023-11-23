@@ -1,11 +1,10 @@
 import { Box, Container, IconButton, TextField } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from "./index";
-import { useEffect, useState } from "react";
 
-import Cookies from "js-cookie";
+import { ChatUsersType } from "./ChatUsers";
 import SendIcon from "@mui/icons-material/Send";
-import api from "../../utils/api";
 import styled from "styled-components";
+import { useState } from "react";
 
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
@@ -19,15 +18,17 @@ const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
 `;
 
 export type ChatScreenProps = {
-  chatMessages: ChatMessagesType[];
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessagesType[]>>;
+  reducerState: {
+    chatMessages: any;
+    chatUsers: ChatUsersType[];
+    currentChatWithtemp: CurrentChatWithType;
+  };
   chatMessagesWith?: CurrentChatWithType;
   sendPrivateMessage: (content: string) => void;
 };
 
 export const ChatScreen = ({
-  chatMessages,
-  setChatMessages,
+  reducerState,
   chatMessagesWith,
   sendPrivateMessage,
 }: ChatScreenProps) => {
@@ -41,13 +42,15 @@ export const ChatScreen = ({
           : " Please select user to continue"}
       </h1>
       <Container maxWidth={"xl"}>
-        {chatMessages.map((chat, index) => {
-          return (
-            <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
-              <p>{chat.message}</p>
-            </MessagesWrapper>
-          );
-        })}
+        {reducerState.chatMessages.map(
+          (chat: ChatMessagesType, index: number) => {
+            return (
+              <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
+                <p>{chat.message}</p>
+              </MessagesWrapper>
+            );
+          }
+        )}
 
         {chatMessagesWith && (
           <Box

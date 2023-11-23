@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
-import { MobileChatView } from "./MobileChatView";
 import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
@@ -36,14 +35,58 @@ export type CurrentChatWithType = {
   userID: string;
 };
 
+type reducerStateType = {
+  chatMessages: ChatMessagesType[];
+  chatUsers: ChatUsersType[];
+  currentChatWithtemp: CurrentChatWithType;
+};
+
+enum reducerTypes {
+  initilizeChatForCurrentUser = "initilizeChatForCurrentChatUser",
+  setChatMessages = "setChatMessages",
+}
+
 export const Chat = () => {
   const navigate = useNavigate();
 
-  const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
+  const initialState: reducerStateType = {
+    chatMessages: [],
+    chatUsers: [],
+    currentChatWithtemp: { userID: "", username: "" },
+  };
 
   const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+
+  const reducer = (
+    state: reducerStateType,
+    action: { type: string; payload: any }
+  ) => {
+    const userName = Cookies.get("userName");
+    switch (action.type) {
+      case "initilizeChatForCurrentChatUser":
+        api
+          .get(`/chat/${userName}?chatUserId=${currentChatWith?.username}`)
+          .then((res) => {
+            dispatch({
+              type: "setChatMessages",
+              payload: res.data.messages.chats,
+            });
+          })
+          .catch((err) => console.log(err));
+        return state;
+
+      case "setChatMessages":
+        return { ...state, chatMessages: action.payload };
+      default:
+        throw new Error("sorry the requested action type was not found");
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  // const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
@@ -51,6 +94,10 @@ export const Chat = () => {
       await api.post(`/chat/${user}`, {
         chatUserId: currentChatWith?.username,
         chatMessage: content,
+      });
+      dispatch({
+        type: reducerTypes.initilizeChatForCurrentUser,
+        payload: null,
       });
       socket.emit("private message", {
         content: content,
@@ -67,15 +114,10 @@ export const Chat = () => {
       navigate("/");
     } else {
       if (currentChatWith) {
-        console.log("the current user is:", currentChatWith);
-        api
-          .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
-          .then((res) => {
-            //  Todo: define response type for this to prevent mistakes on data obtain
-            console.log("The data from backend is :", res.data);
-            setChatMessages(res.data.messages.chats);
-          })
-          .catch((err) => console.log(err));
+        dispatch({
+          type: reducerTypes.initilizeChatForCurrentUser,
+          payload: null,
+        });
       }
 
       socket.connect();
@@ -123,11 +165,15 @@ export const Chat = () => {
         try {
           const newMessages = await api.get(`/chat/${user}`, {
             params: {
-              chatUserId: currentChatWith,
+              chatUserId: currentChatWith?.username,
             },
           });
 
-          setChatMessages(newMessages.data.messages.chats);
+          // setChatMessages(newMessages.data.messages.chats);
+          dispatch({
+            type: reducerTypes.setChatMessages,
+            payload: newMessages.data.messages.chats,
+          });
         } catch (error) {
           console.log(error);
         }
@@ -146,7 +192,7 @@ export const Chat = () => {
       socket.off("user connected");
       socket.off("private message");
     };
-  }, [navigate, currentChatWith, chatMessages]);
+  }, [navigate, currentChatWith, dispatch]);
 
   return (
     <>
@@ -167,8 +213,7 @@ export const Chat = () => {
             currentChatWith={currentChatWith}
           />
           <ChatScreen
-            chatMessages={chatMessages}
-            setChatMessages={setChatMessages}
+            reducerState={state}
             chatMessagesWith={currentChatWith}
             sendPrivateMessage={sendPrivateMessage}
           />
