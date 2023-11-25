@@ -46,6 +46,7 @@ export enum reducerTypes {
   setChatMessages = "setChatMessages",
   setChatUsers = "setChatUsers",
   setCurrentChatWith = "setCurrentChatWith",
+  socketPrivateMessage = "socketPrivateMessage",
 }
 
 export const Chat = () => {
@@ -66,6 +67,22 @@ export const Chat = () => {
   ) => {
     const userName = Cookies.get("userName");
     switch (action.type) {
+      case "socketPrivateMessage":
+        api
+          .get(`/chat/${action.payload}`, {
+            params: {
+              chatUserId: state.currentChatWith?.username,
+            },
+          })
+          .then((res) => {
+            dispatch({
+              type: reducerTypes.setChatMessages,
+              payload: res.data.messages.chats,
+            });
+          })
+          .catch((err) => console.log(err));
+        return state;
+
       case "initilizeChatForCurrentChatUser":
         api
           .get(
@@ -180,20 +197,7 @@ export const Chat = () => {
 
       socket.on("private message", async (msgContent: ServerMessageContent) => {
         const user = Cookies.get("userName");
-
-        try {
-          const newMessages = await api.get(`/chat/${user}`, {
-            params: {
-              chatUserId: state.currentChatWith?.username,
-            },
-          });
-          dispatch({
-            type: reducerTypes.setChatMessages,
-            payload: newMessages.data.messages.chats,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+        dispatch({ type: reducerTypes.socketPrivateMessage, payload: user });
       });
 
       socket.on("connect_error", (err) => {

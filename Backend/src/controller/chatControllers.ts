@@ -8,8 +8,6 @@ export const getUserChats = async (
 ) => {
   const { chatUserId } = req.query;
 
-  console.log("I was here", chatUserId);
-
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
     if (user) {
@@ -39,57 +37,61 @@ export const createUserChat = async (
     chatMessage,
   }: { chatUserId: string; chatMessage: string } = req.body;
 
-  const fromUser = await UserModel.findOne({ user_id: req.params.id });
+  try {
+    const fromUser = await UserModel.findOne({ user_id: req.params.id });
 
-  const toUser = await UserModel.findOne({ user_id: chatUserId });
+    const toUser = await UserModel.findOne({ user_id: chatUserId });
 
-  const chatData: ChatMessage = {
-    chat_id: 0,
-    message: chatMessage,
-    messageByUser: true,
-    dateTime: new Date(),
-  };
+    const chatData: ChatMessage = {
+      chat_id: 0,
+      message: chatMessage,
+      messageByUser: true,
+      dateTime: new Date(),
+    };
 
-  const setMessage = (user: IUser | null, messageByUser: boolean) => {
-    const set_user_id = messageByUser ? toUser?.user_id : fromUser?.user_id;
+    const setMessage = (user: IUser | null, messageByUser: boolean) => {
+      const set_user_id = messageByUser ? toUser?.user_id : fromUser?.user_id;
 
-    const chat = user?.messages.find(
-      (message) => message.user_id === set_user_id
-    );
+      const chat = user?.messages.find(
+        (message) => message.user_id === set_user_id
+      );
 
-    chatData.messageByUser = messageByUser;
-    if (chat) {
-      if (chat.chats.length > 0) {
-        const chat_id = chat.chats[chat.chats.length - 1].chat_id + 1;
-        chatData.chat_id = chat_id;
-        chat.chats.push(chatData);
+      chatData.messageByUser = messageByUser;
+      if (chat) {
+        if (chat.chats.length > 0) {
+          const chat_id = chat.chats[chat.chats.length - 1].chat_id + 1;
+          chatData.chat_id = chat_id;
+          chat.chats.push(chatData);
+        } else {
+          chat.chats.push(chatData);
+        }
       } else {
-        chat.chats.push(chatData);
+        set_user_id &&
+          user?.messages.push({
+            user_id: set_user_id,
+            chats: [chatData],
+          });
       }
+    };
+
+    if (!fromUser || !toUser) {
+      res.status(400).send({
+        message: "sorry no user found",
+      });
     } else {
-      set_user_id &&
-        user?.messages.push({
-          user_id: set_user_id,
-          chats: [chatData],
-        });
+      await setMessage(fromUser, true);
+      await setMessage(toUser, false);
+
+      await fromUser.save();
+      await toUser.save();
+
+      res.status(200).send({
+        status: "message sent successfully",
+        message: fromUser.messages,
+      });
     }
-  };
-
-  if (!fromUser || !toUser) {
-    res.status(400).send({
-      message: "sorry no user found",
-    });
-  } else {
-    await setMessage(fromUser, true);
-    await setMessage(toUser, false);
-
-    await fromUser.save();
-    await toUser.save();
-
-    res.status(200).send({
-      status: "message sent successfully",
-      message: fromUser.messages,
-    });
+  } catch (error) {
+    console.log(error);
   }
 };
 
