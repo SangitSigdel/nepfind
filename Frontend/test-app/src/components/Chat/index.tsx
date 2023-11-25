@@ -3,11 +3,12 @@ import React, { useReducer, useState } from "react";
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
-import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import api from "../../utils/api";
+import { reducerTypes } from "../../hooks/useChatReducer";
 import socket from "../../utils/socket";
 import styled from "styled-components";
+import { useChatReducer } from "../../hooks/useChatReducer";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -35,84 +36,10 @@ export type CurrentChatWithType = {
   userID: string;
 };
 
-type reducerStateType = {
-  chatMessages: ChatMessagesType[];
-  chatUsers: ChatUsersType[];
-  currentChatWith: CurrentChatWithType;
-};
-
-export enum reducerTypes {
-  initilizeChatForCurrentUser = "initilizeChatForCurrentChatUser",
-  setChatMessages = "setChatMessages",
-  setChatUsers = "setChatUsers",
-  setCurrentChatWith = "setCurrentChatWith",
-  socketPrivateMessage = "socketPrivateMessage",
-}
-
 export const Chat = () => {
   const navigate = useNavigate();
 
-  const initialState: reducerStateType = {
-    chatMessages: [],
-    chatUsers: [],
-    currentChatWith: {
-      username: "",
-      userID: "",
-    },
-  };
-
-  const reducer = (
-    state: reducerStateType,
-    action: { type: string; payload: any }
-  ) => {
-    const userName = Cookies.get("userName");
-    switch (action.type) {
-      case "socketPrivateMessage":
-        api
-          .get(`/chat/${action.payload}`, {
-            params: {
-              chatUserId: state.currentChatWith?.username,
-            },
-          })
-          .then((res) => {
-            dispatch({
-              type: reducerTypes.setChatMessages,
-              payload: res.data.messages.chats,
-            });
-          })
-          .catch((err) => console.log(err));
-        return state;
-
-      case "initilizeChatForCurrentChatUser":
-        api
-          .get(
-            `/chat/${userName}?chatUserId=${state.currentChatWith?.username}`
-          )
-          .then((res) => {
-            console.log("the current chat with is", state.currentChatWith);
-
-            dispatch({
-              type: "setChatMessages",
-              payload: res.data.messages.chats,
-            });
-          })
-          .catch((err) => console.log(err));
-        return state;
-
-      case "setChatMessages":
-        return { ...state, chatMessages: action.payload };
-
-      case "setChatUsers":
-        return { ...state, chatUsers: action.payload };
-
-      case "setCurrentChatWith":
-        return { ...state, currentChatWith: action.payload };
-      default:
-        throw new Error("sorry the requested action type was not found");
-    }
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { state, dispatch } = useChatReducer();
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");

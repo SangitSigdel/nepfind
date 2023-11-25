@@ -1,5 +1,5 @@
 import { CurrentChatWithType } from "./index";
-import { reducerTypes } from "./index";
+import { reducerTypes } from "../../hooks/useChatReducer";
 import styled from "styled-components";
 
 const SelectUserWrapper = styled.div`
