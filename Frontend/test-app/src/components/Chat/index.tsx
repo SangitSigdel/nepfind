@@ -1,12 +1,11 @@
 import React, { useState } from "react";
+import api, { getChatMessages, sendMessage } from "../../utils/api";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
-import { MobileChatView } from "./MobileChatView";
-import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
@@ -45,37 +44,15 @@ export const Chat = () => {
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
-  const sendPrivateMessage = async (content: string) => {
-    const user = Cookies.get("userName");
-    try {
-      await api.post(`/chat/${user}`, {
-        chatUserId: currentChatWith?.username,
-        chatMessage: content,
-      });
-      socket.emit("private message", {
-        content: content,
-        to: currentChatWith?.userID,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     const userName = Cookies.get("userName");
     if (!userName) {
       navigate("/");
     } else {
       if (currentChatWith) {
-        console.log("the current user is:", currentChatWith);
-        api
-          .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
-          .then((res) => {
-            //  Todo: define response type for this to prevent mistakes on data obtain
-            console.log("The data from backend is :", res.data);
-            setChatMessages(res.data.messages.chats);
-          })
-          .catch((err) => console.log(err));
+        getChatMessages(currentChatWith?.username).then((msg) => {
+          setChatMessages(msg);
+        });
       }
 
       socket.connect();
@@ -170,17 +147,9 @@ export const Chat = () => {
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}
             chatMessagesWith={currentChatWith}
-            sendPrivateMessage={sendPrivateMessage}
           />
         </ChatWrapper>
       </Box>
-
-      {/* <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
-        <MobileChatView
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-        /> */}
-      {/* </Box> */}
     </>
   );
 };
