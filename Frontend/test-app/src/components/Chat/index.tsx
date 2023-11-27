@@ -72,8 +72,7 @@ export const Chat = () => {
           .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
           .then((res) => {
             //  Todo: define response type for this to prevent mistakes on data obtain
-            console.log("The data from backend is :", res.data);
-            setChatMessages(res.data.messages.chats);
+            setChatMessages(res.data.messages?.chats);
           })
           .catch((err) => console.log(err));
       }
@@ -123,7 +122,7 @@ export const Chat = () => {
         try {
           const newMessages = await api.get(`/chat/${user}`, {
             params: {
-              chatUserId: currentChatWith,
+              chatUserId: currentChatWith?.username,
             },
           });
 

@@ -41,7 +41,7 @@ export const ChatScreen = ({
           : " Please select user to continue"}
       </h1>
       <Container maxWidth={"xl"}>
-        {chatMessages.map((chat, index) => {
+        {chatMessages?.map((chat, index) => {
           return (
             <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
               <p>{chat.message}</p>
