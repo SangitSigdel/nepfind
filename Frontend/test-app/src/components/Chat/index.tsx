@@ -45,6 +45,7 @@ export const Chat = () => {
   const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+  const userName = Cookies.get("userName");
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
@@ -57,13 +58,22 @@ export const Chat = () => {
         content: content,
         to: currentChatWith?.userID,
       });
+      api
+        .get(`/chat/${userName}?chatUserId=${currentChatWith?.username}`)
+        .then((res) => {
+          //  Todo: define response type for this to prevent mistakes on data obtain
+
+          const chats = res.data.messages?.chats;
+
+          !_.isEqual(chats, chatMessages) && setChatMessages(chats);
+        })
+        .catch((err) => console.log(err));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    const userName = Cookies.get("userName");
     if (!userName) {
       navigate("/");
     } else {
