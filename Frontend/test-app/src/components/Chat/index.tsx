@@ -6,6 +6,7 @@ import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import { MobileChatView } from "./MobileChatView";
+import _ from "lodash";
 import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
@@ -67,12 +68,14 @@ export const Chat = () => {
       navigate("/");
     } else {
       if (currentChatWith) {
-        console.log("the current user is:", currentChatWith);
         api
           .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
           .then((res) => {
             //  Todo: define response type for this to prevent mistakes on data obtain
-            setChatMessages(res.data.messages?.chats);
+
+            const chats = res.data.messages?.chats;
+
+            !_.isEqual(chats, chatMessages) && setChatMessages(chats);
           })
           .catch((err) => console.log(err));
       }
