@@ -72,6 +72,7 @@ export const Chat = () => {
           .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
           .then((res) => {
             //  Todo: define response type for this to prevent mistakes on data obtain
+
             const chats = res.data.messages?.chats;
 
             !_.isEqual(chats, chatMessages) && setChatMessages(chats);
