@@ -8,8 +8,6 @@ export const getUserChats = async (
 ) => {
   const { chatUserId } = req.query;
 
-  console.log("I was here", chatUserId);
-
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
     if (user) {
@@ -19,7 +17,12 @@ export const getUserChats = async (
 
       res.status(200).send({
         status: "success",
-        messages,
+        messages: messages || [],
+      });
+    } else {
+      res.status(404).send({
+        status: "failed",
+        messages: [],
       });
     }
   } catch (error) {
@@ -87,8 +90,8 @@ export const createUserChat = async (
     await toUser.save();
 
     res.status(200).send({
-      status: "message sent successfully",
-      message: fromUser.messages,
+      status: "success",
+      messages: fromUser.messages,
     });
   }
 };

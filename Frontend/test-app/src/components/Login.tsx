@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
+import {
+  createUser,
+  getUserDetails,
+  setUserStatusToOnline,
+} from "../utils/api";
 
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
 import TextField from "@mui/material/TextField";
-import api from "../utils/api";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -22,54 +26,41 @@ export const Login = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    const userName = Cookies.get("userName");
-    if (userName) {
+    const userFromCookies = Cookies.get("userName");
+    if (userFromCookies) {
       const checkUser = async () => {
-        try {
-          const user = await api.get(`/user/${userName}`);
-          if (user.data.data.online) {
-            alert("sorry user already online");
-          } else {
-            const user = await api.patch(`/user/status/${userName}`);
-            user && navigate("/chat");
-          }
-        } catch (error) {
-          console.log(error);
+        const user = await getUserDetails(userFromCookies);
+
+        if (user.data.data.online) {
+          alert("sorry user already online");
+        } else {
+          const user = await setUserStatusToOnline(userFromCookies);
+          user.data.online && navigate("/chat");
         }
       };
-      // isuserOnline
+
       checkUser();
     }
   }, [navigate]);
 
-  const handleClick = async () => {
-    try {
-      const user: { data: { data: { online: boolean } } } = await api.get(
-        `/user/${userName}`
-      );
+  const setUpCookiesAndOnlineStatus = async () => {
+    Cookies.set("userName", userName, { expires: 7 });
+    const user = await setUserStatusToOnline(userName);
+    user.data.online && navigate("/chat");
+  };
 
+  const handleClick = async () => {
+    const user = await getUserDetails(userName);
+
+    if (user.data.data) {
       if (user.data.data.online) {
         alert("sorry user already online");
       } else {
-        Cookies.set("userName", userName, { expires: 7 });
-        await api.patch(`/user/status/${userName}`);
-        navigate("/chat");
+        setUpCookiesAndOnlineStatus();
       }
-    } catch (error: any) {
-      if (error.response.status === 404) {
-        try {
-          await api.post("/user/signup", {
-            user_id: userName,
-            user_name: userName,
-          });
-          await api.patch(`/user/status/${userName}`);
-          Cookies.set("userName", userName, { expires: 7 });
-          navigate("/chat");
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      console.log(error);
+    } else {
+      await createUser(userName);
+      setUpCookiesAndOnlineStatus();
     }
   };
 
