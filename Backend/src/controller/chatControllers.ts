@@ -17,7 +17,7 @@ export const getUserChats = async (
 
       res.status(200).send({
         status: "success",
-        messages,
+        messages: messages || [],
       });
     } else {
       res.status(404).send({
