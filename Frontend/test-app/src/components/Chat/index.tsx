@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { getChatMessages, sendMessage } from "../../utils/api";
 
 import { Box } from "@mui/material";
@@ -7,7 +7,7 @@ import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import _ from "lodash";
-import socket from "../../utils/socket";
+import socket from "../../utils/sockets/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -57,14 +57,76 @@ export const Chat = () => {
     initilizeChats();
   };
 
-  const initilizeChats = async () => {
+  const initilizeChats = useCallback(async () => {
     const chatMessgaes = await getChatMessages(
       userName,
       currentChatWith?.username
     );
     const chats = chatMessgaes.data.messages.chats;
     !_.isEqual(chats, chatMessages) && setChatMessages(chats);
+  }, [chatMessages, currentChatWith?.username, userName]);
+
+  const handleChatUsers = (
+    users: {
+      userID: string;
+      username: string;
+    }[]
+  ) => {
+    const updatedUser = users.filter(
+      (user: { userID: string }) => user.userID !== socket.id
+    );
+
+    updatedUser.map((el: { userID: string; username: string }) => {
+      setChatUsers((prev) => {
+        return [
+          ...prev,
+          { user: el.username, status: "online", userId: el.userID },
+        ];
+      });
+    });
   };
+
+  const handleUserConnected = (user: { username: string; userID: string }) => {
+    setChatUsers((prev) => {
+      return [
+        ...prev,
+        { user: user.username, status: "online", userId: user.userID },
+      ];
+    });
+  };
+
+  const handleUserDiconnected = (user: {
+    username: string;
+    userID: string;
+  }) => {
+    setChatUsers((prev) => {
+      return prev.filter((prevUser) => prevUser.user !== user.username);
+    });
+  };
+
+  const handlePrivateMessages = useCallback(
+    async (msgContent: ServerMessageContent) => {
+      const user = Cookies.get("userName");
+
+      const newMessages = await getChatMessages(
+        user,
+        currentChatWith?.username
+      );
+
+      setChatMessages(newMessages.data.messages.chats);
+    },
+    [currentChatWith?.username]
+  );
+
+  const handleConnectionError = useCallback(
+    (err: any) => {
+      if (err.message === "invalid username") {
+        Cookies.remove("userName");
+        navigate("/");
+      }
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     if (!userName) {
@@ -75,67 +137,28 @@ export const Chat = () => {
       socket.connect();
       socket.auth = { userName };
 
-      socket.on("users", (users) => {
-        const updatedUser = users.filter(
-          (user: { userID: string }) => user.userID !== socket.id
-        );
-
-        updatedUser.map((el: { userID: string; username: string }) => {
-          setChatUsers((prev) => {
-            return [
-              ...prev,
-              { user: el.username, status: "online", userId: el.userID },
-            ];
-          });
-        });
-      });
-
-      socket.on(
-        "user connected",
-        (user: { username: string; userID: string }) => {
-          setChatUsers((prev) => {
-            return [
-              ...prev,
-              { user: user.username, status: "online", userId: user.userID },
-            ];
-          });
-        }
-      );
-
-      socket.on(
-        "user disconnected",
-        (user: { username: string; userID: string }) => {
-          setChatUsers((prev) => {
-            return prev.filter((prevUser) => prevUser.user !== user.username);
-          });
-        }
-      );
-
-      socket.on("private message", async (msgContent: ServerMessageContent) => {
-        const user = Cookies.get("userName");
-
-        const newMessages = await getChatMessages(
-          user,
-          currentChatWith?.username
-        );
-
-        setChatMessages(newMessages.data.messages.chats);
-      });
-
-      socket.on("connect_error", (err) => {
-        if (err.message === "invalid username") {
-          Cookies.remove("userName");
-          navigate("/");
-        }
-      });
+      socket.on("users", handleChatUsers);
+      socket.on("user connected", handleUserConnected);
+      socket.on("user disconnected", handleUserDiconnected);
+      socket.on("private message", handlePrivateMessages);
+      socket.on("connect_error", handleConnectionError);
     }
     return () => {
       socket.off("connect_error");
       socket.off("users");
       socket.off("user connected");
+      socket.off("user disconnected");
       socket.off("private message");
     };
-  }, [navigate, currentChatWith, chatMessages]);
+  }, [
+    navigate,
+    currentChatWith,
+    chatMessages,
+    userName,
+    initilizeChats,
+    handleConnectionError,
+    handlePrivateMessages,
+  ]);
 
   return (
     <>
@@ -163,13 +186,6 @@ export const Chat = () => {
           />
         </ChatWrapper>
       </Box>
-
-      {/* <Box component="div" sx={{ display: { xs: "block", sm: "none" } }}>
-        <MobileChatView
-          chatMessages={chatMessages}
-          setChatMessages={setChatMessages}
-        /> */}
-      {/* </Box> */}
     </>
   );
 };
