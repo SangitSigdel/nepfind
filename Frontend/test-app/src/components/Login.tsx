@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import api, { getUserDetails } from "../utils/api";
 
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
 import TextField from "@mui/material/TextField";
-import api from "../utils/api";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,7 @@ export const Login = () => {
     if (userName) {
       const checkUser = async () => {
         try {
-          const user = await api.get(`/user/${userName}`);
+          const user = await getUserDetails();
           if (user.data.data.online) {
             alert("sorry user already online");
           } else {
