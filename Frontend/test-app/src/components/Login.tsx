@@ -26,15 +26,15 @@ export const Login = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    const loggedInUserName = Cookies.get("userName");
-    if (loggedInUserName) {
+    const userFromCookies = Cookies.get("userName");
+    if (userFromCookies) {
       const checkUser = async () => {
-        const user = await getUserDetails(loggedInUserName);
+        const user = await getUserDetails(userFromCookies);
 
         if (user.data.data.online) {
           alert("sorry user already online");
         } else {
-          const user = await setUserStatusToOnline(loggedInUserName);
+          const user = await setUserStatusToOnline(userFromCookies);
           user.data.online && navigate("/chat");
         }
       };
@@ -43,6 +43,12 @@ export const Login = () => {
     }
   }, [navigate]);
 
+  const setUpCookiesAndOnlineStatus = async () => {
+    Cookies.set("userName", userName, { expires: 7 });
+    const user = await setUserStatusToOnline(userName);
+    user.data.online && navigate("/chat");
+  };
+
   const handleClick = async () => {
     const user = await getUserDetails(userName);
 
@@ -50,15 +56,11 @@ export const Login = () => {
       if (user.data.data.online) {
         alert("sorry user already online");
       } else {
-        Cookies.set("userName", userName, { expires: 7 });
-        const user = await setUserStatusToOnline(userName);
-        user.data.online && navigate("/chat");
+        setUpCookiesAndOnlineStatus();
       }
     } else {
       await createUser(userName);
-      Cookies.set("userName", userName, { expires: 7 });
-      const user = await setUserStatusToOnline(userName);
-      user.data.online && navigate("/chat");
+      setUpCookiesAndOnlineStatus();
     }
   };
 
