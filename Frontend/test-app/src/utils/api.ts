@@ -1,7 +1,6 @@
-import axios, { Axios, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import { ChatMessagesType } from "../components";
-import Cookies from "js-cookie";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
