@@ -27,6 +27,14 @@ export type userStatusData = AxiosResponse<{
   online: boolean;
 }>;
 
+export type userMessages = AxiosResponse<{
+  status: string;
+  messages: {
+    user_id: string;
+    chats: ChatMessagesType[];
+  };
+}>;
+
 export const getUserDetails = async (userName: string): Promise<userData> => {
   try {
     const res = await api.get(`/user/${userName}`);
@@ -55,6 +63,39 @@ export const createUser = async (userName: string): Promise<userData> => {
       user_id: userName,
       user_name: userName,
     });
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const sendMessage = async (
+  /* remove undefined types  */
+  user: string | undefined,
+  currentChatWith: string | undefined,
+  message: string
+): Promise<userMessages> => {
+  try {
+    const res = await api.post(`/chat/${user}`, {
+      chatUserId: currentChatWith,
+      chatMessage: message,
+    });
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getChatMessages = async (
+  userName: string | undefined,
+  currentChatWith: string | undefined
+): Promise<userMessages> => {
+  try {
+    const res = await api.get(
+      `/chat/${userName}?chatUserId=${currentChatWith}`
+    );
     return res;
   } catch (error) {
     console.log(error);

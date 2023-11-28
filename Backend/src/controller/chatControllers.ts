@@ -19,6 +19,11 @@ export const getUserChats = async (
         status: "success",
         messages,
       });
+    } else {
+      res.status(404).send({
+        status: "failed",
+        messages: [],
+      });
     }
   } catch (error) {
     res.status(400).send({
@@ -85,8 +90,8 @@ export const createUserChat = async (
     await toUser.save();
 
     res.status(200).send({
-      status: "message sent successfully",
-      message: fromUser.messages,
+      status: "success",
+      messages: fromUser.messages,
     });
   }
 };

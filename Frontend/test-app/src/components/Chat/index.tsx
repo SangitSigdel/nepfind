@@ -1,13 +1,12 @@
 import React, { useState } from "react";
+import { getChatMessages, sendMessage } from "../../utils/api";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
-import { MobileChatView } from "./MobileChatView";
 import _ from "lodash";
-import api from "../../utils/api";
 import socket from "../../utils/socket";
 import styled from "styled-components";
 import { useEffect } from "react";
@@ -45,50 +44,33 @@ export const Chat = () => {
   const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
 
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+
   const userName = Cookies.get("userName");
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
-    try {
-      await api.post(`/chat/${user}`, {
-        chatUserId: currentChatWith?.username,
-        chatMessage: content,
-      });
-      socket.emit("private message", {
-        content: content,
-        to: currentChatWith?.userID,
-      });
-      api
-        .get(`/chat/${userName}?chatUserId=${currentChatWith?.username}`)
-        .then((res) => {
-          //  Todo: define response type for this to prevent mistakes on data obtain
+    await sendMessage(user, currentChatWith?.username, content);
+    socket.emit("private message", {
+      content: content,
+      to: currentChatWith?.userID,
+    });
+    initilizeChats();
+  };
 
-          const chats = res.data.messages?.chats;
-
-          !_.isEqual(chats, chatMessages) && setChatMessages(chats);
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      console.log(error);
-    }
+  const initilizeChats = async () => {
+    const chatMessgaes = await getChatMessages(
+      userName,
+      currentChatWith?.username
+    );
+    const chats = chatMessgaes.data.messages.chats;
+    !_.isEqual(chats, chatMessages) && setChatMessages(chats);
   };
 
   useEffect(() => {
     if (!userName) {
       navigate("/");
     } else {
-      if (currentChatWith) {
-        api
-          .get(`/chat/${userName}?chatUserId=${currentChatWith.username}`)
-          .then((res) => {
-            //  Todo: define response type for this to prevent mistakes on data obtain
-
-            const chats = res.data.messages?.chats;
-
-            !_.isEqual(chats, chatMessages) && setChatMessages(chats);
-          })
-          .catch((err) => console.log(err));
-      }
+      currentChatWith && initilizeChats();
 
       socket.connect();
       socket.auth = { userName };
@@ -132,17 +114,12 @@ export const Chat = () => {
       socket.on("private message", async (msgContent: ServerMessageContent) => {
         const user = Cookies.get("userName");
 
-        try {
-          const newMessages = await api.get(`/chat/${user}`, {
-            params: {
-              chatUserId: currentChatWith?.username,
-            },
-          });
+        const newMessages = await getChatMessages(
+          user,
+          currentChatWith?.username
+        );
 
-          setChatMessages(newMessages.data.messages.chats);
-        } catch (error) {
-          console.log(error);
-        }
+        setChatMessages(newMessages.data.messages.chats);
       });
 
       socket.on("connect_error", (err) => {
