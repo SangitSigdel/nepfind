@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api, { getUserDetails } from "../utils/api";
+import api, { getUserDetails, setUserStatusToOnline } from "../utils/api";
 
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
@@ -30,8 +30,8 @@ export const Login = () => {
           if (user.data.data.online) {
             alert("sorry user already online");
           } else {
-            const user = await api.patch(`/user/status/${userName}`);
-            user && navigate("/chat");
+            const user = await setUserStatusToOnline();
+            user.data.online && navigate("/chat");
           }
         } catch (error) {
           console.log(error);
