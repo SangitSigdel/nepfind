@@ -10,7 +10,7 @@ export const createUser = async (
   try {
     const newUser = await UserModel.create(req.body);
     res.status(200).send({
-      message: "user Created Successfully",
+      status: "success",
       data: newUser,
     });
   } catch (error) {
@@ -27,17 +27,11 @@ export const getUser = async (
 ) => {
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
-    if (user) {
-      res.status(200).send({
-        status: "success",
-        data: user,
-      });
-    } else {
-      res.status(404).send({
-        status: "failed",
-        message: "no users found",
-      });
-    }
+
+    res.status(200).send({
+      status: "success",
+      data: user,
+    });
   } catch (error) {
     res.status(400).send({
       message: error,

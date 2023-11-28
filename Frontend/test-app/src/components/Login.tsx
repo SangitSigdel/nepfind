@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import api, { getUserDetails, setUserStatusToOnline } from "../utils/api";
+import {
+  createUser,
+  getUserDetails,
+  setUserStatusToOnline,
+} from "../utils/api";
 
 import { Button } from "@mui/material";
 import Cookies from "js-cookie";
@@ -22,54 +26,39 @@ export const Login = () => {
   const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
-    const userName = Cookies.get("userName");
-    if (userName) {
+    const loggedInUserName = Cookies.get("userName");
+    if (loggedInUserName) {
       const checkUser = async () => {
-        try {
-          const user = await getUserDetails();
-          if (user.data.data.online) {
-            alert("sorry user already online");
-          } else {
-            const user = await setUserStatusToOnline();
-            user.data.online && navigate("/chat");
-          }
-        } catch (error) {
-          console.log(error);
+        const user = await getUserDetails(loggedInUserName);
+
+        if (user.data.data.online) {
+          alert("sorry user already online");
+        } else {
+          const user = await setUserStatusToOnline(loggedInUserName);
+          user.data.online && navigate("/chat");
         }
       };
-      // isuserOnline
+
       checkUser();
     }
   }, [navigate]);
 
   const handleClick = async () => {
-    try {
-      const user: { data: { data: { online: boolean } } } = await api.get(
-        `/user/${userName}`
-      );
+    const user = await getUserDetails(userName);
 
+    if (user.data.data) {
       if (user.data.data.online) {
         alert("sorry user already online");
       } else {
         Cookies.set("userName", userName, { expires: 7 });
-        await api.patch(`/user/status/${userName}`);
-        navigate("/chat");
+        const user = await setUserStatusToOnline(userName);
+        user.data.online && navigate("/chat");
       }
-    } catch (error: any) {
-      if (error.response.status === 404) {
-        try {
-          await api.post("/user/signup", {
-            user_id: userName,
-            user_name: userName,
-          });
-          await api.patch(`/user/status/${userName}`);
-          Cookies.set("userName", userName, { expires: 7 });
-          navigate("/chat");
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      console.log(error);
+    } else {
+      await createUser(userName);
+      Cookies.set("userName", userName, { expires: 7 });
+      const user = await setUserStatusToOnline(userName);
+      user.data.online && navigate("/chat");
     }
   };
 

@@ -8,8 +8,6 @@ export const getUserChats = async (
 ) => {
   const { chatUserId } = req.query;
 
-  console.log("I was here", chatUserId);
-
   try {
     const user = await UserModel.findOne({ user_id: req.params.id });
     if (user) {

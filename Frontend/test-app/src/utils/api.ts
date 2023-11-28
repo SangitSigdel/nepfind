@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
 
 import { ChatMessagesType } from "../components";
 import Cookies from "js-cookie";
@@ -8,10 +8,9 @@ const API_URL = process.env.REACT_APP_API_URL;
 const api = axios.create({
   baseURL: API_URL,
 });
-const userName = Cookies.get("userName");
 
-type userData = {
-  status: "success" | "fail";
+type userData = AxiosResponse<{
+  status: "success" | "failed";
   data: {
     _id: string;
     user_id: string;
@@ -22,16 +21,14 @@ type userData = {
       chats: ChatMessagesType[];
     }[];
   };
-};
+}>;
 
-type userStatusData = AxiosResponse<{
+export type userStatusData = AxiosResponse<{
   status: "success" | "fail";
   online: boolean;
 }>;
 
-export type userDataAxiosResponse = AxiosResponse<userData>;
-
-export const getUserDetails = async (): Promise<userDataAxiosResponse> => {
+export const getUserDetails = async (userName: string): Promise<userData> => {
   try {
     const res = await api.get(`/user/${userName}`);
     return res;
@@ -41,9 +38,24 @@ export const getUserDetails = async (): Promise<userDataAxiosResponse> => {
   }
 };
 
-export const setUserStatusToOnline = async (): Promise<userStatusData> => {
+export const setUserStatusToOnline = async (
+  user: string
+): Promise<userStatusData> => {
   try {
-    const res = await api.patch(`/user/status/${userName}`);
+    const res = await api.patch(`/user/status/${user}`);
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const createUser = async (userName: string): Promise<userData> => {
+  try {
+    const res = await api.post("/user/signup", {
+      user_id: userName,
+      user_name: userName,
+    });
     return res;
   } catch (error) {
     console.log(error);
