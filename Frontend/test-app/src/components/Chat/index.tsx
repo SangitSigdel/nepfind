@@ -97,8 +97,6 @@ export const Chat = () => {
         component="div"
         sx={{
           display: {
-            xs: "none",
-            sm: "block",
             background: "#002d30",
           },
           height: "100%",

@@ -14,9 +14,9 @@ import styled from "styled-components";
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 2rem;
 `;
 
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
@@ -71,10 +71,11 @@ export const ChatScreen = ({
       <Container
         maxWidth="xl"
         sx={{
-          height: "75vh",
-          position: "fixed",
+          height: "80vh",
           top: "100px",
           overflowY: "auto",
+          width: "80%",
+          margin: "0 auto",
         }}
       >
         {chatMessages?.map((chat, index) => {
@@ -94,17 +95,16 @@ export const ChatScreen = ({
             bottom: 0,
             alignItems: "center",
             justifyContent: "center",
-            position: "fixed",
             width: "100%",
             background: "#008892",
-            paddingBottom: "1rem",
           }}
         >
           <Box
             sx={{
               display: "flex",
               width: "100%",
-              marginLeft: "2.5rem",
+              justifyContent: "center",
+              marginBottom: "20px",
             }}
           >
             <TextField

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React, { Dispatch } from "react";
 
 import { ChatUsersType } from "./ChatUsers";
@@ -80,7 +80,7 @@ export const NewChatScreen = ({
         flexDirection: "column",
         overflowY: "auto",
         height: "100vh",
-        width: "20em",
+        width: "15em",
         overflowX: "hidden",
       }}
     >
