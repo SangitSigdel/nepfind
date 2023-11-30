@@ -1,8 +1,17 @@
-body {
+* {
   margin: 0px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  padding: 0px;
 }
-h2,
-h3 {
-  margin-block-start: 0em;
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #005a61;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #009270;
+  border-radius: 10px;
 }
