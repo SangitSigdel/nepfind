@@ -20,9 +20,11 @@ const ChatScreenWrapper = styled.div`
 `;
 
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
-  text-align: ${(props) => !props.messageByUser && "right"};
+  align-self: ${(props) => (!props.messageByUser ? "flex-end" : "flex-start")};
   padding: 10px;
   color: #ffff;
+  border-radius: 20px;
+  background-color: ${(props) => (props.messageByUser ? "#202c33ce" : "green")};
 `;
 
 const ChatHeader = styled.div`
@@ -78,14 +80,18 @@ export const ChatScreen = ({
           margin: "0 auto",
         }}
       >
-        {chatMessages?.map((chat, index) => {
-          return (
-            <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
-              <p>{chat.message}</p>
-              <div ref={messageEndRef} />
-            </MessagesWrapper>
-          );
-        })}
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          {chatMessages?.map((chat, index) => {
+            return (
+              <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
+                <p style={{ maxWidth: "20rem", padding: "5px" }}>
+                  {chat.message}
+                </p>
+                <div ref={messageEndRef} />
+              </MessagesWrapper>
+            );
+          })}
+        </div>
       </Container>
 
       {chatMessagesWith && (
@@ -103,19 +109,22 @@ export const ChatScreen = ({
             sx={{
               display: "flex",
               width: "100%",
+              alignItems: "center",
               justifyContent: "center",
               marginBottom: "20px",
             }}
           >
             <TextField
               required
-              id="outlined-required"
+              id="filled-search"
               label="Message"
+              variant="filled"
               value={message}
               sx={{
                 width: "70%",
                 marginTop: "20px",
                 background: "#ffff",
+                borderRadius: "50px",
               }}
               onChange={(e) => {
                 setMessage(e.target.value);
@@ -136,7 +145,7 @@ export const ChatScreen = ({
                 setMessage("");
               }}
             >
-              <SendIcon />
+              <SendIcon sx={{ marginTop: "20px" }} />
             </IconButton>
           </Box>
         </Box>

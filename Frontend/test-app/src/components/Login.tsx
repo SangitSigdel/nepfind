@@ -30,12 +30,13 @@ export const Login = () => {
     if (userFromCookies) {
       const checkUser = async () => {
         const user = await getUserDetails(userFromCookies);
-
-        if (user.data.data.online) {
-          alert("sorry user already online");
-        } else {
-          const user = await setUserStatusToOnline(userFromCookies);
-          user.data.online && navigate("/chat");
+        if (user.data.data !== null) {
+          if (user?.data.data.online) {
+            alert("sorry user already online");
+          } else {
+            const user = await setUserStatusToOnline(userFromCookies);
+            user.data.online && navigate("/chat");
+          }
         }
       };
 

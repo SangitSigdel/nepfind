@@ -103,13 +103,13 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <div style={{ background: "#005a61" }}>
+          <Box style={{ background: "#005a61" }}>
             <NewChatScreen
               users={chatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}
             />
-          </div>
+          </Box>
           {/* <ChatUsers
             users={chatUsers}
             setCurrentChatWith={setCurrentChatWith}

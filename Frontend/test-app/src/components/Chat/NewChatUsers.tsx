@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { Dispatch } from "react";
 
 import { ChatUsersType } from "./ChatUsers";
@@ -48,7 +48,6 @@ const UserDisplayHeader = styled.div`
   text-align: center;
   padding: 20px 0;
   background: #008892;
-  position: fixed;
   width: inherit;
 `;
 
@@ -74,20 +73,20 @@ export const NewChatScreen = ({
 }: ChatUsersProps) => {
   const loggedInUser = Cookies.get("userName");
   return (
-    <div
+    <Box
       style={{
         display: "flex",
         flexDirection: "column",
         overflowY: "auto",
         height: "100vh",
-        width: "15em",
+        minWidth: "12em",
         overflowX: "hidden",
       }}
     >
       <UserDisplayHeader>
         <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
       </UserDisplayHeader>
-      <Box sx={{ marginTop: "4.2em" }}>
+      <Box>
         {users.map((el, index) => {
           return (
             <Box>
@@ -105,10 +104,13 @@ export const NewChatScreen = ({
                     alignItems: "center",
                   }}
                 >
-                  <CustomTypography variant="h5">{el.user}</CustomTypography>
+                  <CustomTypography variant="h6">{el.user}</CustomTypography>
                   <StatusCircle online={true} />
                 </div>
-                <CustomTypography variant="h6" sx={{ color: "#ffffffc3" }}>
+                <CustomTypography
+                  variant="subtitle1"
+                  sx={{ color: "#ffffffc3" }}
+                >
                   {"Test message"}
                   {/* {msg.chats[msg.chats.length - 1].message} */}
                 </CustomTypography>
@@ -117,6 +119,6 @@ export const NewChatScreen = ({
           );
         })}
       </Box>
-    </div>
+    </Box>
   );
 };
