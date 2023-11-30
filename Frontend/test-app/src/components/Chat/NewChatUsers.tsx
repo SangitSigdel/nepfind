@@ -1,9 +1,10 @@
 import { Box, Typography } from "@mui/material";
+import React, { Dispatch } from "react";
 
+import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
-import React from "react";
+import { CurrentChatWithType } from ".";
 import styled from "styled-components";
-import userData from "./data.json";
 
 export interface UserData {
   status: string;
@@ -34,6 +35,7 @@ const UserListWrapper = styled.div`
   background: #005a61;
   border-bottom: 1px solid #ffffff6a;
   padding: 10px 20px;
+  cursor: pointer;
 `;
 
 const CustomTypography = styled(Typography)`
@@ -58,7 +60,18 @@ const StatusCircle = styled.div<{ online: boolean }>`
   background-color: ${(props) => (props.online ? "green" : "red")};
 `;
 
-export const NewChatScreen = () => {
+type ChatUsersProps = {
+  users: ChatUsersType[];
+  setCurrentChatWith: Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >;
+  currentChatWith?: CurrentChatWithType;
+};
+
+export const NewChatScreen = ({
+  users,
+  setCurrentChatWith,
+}: ChatUsersProps) => {
   const loggedInUser = Cookies.get("userName");
   return (
     <div
@@ -75,19 +88,29 @@ export const NewChatScreen = () => {
         <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
       </UserDisplayHeader>
       <Box sx={{ marginTop: "4.2em" }}>
-        {userData.data.messages.map((msg, index) => {
+        {users.map((el, index) => {
           return (
             <Box>
-              <UserListWrapper>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <CustomTypography variant="h5">
-                    {msg.user_id}
-                  </CustomTypography>
+              <UserListWrapper
+                onClick={() =>
+                  setCurrentChatWith({
+                    username: el.user,
+                    userID: el.userId,
+                  })
+                }
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <CustomTypography variant="h5">{el.user}</CustomTypography>
                   <StatusCircle online={true} />
                 </div>
                 <CustomTypography variant="h6" sx={{ color: "#ffffffc3" }}>
-                  {" "}
-                  {msg.chats[msg.chats.length - 1].message}
+                  {"Test message"}
+                  {/* {msg.chats[msg.chats.length - 1].message} */}
                 </CustomTypography>
               </UserListWrapper>
             </Box>

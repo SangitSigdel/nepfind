@@ -22,17 +22,18 @@ const ChatScreenWrapper = styled.div`
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
   text-align: ${(props) => !props.messageByUser && "right"};
   padding: 10px;
+  color: #ffff;
 `;
 
 const ChatHeader = styled.div`
-  background: #3f0e40;
+  background: #005a61;
+  padding: 8px 0;
   margin: 0;
   top: 0;
   position: fixed;
   width: 100vw;
   text-align: center;
   color: white;
-  padding: 0;
 `;
 
 export type ChatScreenProps = {
@@ -60,7 +61,7 @@ export const ChatScreen = ({
         </Typography>
       </ChatHeader>
 
-      <Container maxWidth="xl" sx={{}}>
+      <Container maxWidth="xl">
         {chatMessages?.map((chat, index) => {
           return (
             <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
@@ -79,7 +80,7 @@ export const ChatScreen = ({
             justifyContent: "center",
             position: "fixed",
             width: "100%",
-            background: "#3f0e40",
+            background: "#008892",
             paddingBottom: "1rem",
           }}
         >
@@ -87,8 +88,7 @@ export const ChatScreen = ({
             sx={{
               display: "flex",
               width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
+              marginLeft: "2.5rem",
             }}
           >
             <TextField

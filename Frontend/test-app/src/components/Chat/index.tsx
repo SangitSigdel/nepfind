@@ -101,12 +101,16 @@ export const Chat = () => {
             sm: "block",
             background: "#002d30",
           },
-          height: "100vh",
+          height: "100%",
         }}
       >
         <ChatWrapper>
-          <div>
-            <NewChatScreen />
+          <div style={{ background: "#005a61" }}>
+            <NewChatScreen
+              users={chatUsers}
+              setCurrentChatWith={setCurrentChatWith}
+              currentChatWith={currentChatWith}
+            />
           </div>
           {/* <ChatUsers
             users={chatUsers}
