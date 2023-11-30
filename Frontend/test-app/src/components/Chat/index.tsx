@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
-import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
 import { NewChatScreen } from "./NewChatUsers";
@@ -106,9 +105,7 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <div
-            style={{ overflowY: "auto", height: "100vh", minWidth: "20em " }}
-          >
+          <div>
             <NewChatScreen />
           </div>
           {/* <ChatUsers

@@ -38,6 +38,8 @@ const UserListWrapper = styled.div`
 
 const CustomTypography = styled(Typography)`
   color: #ffff;
+  margin: 0;
+  padding: 0;
 `;
 
 const UserDisplayHeader = styled.div`
@@ -45,7 +47,7 @@ const UserDisplayHeader = styled.div`
   padding: 20px 0;
   background: #008892;
   position: fixed;
-  width: 100%;
+  width: inherit;
 `;
 
 const StatusCircle = styled.div<{ online: boolean }>`
@@ -59,11 +61,20 @@ const StatusCircle = styled.div<{ online: boolean }>`
 export const NewChatScreen = () => {
   const loggedInUser = Cookies.get("userName");
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto",
+        height: "100vh",
+        width: "20em",
+        overflowX: "hidden",
+      }}
+    >
       <UserDisplayHeader>
         <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
       </UserDisplayHeader>
-      <Box style={{ marginTop: "4.2em" }}>
+      <Box sx={{ marginTop: "4.2em" }}>
         {userData.data.messages.map((msg, index) => {
           return (
             <Box>

@@ -5,8 +5,6 @@
 
 ::-webkit-scrollbar {
   width: 8px;
-  color: aliceblue;
-  padding-right: 20px;
 }
 
 ::-webkit-scrollbar-track {
@@ -15,4 +13,5 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #009270;
+  border-radius: 10px;
 }
