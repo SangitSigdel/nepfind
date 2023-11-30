@@ -5,6 +5,7 @@ import { ChatScreen } from "./ChatScreen";
 import { ChatUsers } from "./ChatUsers";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
+import { NewChatScreen } from "./NewChatUsers";
 import socket from "../../utils/sockets/socket";
 import styled from "styled-components";
 import { useChatHandlers } from "./useChatHandlers";
@@ -99,16 +100,22 @@ export const Chat = () => {
           display: {
             xs: "none",
             sm: "block",
+            background: "#002d30",
           },
           height: "100vh",
         }}
       >
         <ChatWrapper>
-          <ChatUsers
+          <div
+            style={{ overflowY: "auto", height: "100vh", minWidth: "20em " }}
+          >
+            <NewChatScreen />
+          </div>
+          {/* <ChatUsers
             users={chatUsers}
             setCurrentChatWith={setCurrentChatWith}
             currentChatWith={currentChatWith}
-          />
+          /> */}
           <ChatScreen
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}

@@ -41,7 +41,7 @@ export const useChatHandlers = (
     );
     const chats = chatMessgaes.data.messages.chats;
     !_.isEqual(chats, chatMessages) && setChatMessages(chats);
-  }, [chatMessages, currentChatWith?.username, userName]);
+  }, [chatMessages, currentChatWith?.username, setChatMessages, userName]);
 
   const handleChatUsers = (
     users: {
@@ -92,7 +92,7 @@ export const useChatHandlers = (
 
       setChatMessages(newMessages.data.messages.chats);
     },
-    [currentChatWith?.username]
+    [currentChatWith?.username, setChatMessages]
   );
 
   const handleConnectionError = useCallback(

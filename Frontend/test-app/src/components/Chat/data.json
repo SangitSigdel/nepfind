@@ -1,0 +1,435 @@
+{
+  "status": "success",
+  "data": {
+    "_id": "6565dff6d616cfc5db537ee3",
+    "user_id": "sangit",
+    "user_name": "sangit",
+    "online": false,
+    "messages": [
+      {
+        "user_id": "saugat",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hey man",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T12:41:46.005Z",
+            "_id": "6565e00ad616cfc5db537ef3"
+          },
+          {
+            "chat_id": 1,
+            "message": "yes man",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T12:41:49.274Z",
+            "_id": "6565e00dd616cfc5db537f0b"
+          },
+          {
+            "chat_id": 2,
+            "message": "ok bro",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:02:50.570Z",
+            "_id": "6566476a565046b9774167af"
+          },
+          {
+            "chat_id": 3,
+            "message": "k xa hou halkhavar?",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:57:51.607Z",
+            "_id": "6566544f69b0750b54b16637"
+          },
+          {
+            "chat_id": 4,
+            "message": "Thikai xa mero",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:57:55.874Z",
+            "_id": "6566545369b0750b54b16687"
+          },
+          {
+            "chat_id": 5,
+            "message": "i ",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T21:25:02.219Z",
+            "_id": "65665aaea417cc33aaf3a183"
+          },
+          {
+            "chat_id": 6,
+            "message": "uea",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T21:25:05.125Z",
+            "_id": "65665ab1a417cc33aaf3a1e5"
+          },
+          {
+            "chat_id": 7,
+            "message": "Hi brother",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T22:34:29.049Z",
+            "_id": "65666af5a417cc33aaf3a34b"
+          },
+          {
+            "chat_id": 8,
+            "message": "What are you doing?",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T22:34:36.973Z",
+            "_id": "65666afca417cc33aaf3a3b9"
+          },
+          {
+            "chat_id": 9,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-29T12:06:01.419Z",
+            "_id": "65672929d284d3455e775404"
+          },
+          {
+            "chat_id": 10,
+            "message": "how are you",
+            "messageByUser": false,
+            "dateTime": "2023-11-29T12:06:03.934Z",
+            "_id": "6567292bd284d3455e77547e"
+          },
+          {
+            "chat_id": 11,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-29T12:08:31.225Z",
+            "_id": "656729bfd284d3455e7755c9"
+          },
+          {
+            "chat_id": 12,
+            "message": "sure",
+            "messageByUser": false,
+            "dateTime": "2023-11-29T12:08:48.779Z",
+            "_id": "656729d0d284d3455e77564f"
+          },
+          {
+            "chat_id": 13,
+            "message": "hey amn",
+            "messageByUser": true,
+            "dateTime": "2023-11-29T12:09:34.327Z",
+            "_id": "656729fed284d3455e775988"
+          },
+          {
+            "chat_id": 14,
+            "message": "oey",
+            "messageByUser": false,
+            "dateTime": "2023-11-29T12:09:40.063Z",
+            "_id": "65672a04d284d3455e775a1a"
+          },
+          {
+            "chat_id": 15,
+            "message": "yes bri",
+            "messageByUser": false,
+            "dateTime": "2023-11-29T16:08:10.587Z",
+            "_id": "656761ead284d3455e778872"
+          },
+          {
+            "chat_id": 16,
+            "message": "okay",
+            "messageByUser": true,
+            "dateTime": "2023-11-29T16:09:27.059Z",
+            "_id": "65676237d284d3455e778923"
+          }
+        ],
+        "_id": "6565e00ad616cfc5db537ef2"
+      },
+      {
+        "user_id": "dia",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "HI",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T19:43:24.038Z",
+            "_id": "656642dc59e6d515b648892a"
+          },
+          {
+            "chat_id": 1,
+            "message": "hello dia",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T19:43:27.658Z",
+            "_id": "656642df59e6d515b6488948"
+          },
+          {
+            "chat_id": 2,
+            "message": "Eh hoi",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:08:57.986Z",
+            "_id": "656648d9565046b97741680b"
+          },
+          {
+            "chat_id": 3,
+            "message": "vani bolako maile",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:09:04.820Z",
+            "_id": "656648e0565046b97741683a"
+          },
+          {
+            "chat_id": 4,
+            "message": "hello brother",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:48:18.957Z",
+            "_id": "6566521269b0750b54b16100"
+          },
+          {
+            "chat_id": 5,
+            "message": "k ca hkdsa",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:48:23.737Z",
+            "_id": "6566521769b0750b54b1613b"
+          },
+          {
+            "chat_id": 6,
+            "message": "fldka",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:48:25.280Z",
+            "_id": "6566521969b0750b54b1617b"
+          },
+          {
+            "chat_id": 7,
+            "message": "fda",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:48:27.551Z",
+            "_id": "6566521b69b0750b54b161c0"
+          },
+          {
+            "chat_id": 8,
+            "message": "what",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:52:13.091Z",
+            "_id": "656652fd69b0750b54b1629c"
+          },
+          {
+            "chat_id": 9,
+            "message": "how is the baby",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:52:16.702Z",
+            "_id": "6566530069b0750b54b162ef"
+          },
+          {
+            "chat_id": 10,
+            "message": "ok bro",
+            "messageByUser": true,
+            "dateTime": "2023-11-28T20:55:03.594Z",
+            "_id": "656653a769b0750b54b16462"
+          },
+          {
+            "chat_id": 11,
+            "message": "k xa halchal",
+            "messageByUser": false,
+            "dateTime": "2023-11-28T20:55:07.766Z",
+            "_id": "656653ab69b0750b54b164c1"
+          }
+        ],
+        "_id": "656642dc59e6d515b6488929"
+      },
+      {
+        "user_id": "kalpana",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:52:55.899Z",
+            "_id": "65685b77d284d3455e779891"
+          }
+        ],
+        "_id": "65685b77d284d3455e779890"
+      },
+      {
+        "user_id": "jay",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kritika",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "shravya",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kalpana",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:52:55.899Z",
+            "_id": "65685b77d284d3455e779891"
+          }
+        ],
+        "_id": "65685b77d284d3455e779890"
+      },
+      {
+        "user_id": "jay",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kritika",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "shravya",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kalpana",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:52:55.899Z",
+            "_id": "65685b77d284d3455e779891"
+          }
+        ],
+        "_id": "65685b77d284d3455e779890"
+      },
+      {
+        "user_id": "jay",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kritika",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "shravya",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kalpana",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:52:55.899Z",
+            "_id": "65685b77d284d3455e779891"
+          }
+        ],
+        "_id": "65685b77d284d3455e779890"
+      },
+      {
+        "user_id": "jay",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "kritika",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      },
+      {
+        "user_id": "shravya",
+        "chats": [
+          {
+            "chat_id": 0,
+            "message": "hello",
+            "messageByUser": true,
+            "dateTime": "2023-11-30T09:53:01.084Z",
+            "_id": "65685b7dd284d3455e7798ba"
+          }
+        ],
+        "_id": "65685b7dd284d3455e7798b9"
+      }
+    ],
+    "__v": 31
+  }
+}

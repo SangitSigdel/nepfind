@@ -1,14 +1,20 @@
-import { Box, Container, IconButton, TextField } from "@mui/material";
+import {
+  Box,
+  Container,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from "./index";
-import { useEffect, useState } from "react";
 
-import Cookies from "js-cookie";
 import SendIcon from "@mui/icons-material/Send";
-import api from "../../utils/api";
 import styled from "styled-components";
+import { useState } from "react";
 
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   margin-bottom: 2rem;
 `;
@@ -16,6 +22,17 @@ const ChatScreenWrapper = styled.div`
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
   text-align: ${(props) => !props.messageByUser && "right"};
   padding: 10px;
+`;
+
+const ChatHeader = styled.div`
+  background: #3f0e40;
+  margin: 0;
+  top: 0;
+  position: fixed;
+  width: 100vw;
+  text-align: center;
+  color: white;
+  padding: 0;
 `;
 
 export type ChatScreenProps = {
@@ -35,12 +52,15 @@ export const ChatScreen = ({
 
   return (
     <ChatScreenWrapper>
-      <h1>
-        {chatMessagesWith
-          ? chatMessagesWith.username
-          : " Please select user to continue"}
-      </h1>
-      <Container maxWidth={"xl"}>
+      <ChatHeader>
+        <Typography variant="h3">
+          {chatMessagesWith
+            ? chatMessagesWith.username
+            : " Please select user to continue"}
+        </Typography>
+      </ChatHeader>
+
+      <Container maxWidth="xl" sx={{}}>
         {chatMessages?.map((chat, index) => {
           return (
             <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
@@ -48,11 +68,27 @@ export const ChatScreen = ({
             </MessagesWrapper>
           );
         })}
+      </Container>
 
-        {chatMessagesWith && (
+      {chatMessagesWith && (
+        <Box
+          sx={{
+            display: "flex",
+            bottom: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            position: "fixed",
+            width: "100%",
+            background: "#3f0e40",
+            paddingBottom: "1rem",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <TextField
@@ -60,6 +96,11 @@ export const ChatScreen = ({
               id="outlined-required"
               label="Message"
               value={message}
+              sx={{
+                width: "70%",
+                marginTop: "20px",
+                background: "#ffff",
+              }}
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
@@ -73,6 +114,7 @@ export const ChatScreen = ({
               }}
             />
             <IconButton
+              sx={{ color: "#ffff" }}
               onClick={() => {
                 sendPrivateMessage(message);
                 setMessage("");
@@ -81,8 +123,8 @@ export const ChatScreen = ({
               <SendIcon />
             </IconButton>
           </Box>
-        )}
-      </Container>
+        </Box>
+      )}
     </ChatScreenWrapper>
   );
 };

@@ -3,11 +3,14 @@ import { Dispatch } from "react";
 import styled from "styled-components";
 
 const SelectUserWrapper = styled.div`
+  position: fixed;
   padding-right: 20px;
   p {
     font-size: 18px;
     margin: 0.2em;
   }
+  padding-top: 50px;
+  z-index: 1;
 
   background-color: #3f0e40;
   color: #ffff;
