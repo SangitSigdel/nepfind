@@ -6,10 +6,10 @@ import {
   Typography,
 } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from "./index";
+import { useEffect, useRef, useState } from "react";
 
 import SendIcon from "@mui/icons-material/Send";
 import styled from "styled-components";
-import { useState } from "react";
 
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
@@ -51,6 +51,13 @@ export const ChatScreen = ({
 }: ChatScreenProps) => {
   const [message, setMessage] = useState<string>("");
 
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(scrollToBottom, [chatMessages]);
+
   return (
     <ChatScreenWrapper>
       <ChatHeader>
@@ -61,11 +68,20 @@ export const ChatScreen = ({
         </Typography>
       </ChatHeader>
 
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          height: "75vh",
+          position: "fixed",
+          top: "100px",
+          overflowY: "auto",
+        }}
+      >
         {chatMessages?.map((chat, index) => {
           return (
             <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
               <p>{chat.message}</p>
+              <div ref={messageEndRef} />
             </MessagesWrapper>
           );
         })}
