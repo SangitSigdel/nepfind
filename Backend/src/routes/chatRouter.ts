@@ -3,6 +3,7 @@ import {
   deleteUserChat,
   editUserChat,
   getUserChats,
+  setChatStatusSeen,
 } from "../controller/chatControllers";
 
 import express from "express";
@@ -15,5 +16,7 @@ chatRouter
   .post(createUserChat)
   .delete(deleteUserChat)
   .patch(editUserChat);
+
+chatRouter.route("/chatstatus/:id").post(setChatStatusSeen);
 
 export default chatRouter;

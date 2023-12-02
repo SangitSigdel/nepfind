@@ -5,6 +5,7 @@ export interface ChatMessage {
   message: string;
   messageByUser: boolean;
   dateTime: Date;
+  seen: boolean;
 }
 
 export interface UserChats {
@@ -24,6 +25,7 @@ const chatMessageSchema: Schema<ChatMessage> = new Schema({
   message: String,
   messageByUser: Boolean,
   dateTime: Date,
+  seen: { type: Boolean, default: false },
 });
 
 const userChatsSchema: Schema<UserChats> = new Schema({

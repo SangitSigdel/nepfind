@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserModel, { ChatMessage, IUser } from "../model/chatModel";
+import UserModel, { ChatMessage, IUser, UserChats } from "../model/chatModel";
 
 export const getUserChats = async (
   req: Request,
@@ -51,6 +51,7 @@ export const createUserChat = async (
     message: chatMessage,
     messageByUser: true,
     dateTime: new Date(),
+    seen: false,
   };
 
   const setMessage = (user: IUser | null, messageByUser: boolean) => {
@@ -172,6 +173,42 @@ export const editUserChat = async (
     res.status(200).send({
       status: "selected message updated successfully",
       message: user,
+    });
+  }
+};
+
+export const setChatStatusSeen = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { chat_user_id, chat_id } = req.body;
+  try {
+    const user = await UserModel.findOne({ user_id: req.params.id });
+
+    if (user) {
+      const messages: UserChats[] = user.messages.filter(
+        (msg) => msg.user_id === chat_user_id
+      );
+
+      const chats = messages[0].chats.filter(
+        (chat) => chat.chat_id === chat_id
+      );
+
+      chats[0].seen = true;
+
+      await user.save();
+      res.status(200).send({
+        chat: chats[0],
+      });
+    } else {
+      res.status(404).send({
+        message: "sorry user not found",
+      });
+    }
+  } catch (error) {
+    res.status(404).send({
+      error,
     });
   }
 };
