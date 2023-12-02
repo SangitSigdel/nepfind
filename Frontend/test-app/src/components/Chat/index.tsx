@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import styled, { useTheme } from "styled-components";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./ChatScreen";
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
-import { NewChatScreen } from "./NewChatUsers";
+import { NewChatScreen } from "./ChatUsers";
 import socket from "../../utils/sockets/socket";
-import styled from "styled-components";
 import { useChatHandlers } from "./useChatHandlers";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -31,6 +31,8 @@ export type CurrentChatWithType = {
 
 export const Chat = () => {
   const navigate = useNavigate();
+
+  const theme = useTheme();
 
   const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
 
@@ -97,24 +99,22 @@ export const Chat = () => {
         component="div"
         sx={{
           display: {
-            background: "#002d30",
+            background: theme.palette.primary.dark,
           },
           height: "100%",
         }}
       >
         <ChatWrapper>
-          <Box style={{ background: "#005a61" }}>
+          <Box
+            style={{ background: theme.palette.primary.dark }}
+            sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
+          >
             <NewChatScreen
               users={chatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}
             />
           </Box>
-          {/* <ChatUsers
-            users={chatUsers}
-            setCurrentChatWith={setCurrentChatWith}
-            currentChatWith={currentChatWith}
-          /> */}
           <ChatScreen
             chatMessages={chatMessages}
             setChatMessages={setChatMessages}

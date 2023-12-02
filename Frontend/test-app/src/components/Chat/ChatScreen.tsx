@@ -6,10 +6,10 @@ import {
   Typography,
 } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from "./index";
+import styled, { useTheme } from "styled-components";
 import { useEffect, useRef, useState } from "react";
 
 import SendIcon from "@mui/icons-material/Send";
-import styled from "styled-components";
 
 const ChatScreenWrapper = styled.div`
   align-self: flex-end;
@@ -22,20 +22,22 @@ const ChatScreenWrapper = styled.div`
 const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
   align-self: ${(props) => (!props.messageByUser ? "flex-end" : "flex-start")};
   padding: 10px;
-  color: #ffff;
+  color: ${(props) => props.theme.palette.bright.main};
   border-radius: 20px;
-  background-color: ${(props) => (props.messageByUser ? "#202c33ce" : "green")};
+  background-color: ${(props) =>
+    props.messageByUser
+      ? props.theme.palette.chatBubble.sendMessageBubble
+      : props.theme.palette.chatBubble.recieveMessageBubble};
 `;
 
 const ChatHeader = styled.div`
-  background: #005a61;
-  padding: 8px 0;
+  background: ${(props) => props.theme.palette.primary.light};
+  padding: 20px;
   margin: 0;
   top: 0;
   position: fixed;
   width: 100vw;
-  text-align: center;
-  color: white;
+  color: ${(props) => props.theme.palette.bright.main};
 `;
 
 export type ChatScreenProps = {
@@ -51,6 +53,8 @@ export const ChatScreen = ({
   chatMessagesWith,
   sendPrivateMessage,
 }: ChatScreenProps) => {
+  const theme = useTheme();
+
   const [message, setMessage] = useState<string>("");
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
@@ -63,7 +67,7 @@ export const ChatScreen = ({
   return (
     <ChatScreenWrapper>
       <ChatHeader>
-        <Typography variant="h3">
+        <Typography variant="h6">
           {chatMessagesWith
             ? chatMessagesWith.username
             : " Please select user to continue"}
@@ -102,7 +106,6 @@ export const ChatScreen = ({
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            background: "#008892",
           }}
         >
           <Box
@@ -123,8 +126,8 @@ export const ChatScreen = ({
               sx={{
                 width: "70%",
                 marginTop: "20px",
-                background: "#ffff",
-                borderRadius: "50px",
+                background: theme.palette.bright.main,
+                borderRadius: "10px",
               }}
               onChange={(e) => {
                 setMessage(e.target.value);
@@ -139,7 +142,7 @@ export const ChatScreen = ({
               }}
             />
             <IconButton
-              sx={{ color: "#ffff" }}
+              sx={{ color: theme.palette.bright.main }}
               onClick={() => {
                 sendPrivateMessage(message);
                 setMessage("");
