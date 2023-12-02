@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import UserModel, { ChatMessage, IUser, UserChats } from "../model/chatModel";
 
+/* TODO: have a checks input from user in the user body before doing any processing 
+        and response user that the following field is missing
+*/
+
 export const getUserChats = async (
   req: Request,
   res: Response,
@@ -54,14 +58,19 @@ export const createUserChat = async (
     seen: false,
   };
 
-  const setMessage = (user: IUser | null, messageByUser: boolean) => {
-    const set_user_id = messageByUser ? toUser?.user_id : fromUser?.user_id;
+  const setMessage = (user: IUser | null, isMessageFromUser: boolean) => {
+    const set_user_id = isMessageFromUser ? toUser?.user_id : fromUser?.user_id;
 
     const chat = user?.messages.find(
       (message) => message.user_id === set_user_id
     );
 
-    chatData.messageByUser = messageByUser;
+    if (chat) {
+      const numOfUnreadMessages = chat?.unread;
+      chat.unread = numOfUnreadMessages + 1;
+    }
+
+    chatData.messageByUser = isMessageFromUser;
     if (chat) {
       if (chat.chats.length > 0) {
         const chat_id = chat.chats[chat.chats.length - 1].chat_id + 1;
@@ -75,6 +84,7 @@ export const createUserChat = async (
         user?.messages.push({
           user_id: set_user_id,
           chats: [chatData],
+          unread: 1,
         });
     }
   };
@@ -210,5 +220,39 @@ export const setChatStatusSeen = async (
     res.status(404).send({
       error,
     });
+  }
+};
+
+export const resetUnreadMessages = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserModel.findOne({ user_id: req.params.id });
+
+    const messagesToReset = user?.messages.filter(
+      (msg) => msg.user_id === req.body.chatUserId
+    );
+
+    if (messagesToReset) {
+      messagesToReset[0].unread = 0;
+      res.status(200).send({
+        status: "success",
+        message: "Unread message reset successful",
+      });
+
+      user?.save();
+    } else {
+      res.status(400).send({
+        status: "failed",
+        message: "sorry failed",
+      });
+    }
+  } catch (error) {
+    res.status(400).send({
+      error,
+    });
+    console.log(error);
   }
 };

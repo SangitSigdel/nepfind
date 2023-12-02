@@ -22,6 +22,7 @@ export type ChatMessagesType = {
   messageByUser: boolean;
   dateTime?: string;
   _id?: string;
+  seen: boolean;
 };
 
 export type CurrentChatWithType = {
@@ -110,6 +111,7 @@ export const Chat = () => {
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
             <NewChatScreen
+              chatMessages={chatMessages}
               users={chatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}

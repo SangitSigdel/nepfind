@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
+import { ChatMessagesType, CurrentChatWithType } from ".";
 import React, { Dispatch } from "react";
 import styled, { useTheme } from "styled-components";
 
 import Cookies from "js-cookie";
-import { CurrentChatWithType } from ".";
 
 export interface UserData {
   status: string;
@@ -50,10 +50,14 @@ const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   }
 `;
 
-const CustomTypography = styled(Typography)`
-  color: ${(props) => props.theme.palette.bright.main};
+const CustomTypography = styled(Typography)<{ unseenMessage: number }>`
+  color: ${(props) => props.theme.palette.bright.light};
   margin: 0;
   padding: 0;
+
+  &.MuiTypography-root {
+    font-weight: ${(props) => props.unseenMessage > 0 && "bold"};
+  }
 `;
 
 const UserDisplayHeader = styled.div`
@@ -77,15 +81,21 @@ type ChatUsersProps = {
     React.SetStateAction<CurrentChatWithType | undefined>
   >;
   currentChatWith?: CurrentChatWithType;
+  chatMessages: ChatMessagesType[];
 };
 
 export const NewChatScreen = ({
   users,
+  chatMessages,
   setCurrentChatWith,
   currentChatWith,
 }: ChatUsersProps) => {
   const loggedInUser = Cookies.get("userName");
   const theme = useTheme();
+
+  const unseenMessages = chatMessages?.filter(
+    (msg) => msg.seen === false
+  ).length;
 
   const chatView = (
     userName: string,
@@ -108,11 +118,11 @@ export const NewChatScreen = ({
             alignItems: "center",
           }}
         >
-          <CustomTypography variant="h6">{userName}</CustomTypography>
+          <CustomTypography variant="subtitle1">{userName}</CustomTypography>
           <StatusCircle online={true} />
         </div>
         <CustomTypography
-          variant="subtitle1"
+          variant="subtitle2"
           sx={{ color: theme.palette.bright.light }}
         >
           {"Test message"}

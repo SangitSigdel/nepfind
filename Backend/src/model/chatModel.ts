@@ -11,6 +11,7 @@ export interface ChatMessage {
 export interface UserChats {
   user_id: string;
   chats: ChatMessage[];
+  unread: number;
 }
 
 export interface IUser extends Document {
@@ -32,6 +33,7 @@ const userChatsSchema: Schema<UserChats> = new Schema({
   user_id: {
     type: String,
   },
+  unread: { type: Number, default: 0 },
   chats: [chatMessageSchema],
 });
 
