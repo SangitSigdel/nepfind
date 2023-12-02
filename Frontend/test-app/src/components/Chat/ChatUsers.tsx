@@ -36,10 +36,12 @@ export type ChatUsersType = {
   userId: string;
 };
 
-const UserListWrapper = styled.div`
+const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   padding: 10px 20px;
   margin-right: 5px;
   margin-top: 5px;
+  background: ${(props) =>
+    props.setBackground && props.theme.palette.primary.light};
   border-bottom: 1px solid ${(props) => props.theme.palette.border.main};
   cursor: pointer;
 
@@ -80,9 +82,46 @@ type ChatUsersProps = {
 export const NewChatScreen = ({
   users,
   setCurrentChatWith,
+  currentChatWith,
 }: ChatUsersProps) => {
   const loggedInUser = Cookies.get("userName");
   const theme = useTheme();
+
+  const chatView = (
+    userName: string,
+    userId: string,
+    setBackground: boolean
+  ) => {
+    return (
+      <UserListWrapper
+        setBackground={setBackground}
+        onClick={() => {
+          setCurrentChatWith({
+            username: userName,
+            userID: userId,
+          });
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <CustomTypography variant="h6">{userName}</CustomTypography>
+          <StatusCircle online={true} />
+        </div>
+        <CustomTypography
+          variant="subtitle1"
+          sx={{ color: theme.palette.bright.light }}
+        >
+          {"Test message"}
+          {/* {msg.chats[msg.chats.length - 1].message} */}
+        </CustomTypography>
+      </UserListWrapper>
+    );
+  };
+
   return (
     <Box
       style={{
@@ -101,31 +140,9 @@ export const NewChatScreen = ({
         {users.map((el, index) => {
           return (
             <Box>
-              <UserListWrapper
-                onClick={() =>
-                  setCurrentChatWith({
-                    username: el.user,
-                    userID: el.userId,
-                  })
-                }
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <CustomTypography variant="h6">{el.user}</CustomTypography>
-                  <StatusCircle online={true} />
-                </div>
-                <CustomTypography
-                  variant="subtitle1"
-                  sx={{ color: theme.palette.bright.light }}
-                >
-                  {"Test message"}
-                  {/* {msg.chats[msg.chats.length - 1].message} */}
-                </CustomTypography>
-              </UserListWrapper>
+              {currentChatWith?.username === el.user
+                ? chatView(el.user, el.userId, true)
+                : chatView(el.user, el.userId, false)}
             </Box>
           );
         })}
