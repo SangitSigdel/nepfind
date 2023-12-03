@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Badge, Box, Typography } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from ".";
 import React, { Dispatch } from "react";
 import { refreshAuserChat, resetUserUnreadMessages } from "../../utils/api";
@@ -38,6 +38,16 @@ export type ChatUsersType = {
   unreadMsgs: number;
 };
 
+type ChatUsersProps = {
+  users: ChatUsersType[];
+  setCurrentChatWith: Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >;
+  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>;
+  currentChatWith?: CurrentChatWithType;
+  chatMessages: ChatMessagesType[];
+};
+
 const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   padding: 10px 20px;
   margin-right: 5px;
@@ -52,13 +62,13 @@ const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   }
 `;
 
-const CustomTypography = styled(Typography)<{ unseenMessage: number }>`
+const CustomTypography = styled(Typography)<{ unReadMessages: boolean }>`
   color: ${(props) => props.theme.palette.bright.light};
   margin: 0;
   padding: 0;
 
   &.MuiTypography-root {
-    font-weight: ${(props) => props.unseenMessage > 0 && "bold"};
+    font-weight: ${(props) => props.unReadMessages && "bold"};
   }
 `;
 
@@ -76,16 +86,6 @@ const StatusCircle = styled.div<{ online: boolean }>`
   border-radius: 50%;
   background-color: ${(props) => (props.online ? "green" : "red")};
 `;
-
-type ChatUsersProps = {
-  users: ChatUsersType[];
-  setCurrentChatWith: Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >;
-  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>;
-  currentChatWith?: CurrentChatWithType;
-  chatMessages: ChatMessagesType[];
-};
 
 export const NewChatScreen = ({
   users,
@@ -107,7 +107,7 @@ export const NewChatScreen = ({
       <UserListWrapper
         setBackground={setBackground}
         onClick={async () => {
-          resetUserUnreadMessages(loggedInUser, userName);
+          await resetUserUnreadMessages(loggedInUser, userName);
           await refreshAuserChat(userName, setChatUsers);
           setCurrentChatWith({
             username: userName,
@@ -121,15 +121,38 @@ export const NewChatScreen = ({
             alignItems: "center",
           }}
         >
-          <CustomTypography variant="subtitle1">{userName}</CustomTypography>
+          <CustomTypography
+            unReadMessages={unreadMessages > 0 ? true : false}
+            variant="subtitle1"
+          >
+            {userName}
+          </CustomTypography>
           <StatusCircle online={true} />
         </div>
         <CustomTypography
           variant="subtitle2"
-          sx={{ color: theme.palette.bright.light }}
+          unReadMessages={unreadMessages > 0 ? true : false}
+          sx={{
+            color: theme.palette.bright.light,
+          }}
         >
-          {"Test message"}
-          <p>{unreadMessages}</p>
+          <div style={{ display: "flex", alignContent: "space-between" }}>
+            <p
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                maxWidth: "120px",
+              }}
+            >
+              {"Test message a very long one and is all ok"}
+            </p>
+            <Badge
+              color="primary"
+              badgeContent={unreadMessages !== 0 ? unreadMessages : null}
+            />
+          </div>
+          {/* <p>{unreadMessages !== 0 && unreadMessages}</p> */}
         </CustomTypography>
       </UserListWrapper>
     );
