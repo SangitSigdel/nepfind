@@ -1,9 +1,10 @@
-import { Box, Typography } from "@mui/material";
+import { Badge, Box, Typography } from "@mui/material";
+import { ChatMessagesType, CurrentChatWithType } from ".";
 import React, { Dispatch } from "react";
+import { refreshAuserChat, resetUserUnreadMessages } from "../../utils/api";
 import styled, { useTheme } from "styled-components";
 
 import Cookies from "js-cookie";
-import { CurrentChatWithType } from ".";
 
 export interface UserData {
   status: string;
@@ -34,6 +35,17 @@ export type ChatUsersType = {
   user: string;
   status: string;
   userId: string;
+  unreadMsgs: number;
+};
+
+type ChatUsersProps = {
+  users: ChatUsersType[];
+  setCurrentChatWith: Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >;
+  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>;
+  currentChatWith?: CurrentChatWithType;
+  chatMessages: ChatMessagesType[];
 };
 
 const UserListWrapper = styled.div<{ setBackground?: boolean }>`
@@ -50,10 +62,14 @@ const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   }
 `;
 
-const CustomTypography = styled(Typography)`
-  color: ${(props) => props.theme.palette.bright.main};
+const CustomTypography = styled(Typography)<{ unReadMessages: boolean }>`
+  color: ${(props) => props.theme.palette.bright.light};
   margin: 0;
   padding: 0;
+
+  &.MuiTypography-root {
+    font-weight: ${(props) => props.unReadMessages && "bold"};
+  }
 `;
 
 const UserDisplayHeader = styled.div`
@@ -71,16 +87,10 @@ const StatusCircle = styled.div<{ online: boolean }>`
   background-color: ${(props) => (props.online ? "green" : "red")};
 `;
 
-type ChatUsersProps = {
-  users: ChatUsersType[];
-  setCurrentChatWith: Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >;
-  currentChatWith?: CurrentChatWithType;
-};
-
 export const NewChatScreen = ({
   users,
+  chatMessages,
+  setChatUsers,
   setCurrentChatWith,
   currentChatWith,
 }: ChatUsersProps) => {
@@ -90,12 +100,15 @@ export const NewChatScreen = ({
   const chatView = (
     userName: string,
     userId: string,
-    setBackground: boolean
+    setBackground: boolean,
+    unreadMessages: number
   ) => {
     return (
       <UserListWrapper
         setBackground={setBackground}
-        onClick={() => {
+        onClick={async () => {
+          await resetUserUnreadMessages(loggedInUser, userName);
+          await refreshAuserChat(userName, setChatUsers);
           setCurrentChatWith({
             username: userName,
             userID: userId,
@@ -108,15 +121,37 @@ export const NewChatScreen = ({
             alignItems: "center",
           }}
         >
-          <CustomTypography variant="h6">{userName}</CustomTypography>
+          <CustomTypography
+            unReadMessages={unreadMessages > 0 ? true : false}
+            variant="subtitle1"
+          >
+            {userName}
+          </CustomTypography>
           <StatusCircle online={true} />
         </div>
         <CustomTypography
-          variant="subtitle1"
-          sx={{ color: theme.palette.bright.light }}
+          variant="subtitle2"
+          unReadMessages={unreadMessages > 0 ? true : false}
+          sx={{
+            color: theme.palette.bright.light,
+          }}
         >
-          {"Test message"}
-          {/* {msg.chats[msg.chats.length - 1].message} */}
+          <div style={{ display: "flex", alignContent: "space-between" }}>
+            <p
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                maxWidth: "120px",
+              }}
+            >
+              {"Test message a very long one and is all ok"}
+            </p>
+            <Badge
+              color="primary"
+              badgeContent={unreadMessages !== 0 ? unreadMessages : null}
+            />
+          </div>
         </CustomTypography>
       </UserListWrapper>
     );
@@ -141,8 +176,8 @@ export const NewChatScreen = ({
           return (
             <Box>
               {currentChatWith?.username === el.user
-                ? chatView(el.user, el.userId, true)
-                : chatView(el.user, el.userId, false)}
+                ? chatView(el.user, el.userId, true, el.unreadMsgs)
+                : chatView(el.user, el.userId, false, el.unreadMsgs)}
             </Box>
           );
         })}

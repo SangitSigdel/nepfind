@@ -22,6 +22,7 @@ export type ChatMessagesType = {
   messageByUser: boolean;
   dateTime?: string;
   _id?: string;
+  seen: boolean;
 };
 
 export type CurrentChatWithType = {
@@ -53,10 +54,13 @@ export const Chat = () => {
   } = useChatHandlers(
     currentChatWith,
     userName,
+    chatUsers,
     chatMessages,
     setChatMessages,
     setChatUsers
   );
+
+  console.log("The chat users are :", chatUsers);
 
   useEffect(() => {
     if (!userName) {
@@ -84,6 +88,7 @@ export const Chat = () => {
     navigate,
     currentChatWith,
     chatMessages,
+    chatUsers,
     userName,
     initilizeChats,
     handleChatUsers,
@@ -110,7 +115,9 @@ export const Chat = () => {
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
             <NewChatScreen
+              chatMessages={chatMessages}
               users={chatUsers}
+              setChatUsers={setChatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}
             />
