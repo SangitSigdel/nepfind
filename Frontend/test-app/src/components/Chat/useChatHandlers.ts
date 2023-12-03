@@ -4,6 +4,7 @@ import {
   getChatMessages,
   getUserDetails,
   refreshAuserChat,
+  resetUserUnreadMessages,
   sendMessage,
 } from "../../utils/api";
 
@@ -126,6 +127,12 @@ export const useChatHandlers = (
     async (msgContent: ServerMessageContent) => {
       const user = Cookies.get("userName");
 
+      /* ma tei sang chat gareko the ra tesaiko msg aayo vane */
+
+      if (currentChatWith?.username === msgContent.from) {
+        await resetUserUnreadMessages(user, msgContent.from);
+      }
+
       const newMessages = await getChatMessages(
         user,
         currentChatWith?.username
@@ -135,7 +142,7 @@ export const useChatHandlers = (
 
       setChatMessages(newMessages.data.messages.chats);
     },
-    [currentChatWith?.username, setChatMessages, setChatUsers]
+    [currentChatWith, setChatMessages, setChatUsers]
   );
 
   const handleConnectionError = useCallback(
