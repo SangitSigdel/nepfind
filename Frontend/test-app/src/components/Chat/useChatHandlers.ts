@@ -1,6 +1,11 @@
 import { ChatMessagesType, CurrentChatWithType } from ".";
 import React, { Dispatch } from "react";
-import { getChatMessages, getUserDetails, sendMessage } from "../../utils/api";
+import {
+  getChatMessages,
+  getUserDetails,
+  refreshAuserChat,
+  sendMessage,
+} from "../../utils/api";
 
 import { ChatUsersType } from "./ChatUsers";
 import Cookies from "js-cookie";
@@ -126,21 +131,7 @@ export const useChatHandlers = (
         currentChatWith?.username
       );
 
-      const loggedInUser = await getUserDetails(user as string);
-
-      const userSendingMessage = loggedInUser.data.data.messages.filter(
-        (msg) => msg.user_id === msgContent.from
-      );
-
-      const unReadMessagesFromUser = userSendingMessage[0].unread;
-
-      setChatUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user.user === msgContent.userName
-            ? { ...user, unreadMsgs: unReadMessagesFromUser }
-            : user
-        )
-      );
+      await refreshAuserChat(msgContent.from, setChatUsers);
 
       setChatMessages(newMessages.data.messages.chats);
     },

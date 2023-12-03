@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ChatMessagesType, CurrentChatWithType } from ".";
 import React, { Dispatch } from "react";
+import { refreshAuserChat, resetUserUnreadMessages } from "../../utils/api";
 import styled, { useTheme } from "styled-components";
 
 import Cookies from "js-cookie";
@@ -81,6 +82,7 @@ type ChatUsersProps = {
   setCurrentChatWith: Dispatch<
     React.SetStateAction<CurrentChatWithType | undefined>
   >;
+  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>;
   currentChatWith?: CurrentChatWithType;
   chatMessages: ChatMessagesType[];
 };
@@ -88,13 +90,12 @@ type ChatUsersProps = {
 export const NewChatScreen = ({
   users,
   chatMessages,
+  setChatUsers,
   setCurrentChatWith,
   currentChatWith,
 }: ChatUsersProps) => {
   const loggedInUser = Cookies.get("userName");
   const theme = useTheme();
-
-  console.log("The currentChatwith is", currentChatWith);
 
   const chatView = (
     userName: string,
@@ -105,7 +106,9 @@ export const NewChatScreen = ({
     return (
       <UserListWrapper
         setBackground={setBackground}
-        onClick={() => {
+        onClick={async () => {
+          resetUserUnreadMessages(loggedInUser, userName);
+          await refreshAuserChat(userName, setChatUsers);
           setCurrentChatWith({
             username: userName,
             userID: userId,

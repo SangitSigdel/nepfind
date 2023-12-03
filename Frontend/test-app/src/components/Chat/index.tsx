@@ -88,6 +88,7 @@ export const Chat = () => {
     navigate,
     currentChatWith,
     chatMessages,
+    chatUsers,
     userName,
     initilizeChats,
     handleChatUsers,
@@ -116,6 +117,7 @@ export const Chat = () => {
             <NewChatScreen
               chatMessages={chatMessages}
               users={chatUsers}
+              setChatUsers={setChatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}
             />

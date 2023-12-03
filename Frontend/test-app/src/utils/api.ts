@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 
 import { ChatMessagesType } from "../components";
+import { ChatUsersType } from "../components/Chat/ChatUsers";
+import Cookies from "js-cookie";
+import { Dispatch } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -104,14 +107,37 @@ export const getChatMessages = async (
   }
 };
 
+export const refreshAuserChat = async (
+  currentChattingUser: string,
+  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>
+) => {
+  const user = Cookies.get("userName");
+  const loggedInUser = await getUserDetails(user as string);
+
+  const userSendingMessage = loggedInUser.data.data.messages.filter(
+    (msg) => msg.user_id === currentChattingUser
+  );
+
+  const [userMessage] = userSendingMessage;
+
+  setChatUsers((prevUsers) =>
+    prevUsers.map((user) =>
+      user.user === currentChattingUser
+        ? { ...user, unreadMsgs: userMessage?.unread }
+        : user
+    )
+  );
+};
+
 export const resetUserUnreadMessages = async (
   userName: string | undefined,
   currentChatWith: string | undefined
 ) => {
   try {
-    const res = await api.patch(`/chat/${userName}`, {
+    const res = await api.patch(`/chat/resetunread/${userName}`, {
       chatUserId: currentChatWith,
     });
+    console.log("The response of reset is:", res);
     return res;
   } catch (error) {
     console.log(error);

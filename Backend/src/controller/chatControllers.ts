@@ -235,7 +235,7 @@ export const resetUnreadMessages = async (
       (msg) => msg.user_id === req.body.chatUserId
     );
 
-    if (messagesToReset) {
+    if (messagesToReset && messagesToReset.length > 0) {
       messagesToReset[0].unread = 0;
       res.status(200).send({
         status: "success",
@@ -244,7 +244,7 @@ export const resetUnreadMessages = async (
 
       user?.save();
     } else {
-      res.status(400).send({
+      res.status(200).send({
         status: "failed",
         message: "sorry failed",
       });
