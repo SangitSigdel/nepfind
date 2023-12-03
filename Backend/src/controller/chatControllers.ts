@@ -65,13 +65,14 @@ export const createUserChat = async (
       (message) => message.user_id === set_user_id
     );
 
-    if (chat) {
-      const numOfUnreadMessages = chat?.unread;
-      chat.unread = numOfUnreadMessages + 1;
-    }
-
     chatData.messageByUser = isMessageFromUser;
+
     if (chat) {
+      if (!isMessageFromUser) {
+        const numOfUnreadMessages = chat.unread;
+        chat.unread = numOfUnreadMessages + 1;
+      }
+
       if (chat.chats.length > 0) {
         const chat_id = chat.chats[chat.chats.length - 1].chat_id + 1;
         chatData.chat_id = chat_id;
@@ -84,7 +85,7 @@ export const createUserChat = async (
         user?.messages.push({
           user_id: set_user_id,
           chats: [chatData],
-          unread: 1,
+          unread: !isMessageFromUser ? 1 : 0,
         });
     }
   };

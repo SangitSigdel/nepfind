@@ -152,7 +152,6 @@ export const NewChatScreen = ({
               badgeContent={unreadMessages !== 0 ? unreadMessages : null}
             />
           </div>
-          {/* <p>{unreadMessages !== 0 && unreadMessages}</p> */}
         </CustomTypography>
       </UserListWrapper>
     );
