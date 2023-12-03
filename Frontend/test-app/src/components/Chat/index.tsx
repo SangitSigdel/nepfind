@@ -54,10 +54,13 @@ export const Chat = () => {
   } = useChatHandlers(
     currentChatWith,
     userName,
+    chatUsers,
     chatMessages,
     setChatMessages,
     setChatUsers
   );
+
+  console.log("The chat users are :", chatUsers);
 
   useEffect(() => {
     if (!userName) {

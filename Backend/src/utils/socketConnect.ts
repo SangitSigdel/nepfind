@@ -32,13 +32,29 @@ export const socketConnect = () => {
       username: (socket as CustomSocket).username,
     });
 
-    socket.on("private message", ({ content, to }) => {
-      socket.to(to).emit("private message", {
+    socket.on(
+      "private message",
+      ({
         content,
-        from: socket.id,
-        userName: socket.username,
-      });
-    });
+        to,
+        fromUserName,
+      }: {
+        content: string;
+        to: {
+          username: string;
+          userID: string;
+        };
+        fromUserName: string;
+      }) => {
+        socket.to(to.userID).emit("private message", {
+          content,
+          // from: socket.id,
+          from: fromUserName,
+          to: to,
+          userName: socket.username,
+        });
+      }
+    );
 
     socket.on("disconnect", () => {
       try {

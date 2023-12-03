@@ -18,6 +18,7 @@ type userData = AxiosResponse<{
     messages: {
       user_id: string;
       chats: ChatMessagesType[];
+      unread: number;
     }[];
   };
 }>;
@@ -96,6 +97,21 @@ export const getChatMessages = async (
     const res = await api.get(
       `/chat/${userName}?chatUserId=${currentChatWith}`
     );
+    return res;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const resetUserUnreadMessages = async (
+  userName: string | undefined,
+  currentChatWith: string | undefined
+) => {
+  try {
+    const res = await api.patch(`/chat/${userName}`, {
+      chatUserId: currentChatWith,
+    });
     return res;
   } catch (error) {
     console.log(error);

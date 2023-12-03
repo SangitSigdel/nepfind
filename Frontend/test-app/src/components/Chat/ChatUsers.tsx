@@ -34,6 +34,7 @@ export type ChatUsersType = {
   user: string;
   status: string;
   userId: string;
+  unreadMsgs: number;
 };
 
 const UserListWrapper = styled.div<{ setBackground?: boolean }>`
@@ -93,14 +94,13 @@ export const NewChatScreen = ({
   const loggedInUser = Cookies.get("userName");
   const theme = useTheme();
 
-  const unseenMessages = chatMessages?.filter(
-    (msg) => msg.seen === false
-  ).length;
+  console.log("The currentChatwith is", currentChatWith);
 
   const chatView = (
     userName: string,
     userId: string,
-    setBackground: boolean
+    setBackground: boolean,
+    unreadMessages: number
   ) => {
     return (
       <UserListWrapper
@@ -126,7 +126,7 @@ export const NewChatScreen = ({
           sx={{ color: theme.palette.bright.light }}
         >
           {"Test message"}
-          {/* {msg.chats[msg.chats.length - 1].message} */}
+          <p>{unreadMessages}</p>
         </CustomTypography>
       </UserListWrapper>
     );
@@ -151,8 +151,8 @@ export const NewChatScreen = ({
           return (
             <Box>
               {currentChatWith?.username === el.user
-                ? chatView(el.user, el.userId, true)
-                : chatView(el.user, el.userId, false)}
+                ? chatView(el.user, el.userId, true, el.unreadMsgs)
+                : chatView(el.user, el.userId, false, el.unreadMsgs)}
             </Box>
           );
         })}
