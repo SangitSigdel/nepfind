@@ -120,13 +120,20 @@ export const refreshAuserChat = async (
 
   const [userMessage] = userSendingMessage;
 
-  setChatUsers((prevUsers) =>
-    prevUsers.map((user) =>
-      user.user === currentChattingUser
-        ? { ...user, unreadMsgs: userMessage?.unread }
-        : user
-    )
-  );
+  if (userMessage) {
+    setChatUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.user === currentChattingUser
+          ? {
+              ...user,
+              unreadMsgs: userMessage?.unread,
+              recentMsg:
+                userMessage.chats[userMessage.chats.length - 1].message,
+            }
+          : user
+      )
+    );
+  }
 };
 
 export const resetUserUnreadMessages = async (

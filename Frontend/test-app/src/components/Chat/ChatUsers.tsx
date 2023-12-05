@@ -36,6 +36,7 @@ export type ChatUsersType = {
   status: string;
   userId: string;
   unreadMsgs: number;
+  recentMsg: string;
 };
 
 type ChatUsersProps = {
@@ -101,7 +102,8 @@ export const NewChatScreen = ({
     userName: string,
     userId: string,
     setBackground: boolean,
-    unreadMessages: number
+    noOfUnreadMessages: number,
+    recentMessage: string
   ) => {
     return (
       <UserListWrapper
@@ -122,7 +124,7 @@ export const NewChatScreen = ({
           }}
         >
           <CustomTypography
-            unReadMessages={unreadMessages > 0 ? true : false}
+            unReadMessages={noOfUnreadMessages > 0 ? true : false}
             variant="subtitle1"
           >
             {userName}
@@ -131,12 +133,12 @@ export const NewChatScreen = ({
         </div>
         <CustomTypography
           variant="subtitle2"
-          unReadMessages={unreadMessages > 0 ? true : false}
+          unReadMessages={noOfUnreadMessages > 0 ? true : false}
           sx={{
             color: theme.palette.bright.light,
           }}
         >
-          <div style={{ display: "flex", alignContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <p
               style={{
                 overflow: "hidden",
@@ -145,11 +147,13 @@ export const NewChatScreen = ({
                 maxWidth: "120px",
               }}
             >
-              {"Test message a very long one and is all ok"}
+              {recentMessage}
             </p>
             <Badge
               color="primary"
-              badgeContent={unreadMessages !== 0 ? unreadMessages : null}
+              badgeContent={
+                noOfUnreadMessages !== 0 ? noOfUnreadMessages : null
+              }
             />
           </div>
         </CustomTypography>
@@ -176,8 +180,20 @@ export const NewChatScreen = ({
           return (
             <Box>
               {currentChatWith?.username === el.user
-                ? chatView(el.user, el.userId, true, el.unreadMsgs)
-                : chatView(el.user, el.userId, false, el.unreadMsgs)}
+                ? chatView(
+                    el.user,
+                    el.userId,
+                    true,
+                    el.unreadMsgs,
+                    el.recentMsg
+                  )
+                : chatView(
+                    el.user,
+                    el.userId,
+                    false,
+                    el.unreadMsgs,
+                    el.recentMsg
+                  )}
             </Box>
           );
         })}

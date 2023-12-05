@@ -70,10 +70,16 @@ export const useChatHandlers = (
 
     updatedUser.map(async (el: { userID: string; username: string }) => {
       let unreadMessages = 0;
+      let userChatData;
+      let recentMessage = "";
       if (userData) {
-        unreadMessages = userData.data.data?.messages.filter(
+        userChatData = userData.data.data?.messages.filter(
           (msg) => msg.user_id === el.username
-        )[0]?.unread;
+        )[0];
+
+        unreadMessages = userChatData?.unread;
+        recentMessage =
+          userChatData?.chats[userChatData.chats.length - 1].message;
       }
       setChatUsers((prev) => {
         return [
@@ -83,6 +89,7 @@ export const useChatHandlers = (
             status: "online",
             userId: el.userID,
             unreadMsgs: unreadMessages,
+            recentMsg: recentMessage,
           },
         ];
       });
@@ -98,8 +105,13 @@ export const useChatHandlers = (
     const connectedUser = userData.data.data.messages.filter(
       (msg) => msg.user_id === user.username
     );
-
-    const unreadMessage = connectedUser[0]?.unread;
+    let unreadMessage = 0;
+    let recentMessage = "";
+    if (connectedUser) {
+      unreadMessage = connectedUser[0]?.unread;
+      recentMessage =
+        connectedUser[0]?.chats[connectedUser[0]?.chats.length - 1].message;
+    }
 
     setChatUsers((prev) => {
       return [
@@ -109,6 +121,7 @@ export const useChatHandlers = (
           status: "online",
           userId: user.userID,
           unreadMsgs: unreadMessage,
+          recentMsg: recentMessage,
         },
       ];
     });
