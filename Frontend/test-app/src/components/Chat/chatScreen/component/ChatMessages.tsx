@@ -1,4 +1,8 @@
-import { ChatScreenContainer, MessagesWrapper } from "../../style";
+import {
+  ChatListWrapper,
+  ChatScreenContainer,
+  MessagesWrapper,
+} from "../../style";
 import React, { useEffect, useRef } from "react";
 
 import { ChatMessagesType } from "../../types";
@@ -16,20 +20,20 @@ export const ChatMessages = ({
 
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
+  const ChatMessagesList = () => (
+    <ChatListWrapper>
+      {chatMessages?.map((chat, index) => (
+        <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
+          {chat.message}
+          <div ref={messageEndRef} />
+        </MessagesWrapper>
+      ))}
+    </ChatListWrapper>
+  );
+
   return (
     <ChatScreenContainer maxWidth="xl">
-      <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-        {chatMessages?.map((chat, index) => {
-          return (
-            <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
-              <p style={{ maxWidth: "20rem", padding: "5px" }}>
-                {chat.message}
-              </p>
-              <div ref={messageEndRef} />
-            </MessagesWrapper>
-          );
-        })}
-      </div>
+      <ChatMessagesList />
     </ChatScreenContainer>
   );
 };

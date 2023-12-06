@@ -32,6 +32,7 @@ export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
     props.messageByUser
       ? props.theme.palette.chatBubble.sendMessageBubble
       : props.theme.palette.chatBubble.recieveMessageBubble};
+  max-width: 20rem;
 `;
 
 export const ChatHeader = styled.div`
@@ -106,4 +107,17 @@ export const StatusCircle = styled.div<{ online: boolean }>`
   margin: 10px;
   border-radius: 50%;
   background-color: ${(props) => (props.online ? "green" : "red")};
+`;
+
+export const ChatListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+export const RecentChat = styled.p`
+  overflow: "hidden";
+  white-space: "nowrap";
+  text-overflow: "ellipsis";
+  max-width: "120px";
 `;
