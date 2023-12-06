@@ -1,43 +1,15 @@
-import axios, { AxiosResponse } from "axios";
+import { userData, userMessages, userStatusData } from "../types";
 
-import { ChatMessagesType } from "../components/Chat/types";
 import { ChatUsersType } from "../components/Chat/types";
 import Cookies from "js-cookie";
 import { Dispatch } from "react";
+import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_URL,
 });
-
-type userData = AxiosResponse<{
-  status: "success" | "failed";
-  data: {
-    _id: string;
-    user_id: string;
-    user_name: string;
-    online: boolean;
-    messages: {
-      user_id: string;
-      chats: ChatMessagesType[];
-      unread: number;
-    }[];
-  };
-}>;
-
-export type userStatusData = AxiosResponse<{
-  status: "success" | "fail";
-  online: boolean;
-}>;
-
-export type userMessages = AxiosResponse<{
-  status: string;
-  messages: {
-    user_id: string;
-    chats: ChatMessagesType[];
-  };
-}>;
 
 export const getUserDetails = async (userName: string): Promise<userData> => {
   try {
