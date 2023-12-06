@@ -25,6 +25,9 @@ export const useChatHandlers = (
   chatUsers: ChatUsersType[],
   chatMessages: ChatMessagesType[],
   setChatMessages: Dispatch<React.SetStateAction<ChatMessagesType[]>>,
+  setCurrentChatWith: React.Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >,
   setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>
 ) => {
   const navigate = useNavigate();
@@ -129,6 +132,7 @@ export const useChatHandlers = (
     setChatUsers((prev) => {
       return prev.filter((prevUser) => prevUser.user !== user.username);
     });
+    setCurrentChatWith(undefined);
   };
 
   const handlePrivateMessages = useCallback(

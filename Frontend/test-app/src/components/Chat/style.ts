@@ -35,13 +35,14 @@ export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
   max-width: 20rem;
 `;
 
-export const ChatHeader = styled.div`
+export const ChatHeaderWrapper = styled.div`
   background: ${(props) => props.theme.palette.primary.light};
   padding: 20px;
   margin: 0;
+  text-align: center;
   top: 0;
   position: fixed;
-  width: 100vw;
+  width: 90vw;
   color: ${(props) => props.theme.palette.bright.main};
 `;
 
@@ -120,4 +121,15 @@ export const RecentChat = styled.p`
   white-space: "nowrap";
   text-overflow: "ellipsis";
   max-width: "120px";
+`;
+
+export const InitialScreenTextWrapper = styled(Typography)`
+  && {
+    display: flex;
+    color: white;
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
 `;
