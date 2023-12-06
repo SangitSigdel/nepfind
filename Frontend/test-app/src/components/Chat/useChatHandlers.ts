@@ -1,4 +1,8 @@
-import { ChatMessagesType, CurrentChatWithType } from ".";
+import {
+  ChatMessagesType,
+  CurrentChatWithType,
+  ServerMessageContent,
+} from "./types";
 import React, { Dispatch } from "react";
 import {
   getChatMessages,
@@ -8,22 +12,12 @@ import {
   sendMessage,
 } from "../../utils/api";
 
-import { ChatUsersType } from "./ChatUsers";
+import { ChatUsersType } from "./types";
 import Cookies from "js-cookie";
 import _ from "lodash";
 import socket from "../../utils/sockets/socket";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
-type ServerMessageContent = {
-  content: string;
-  from: string;
-  to: {
-    username: string;
-    userID: string;
-  };
-  userName: string;
-};
 
 export const useChatHandlers = (
   currentChatWith: CurrentChatWithType | undefined,
@@ -108,9 +102,10 @@ export const useChatHandlers = (
     let unreadMessage = 0;
     let recentMessage = "";
     if (connectedUser) {
-      unreadMessage = connectedUser[0]?.unread;
+      const [connectedUserData] = connectedUser;
+      unreadMessage = connectedUserData.unread;
       recentMessage =
-        connectedUser[0]?.chats[connectedUser[0]?.chats.length - 1].message;
+        connectedUserData.chats[connectedUserData?.chats.length - 1].message;
     }
 
     setChatUsers((prev) => {
@@ -139,8 +134,6 @@ export const useChatHandlers = (
   const handlePrivateMessages = useCallback(
     async (msgContent: ServerMessageContent) => {
       const user = Cookies.get("userName");
-
-      /* ma tei sang chat gareko the ra tesaiko msg aayo vane */
 
       if (currentChatWith?.username === msgContent.from) {
         await resetUserUnreadMessages(user, msgContent.from);

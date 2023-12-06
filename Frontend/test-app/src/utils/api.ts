@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
-import { ChatMessagesType } from "../components";
-import { ChatUsersType } from "../components/Chat/ChatUsers";
+import { ChatMessagesType } from "../components/Chat/types";
+import { ChatUsersType } from "../components/Chat/types";
 import Cookies from "js-cookie";
 import { Dispatch } from "react";
 
@@ -75,7 +75,6 @@ export const createUser = async (userName: string): Promise<userData> => {
 };
 
 export const sendMessage = async (
-  /* remove undefined types  */
   user: string | undefined,
   currentChatWith: string | undefined,
   message: string
@@ -144,7 +143,7 @@ export const resetUserUnreadMessages = async (
     const res = await api.patch(`/chat/resetunread/${userName}`, {
       chatUserId: currentChatWith,
     });
-    console.log("The response of reset is:", res);
+
     return res;
   } catch (error) {
     console.log(error);

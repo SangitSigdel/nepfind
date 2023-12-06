@@ -1,34 +1,16 @@
+import { ChatMessagesType, ChatUsersType, CurrentChatWithType } from "./types";
 import React, { useState } from "react";
-import styled, { useTheme } from "styled-components";
 
 import { Box } from "@mui/material";
-import { ChatScreen } from "./ChatScreen";
-import { ChatUsersType } from "./ChatUsers";
+import { ChatScreen } from "./chatScreen/ChatScreen";
+import { ChatWrapper } from "./style";
 import Cookies from "js-cookie";
-import { NewChatScreen } from "./ChatUsers";
+import { NewChatScreen } from "./chatUser/ChatUsers";
 import socket from "../../utils/sockets/socket";
 import { useChatHandlers } from "./useChatHandlers";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-const ChatWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-export type ChatMessagesType = {
-  chat_id: number;
-  message: string;
-  messageByUser: boolean;
-  dateTime?: string;
-  _id?: string;
-  seen: boolean;
-};
-
-export type CurrentChatWithType = {
-  username: string;
-  userID: string;
-};
+import { useTheme } from "styled-components";
 
 export const Chat = () => {
   const navigate = useNavigate();
@@ -59,8 +41,6 @@ export const Chat = () => {
     setChatMessages,
     setChatUsers
   );
-
-  console.log("The chat users are :", chatUsers);
 
   useEffect(() => {
     if (!userName) {
