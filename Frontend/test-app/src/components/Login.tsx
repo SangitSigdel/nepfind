@@ -46,7 +46,9 @@ export const Login = () => {
 
   const setUpCookiesAndOnlineStatus = async () => {
     Cookies.set("userName", userName, { expires: 7 });
+
     const user = await setUserStatusToOnline(userName);
+
     user.data.online && navigate("/chat");
   };
 

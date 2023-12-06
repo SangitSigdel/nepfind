@@ -1,4 +1,8 @@
-import { ChatMessagesType, CurrentChatWithType } from ".";
+import {
+  ChatMessagesType,
+  CurrentChatWithType,
+  ServerMessageContent,
+} from "./types";
 import React, { Dispatch } from "react";
 import {
   getChatMessages,
@@ -8,22 +12,12 @@ import {
   sendMessage,
 } from "../../utils/api";
 
-import { ChatUsersType } from "./ChatUsers";
+import { ChatUsersType } from "./types";
 import Cookies from "js-cookie";
 import _ from "lodash";
 import socket from "../../utils/sockets/socket";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
-type ServerMessageContent = {
-  content: string;
-  from: string;
-  to: {
-    username: string;
-    userID: string;
-  };
-  userName: string;
-};
 
 export const useChatHandlers = (
   currentChatWith: CurrentChatWithType | undefined,
@@ -70,10 +64,16 @@ export const useChatHandlers = (
 
     updatedUser.map(async (el: { userID: string; username: string }) => {
       let unreadMessages = 0;
+      let userChatData;
+      let recentMessage = "";
       if (userData) {
-        unreadMessages = userData.data.data?.messages.filter(
+        userChatData = userData.data.data?.messages.filter(
           (msg) => msg.user_id === el.username
-        )[0]?.unread;
+        )[0];
+
+        unreadMessages = userChatData?.unread;
+        recentMessage =
+          userChatData?.chats[userChatData.chats.length - 1].message;
       }
       setChatUsers((prev) => {
         return [
@@ -83,6 +83,7 @@ export const useChatHandlers = (
             status: "online",
             userId: el.userID,
             unreadMsgs: unreadMessages,
+            recentMsg: recentMessage,
           },
         ];
       });
@@ -98,8 +99,14 @@ export const useChatHandlers = (
     const connectedUser = userData.data.data.messages.filter(
       (msg) => msg.user_id === user.username
     );
-
-    const unreadMessage = connectedUser[0]?.unread;
+    let unreadMessage = 0;
+    let recentMessage = "";
+    if (connectedUser) {
+      const [connectedUserData] = connectedUser;
+      unreadMessage = connectedUserData.unread;
+      recentMessage =
+        connectedUserData.chats[connectedUserData?.chats.length - 1].message;
+    }
 
     setChatUsers((prev) => {
       return [
@@ -109,6 +116,7 @@ export const useChatHandlers = (
           status: "online",
           userId: user.userID,
           unreadMsgs: unreadMessage,
+          recentMsg: recentMessage,
         },
       ];
     });
@@ -126,8 +134,6 @@ export const useChatHandlers = (
   const handlePrivateMessages = useCallback(
     async (msgContent: ServerMessageContent) => {
       const user = Cookies.get("userName");
-
-      /* ma tei sang chat gareko the ra tesaiko msg aayo vane */
 
       if (currentChatWith?.username === msgContent.from) {
         await resetUserUnreadMessages(user, msgContent.from);
