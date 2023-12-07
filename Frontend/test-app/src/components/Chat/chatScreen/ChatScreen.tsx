@@ -1,9 +1,9 @@
-import { ChatHeader, ChatScreenWrapper } from "../style";
-
+import { ChatHeader } from "./component/ChatHeader";
 import { ChatMessages } from "./component/ChatMessages";
 import { ChatScreenProps } from "../types";
+import { ChatScreenWrapper } from "../style";
+import { InitialScreen } from "./component/InitialScreen";
 import { MessageInput } from "./component/MessageInput";
-import { Typography } from "@mui/material";
 import { useState } from "react";
 
 export const ChatScreen = ({
@@ -15,13 +15,11 @@ export const ChatScreen = ({
 
   return (
     <ChatScreenWrapper>
-      <ChatHeader>
-        <Typography variant="h6">
-          {chatMessagesWith
-            ? chatMessagesWith.username
-            : " Please select user to continue"}
-        </Typography>
-      </ChatHeader>
+      {chatMessagesWith ? (
+        <ChatHeader currentChatWith={chatMessagesWith.username} />
+      ) : (
+        <InitialScreen />
+      )}
 
       <ChatMessages chatMessages={chatMessages} />
 

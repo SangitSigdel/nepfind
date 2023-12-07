@@ -39,6 +39,7 @@ export const Chat = () => {
     chatUsers,
     chatMessages,
     setChatMessages,
+    setCurrentChatWith,
     setChatUsers
   );
 
