@@ -132,7 +132,7 @@ export const useChatHandlers = (
     setChatUsers((prev) => {
       return prev.filter((prevUser) => prevUser.user !== user.username);
     });
-    setCurrentChatWith(undefined);
+    chatUsers.length <= 1 && setCurrentChatWith(undefined);
   };
 
   const handlePrivateMessages = useCallback(
