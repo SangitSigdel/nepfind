@@ -11,7 +11,7 @@ export type ChatMessagesType = {
 
 export type CurrentChatWithType = {
   username: string;
-  userID: string;
+  socketID: string;
 };
 
 export type ChatScreenProps = {
@@ -49,8 +49,8 @@ export interface ChatsEntity {
 export type ChatUsersType = {
   user: string;
   status: string;
-  userId: string;
-  unreadMsgs: number;
+  socketId: string;
+  noOfUnreadMsgs: number;
   recentMsg: string;
 };
 

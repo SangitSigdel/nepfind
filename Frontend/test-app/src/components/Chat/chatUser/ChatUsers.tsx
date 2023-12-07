@@ -18,7 +18,7 @@ export const ChatUsers = ({
         <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
       </UserDisplayHeader>
       <OnlineUserList
-        users={users}
+        onlineUsers={users}
         setChatUsers={setChatUsers}
         setCurrentChatWith={setCurrentChatWith}
         currentChatWith={currentChatWith}

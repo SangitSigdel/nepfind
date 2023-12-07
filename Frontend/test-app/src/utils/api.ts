@@ -97,7 +97,7 @@ export const refreshAuserChat = async (
         user.user === currentChattingUser
           ? {
               ...user,
-              unreadMsgs: userMessage?.unread,
+              noOfUnreadMsgs: userMessage?.unread,
               recentMsg:
                 userMessage.chats[userMessage.chats.length - 1].message,
             }

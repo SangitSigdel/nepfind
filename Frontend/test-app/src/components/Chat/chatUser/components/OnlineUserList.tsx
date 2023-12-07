@@ -6,17 +6,18 @@ import {
   StatusCircle,
   UserListWrapper,
 } from "../../style";
+import React, { useEffect, useState } from "react";
 import {
+  getUserDetails,
   refreshAuserChat,
   resetUserUnreadMessages,
 } from "../../../../utils/api";
 
 import Cookies from "js-cookie";
-import React from "react";
 import { useTheme } from "styled-components";
 
 type OnlineUserListProps = {
-  users: ChatUsersType[];
+  onlineUsers: ChatUsersType[];
   setChatUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
   setCurrentChatWith: React.Dispatch<
     React.SetStateAction<CurrentChatWithType | undefined>
@@ -25,13 +26,56 @@ type OnlineUserListProps = {
 };
 
 export const OnlineUserList = ({
-  users,
+  onlineUsers,
   setChatUsers,
   setCurrentChatWith,
   currentChatWith,
 }: OnlineUserListProps) => {
-  const loggedInUser = Cookies.get("userName");
+  const loggedInUser = Cookies.get("userName") as string;
   const theme = useTheme();
+
+  const [abc, setAbc] = useState<ChatUsersType[]>([]);
+
+  // shapping the userData from api as a chatuserdata
+
+  const shapeUserData = async () => {
+    let userDataShappedAsChatUsers: ChatUsersType[] = [];
+    try {
+      const userData = await getUserDetails(loggedInUser);
+
+      userData.data.data.messages.map((msg, index) => {
+        userDataShappedAsChatUsers.push({
+          user: msg.user_id,
+          status: "offline",
+          socketId: "",
+          noOfUnreadMsgs: msg.unread,
+          recentMsg: msg.chats[msg.chats.length - 1].message,
+        });
+      });
+
+      userDataShappedAsChatUsers.map((shappedUser) => {
+        const matchingOnlineUser = onlineUsers.find(
+          (onlineUser) => onlineUser.user === shappedUser.user
+        );
+        return {
+          ...shappedUser,
+          socketId: matchingOnlineUser?.socketId,
+          status: matchingOnlineUser?.status,
+        };
+      });
+
+      setAbc(userDataShappedAsChatUsers);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    shapeUserData();
+  }, []);
+
+  // Add socket ID to userDataShappedAsChatUser and set status to online if user is online
 
   const chatView = (onlineUser: ChatUsersType, setBackground: boolean) => {
     const handleClick = async () => {
@@ -39,7 +83,7 @@ export const OnlineUserList = ({
       await refreshAuserChat(onlineUser.user, setChatUsers);
       setCurrentChatWith({
         username: onlineUser.user,
-        userID: onlineUser.userId,
+        socketID: onlineUser.socketId,
       });
     };
 
@@ -51,7 +95,7 @@ export const OnlineUserList = ({
         }}
       >
         <CustomTypography
-          unReadMessages={onlineUser.unreadMsgs > 0 ? true : false}
+          unReadMessages={onlineUser.noOfUnreadMsgs > 0 ? true : false}
           variant="subtitle1"
         >
           {onlineUser.user}
@@ -63,7 +107,7 @@ export const OnlineUserList = ({
     const RecentMsgWithNotificationBubble = () => (
       <CustomTypography
         variant="subtitle2"
-        unReadMessages={onlineUser.unreadMsgs > 0}
+        unReadMessages={onlineUser.noOfUnreadMsgs > 0}
         sx={{
           color: theme.palette.bright.light,
         }}
@@ -73,7 +117,7 @@ export const OnlineUserList = ({
           <Badge
             color="primary"
             badgeContent={
-              onlineUser.unreadMsgs !== 0 ? onlineUser.unreadMsgs : null
+              onlineUser.noOfUnreadMsgs !== 0 ? onlineUser.noOfUnreadMsgs : null
             }
           />
         </div>
@@ -90,7 +134,7 @@ export const OnlineUserList = ({
 
   return (
     <Box>
-      {users.map((onlineUser, index) => {
+      {abc.map((onlineUser, index) => {
         return (
           <Box key={index}>
             {currentChatWith?.username === onlineUser.user

@@ -82,8 +82,8 @@ export const useChatHandlers = (
           {
             user: el.username,
             status: "online",
-            userId: el.userID,
-            unreadMsgs: unreadMessages,
+            socketId: el.userID,
+            noOfUnreadMsgs: unreadMessages,
             recentMsg: recentMessage,
           },
         ];
@@ -115,8 +115,8 @@ export const useChatHandlers = (
         {
           user: user.username,
           status: "online",
-          userId: user.userID,
-          unreadMsgs: unreadMessage,
+          socketId: user.userID,
+          noOfUnreadMsgs: unreadMessage,
           recentMsg: recentMessage,
         },
       ];
