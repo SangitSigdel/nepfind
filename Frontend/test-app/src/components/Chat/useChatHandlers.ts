@@ -3,7 +3,7 @@ import {
   CurrentChatWithType,
   ServerMessageContent,
 } from "./types";
-import React, { Dispatch } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   getChatMessages,
   getUserDetails,
@@ -24,10 +24,8 @@ export const useChatHandlers = (
   userName: string | undefined,
   chatUsers: ChatUsersType[],
   chatMessages: ChatMessagesType[],
-  setChatMessages: Dispatch<React.SetStateAction<ChatMessagesType[]>>,
-  setCurrentChatWith: React.Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >,
+  setChatMessages: Dispatch<SetStateAction<ChatMessagesType[]>>,
+  setCurrentChatWith: Dispatch<SetStateAction<CurrentChatWithType | undefined>>,
   setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>
 ) => {
   const navigate = useNavigate();

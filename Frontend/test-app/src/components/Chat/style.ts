@@ -67,7 +67,7 @@ export const ChatUserWrapper = styled(Box)`
   flex-direction: column;
   overflow-y: auto;
   height: 100vh;
-  min-width: 12em;
+  min-width: 16em;
   overflow-x: hidden;
 `;
 

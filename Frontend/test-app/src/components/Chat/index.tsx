@@ -3,9 +3,9 @@ import React, { useState } from "react";
 
 import { Box } from "@mui/material";
 import { ChatScreen } from "./chatScreen/ChatScreen";
+import { ChatUsers } from "./chatUser/ChatUsers";
 import { ChatWrapper } from "./style";
 import Cookies from "js-cookie";
-import { NewChatScreen } from "./chatUser/ChatUsers";
 import socket from "../../utils/sockets/socket";
 import { useChatHandlers } from "./useChatHandlers";
 import { useEffect } from "react";
@@ -95,7 +95,7 @@ export const Chat = () => {
             style={{ background: theme.palette.primary.dark }}
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
-            <NewChatScreen
+            <ChatUsers
               chatMessages={chatMessages}
               users={chatUsers}
               setChatUsers={setChatUsers}

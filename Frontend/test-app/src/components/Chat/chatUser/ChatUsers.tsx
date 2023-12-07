@@ -4,7 +4,7 @@ import { ChatUsersProps } from "../types";
 import Cookies from "js-cookie";
 import { OnlineUserList } from "./components/OnlineUserList";
 
-export const NewChatScreen = ({
+export const ChatUsers = ({
   users,
   setChatUsers,
   setCurrentChatWith,
