@@ -105,31 +105,14 @@ export const useChatHandlers = (
     username: string;
     userID: string;
   }) => {
-    const userData = await getUserDetails(userName as string);
-
-    const connectedUser = userData.data.data.messages.filter(
-      (msg) => msg.user_id === user.username
-    );
-    let unreadMessage = 0;
-    let recentMessage = "";
-    if (connectedUser) {
-      const [connectedUserData] = connectedUser;
-      unreadMessage = connectedUserData.unread;
-      recentMessage =
-        connectedUserData.chats[connectedUserData?.chats.length - 1].message;
-    }
-
     setChatUsers((prev) => {
-      return [
-        ...prev,
-        {
-          user: user.username,
-          status: "online",
-          userId: user.userID,
-          unreadMsgs: unreadMessage,
-          recentMsg: recentMessage,
-        },
-      ];
+      let refreshUserStatus = prev.map((sotredUser) => {
+        if (sotredUser.user === user.username) {
+          return { ...sotredUser, status: "online" };
+        }
+        return sotredUser;
+      });
+      return refreshUserStatus;
     });
   };
 
@@ -138,9 +121,14 @@ export const useChatHandlers = (
     userID: string;
   }) => {
     setChatUsers((prev) => {
-      return prev.filter((prevUser) => prevUser.user !== user.username);
+      let refreshUserStatus = prev.map((sotredUser) => {
+        if (sotredUser.user === user.username) {
+          return { ...sotredUser, status: "offline" };
+        }
+        return sotredUser;
+      });
+      return refreshUserStatus;
     });
-    chatUsers.length <= 1 && setCurrentChatWith(undefined);
   };
 
   const handlePrivateMessages = useCallback(
