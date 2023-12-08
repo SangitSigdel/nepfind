@@ -56,7 +56,7 @@ export const OnlineUserList = ({
         >
           {onlineUser.user}
         </CustomTypography>
-        <StatusCircle online={true} />
+        <StatusCircle online={onlineUser.status === "online" ? true : false} />
       </div>
     );
 
