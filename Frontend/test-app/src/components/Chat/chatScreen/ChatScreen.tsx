@@ -16,19 +16,17 @@ export const ChatScreen = ({
   return (
     <ChatScreenWrapper>
       {chatMessagesWith ? (
-        <ChatHeader currentChatWith={chatMessagesWith.username} />
+        <div>
+          <ChatHeader currentChatWith={chatMessagesWith.username} />
+          <ChatMessages chatMessages={chatMessages} />
+          <MessageInput
+            message={message}
+            setMessage={setMessage}
+            sendPrivateMessage={sendPrivateMessage}
+          />
+        </div>
       ) : (
         <InitialScreen />
-      )}
-
-      <ChatMessages chatMessages={chatMessages} />
-
-      {chatMessagesWith && (
-        <MessageInput
-          message={message}
-          setMessage={setMessage}
-          sendPrivateMessage={sendPrivateMessage}
-        />
       )}
     </ChatScreenWrapper>
   );
