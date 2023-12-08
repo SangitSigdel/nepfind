@@ -67,7 +67,7 @@ export const ChatUserWrapper = styled(Box)`
   flex-direction: column;
   overflow-y: auto;
   height: 100vh;
-  min-width: 12em;
+  min-width: 20em;
   overflow-x: hidden;
 `;
 
@@ -96,8 +96,9 @@ export const CustomTypography = styled(Typography)<{ unReadMessages: boolean }>`
 `;
 
 export const UserDisplayHeader = styled.div`
-  text-align: center;
-  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
   background: ${(props) => props.theme.palette.primary.light};
   width: inherit;
 `;

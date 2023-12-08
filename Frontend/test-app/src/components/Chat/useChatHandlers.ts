@@ -28,7 +28,8 @@ export const useChatHandlers = (
   setCurrentChatWith: React.Dispatch<
     React.SetStateAction<CurrentChatWithType | undefined>
   >,
-  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>
+  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>,
+  setOnlineusers: Dispatch<React.SetStateAction<ChatUsersType[]>>
 ) => {
   const navigate = useNavigate();
 
@@ -58,13 +59,35 @@ export const useChatHandlers = (
       username: string;
     }[]
   ) => {
+    const loggedInUser = Cookies.get("userName") as string;
+    // Set value for online users
+
+    const shappedOnlineUsers: ChatUsersType[] = onlineUsers.map(
+      (onlineUser) => {
+        return {
+          user: onlineUser.username,
+          status: "online",
+          userId: onlineUser.userID,
+          unreadMsgs: 0,
+          recentMsg: "",
+        };
+      }
+    );
+
+    setOnlineusers(
+      shappedOnlineUsers.filter(
+        (onlineUser) => onlineUser.user !== loggedInUser
+      )
+    );
+
+    // Set value of all chats users
+
     // Filtering loggedin user from the online user list
     const filteredUser = onlineUsers.filter(
       (user: { userID: string }) => user.userID !== socket.id
     );
     onlineUsers = filteredUser;
 
-    const loggedInUser = Cookies.get("userName") as string;
     let userDataShappedAsChatUsers: ChatUsersType[] = [];
 
     try {
@@ -105,6 +128,17 @@ export const useChatHandlers = (
     username: string;
     userID: string;
   }) => {
+    const newUser: ChatUsersType = {
+      user: user.username,
+      status: "online",
+      userId: user.userID,
+      unreadMsgs: 0,
+      recentMsg: "",
+    };
+    setOnlineusers((prev) => {
+      return [...prev, newUser];
+    });
+
     setChatUsers((prev) => {
       let setUsersStatusToOnline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {
@@ -120,6 +154,13 @@ export const useChatHandlers = (
     username: string;
     userID: string;
   }) => {
+    setOnlineusers((prev) => {
+      const updatedList = prev.filter(
+        (disconnectedUser) => disconnectedUser.user !== user.username
+      );
+      return updatedList;
+    });
+
     setChatUsers((prev) => {
       let setUsersStatusToOffline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {

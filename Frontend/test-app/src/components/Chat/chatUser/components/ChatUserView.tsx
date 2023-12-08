@@ -13,6 +13,7 @@ import {
 
 import Cookies from "js-cookie";
 import React from "react";
+import { UserNameView } from "./UserNameView";
 import { useTheme } from "styled-components";
 
 type OnlineUserListProps = {
@@ -24,7 +25,7 @@ type OnlineUserListProps = {
   currentChatWith: CurrentChatWithType | undefined;
 };
 
-export const OnlineUserList = ({
+export const ChatUserView = ({
   users,
   setChatUsers,
   setCurrentChatWith,
@@ -42,23 +43,6 @@ export const OnlineUserList = ({
         userID: onlineUser.userId,
       });
     };
-
-    const UserNameWithStatusCircle = () => (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <CustomTypography
-          unReadMessages={onlineUser.unreadMsgs > 0 ? true : false}
-          variant="subtitle1"
-        >
-          {onlineUser.user}
-        </CustomTypography>
-        <StatusCircle online={onlineUser.status === "online" ? true : false} />
-      </div>
-    );
 
     const RecentMsgWithNotificationBubble = () => (
       <CustomTypography
@@ -82,7 +66,7 @@ export const OnlineUserList = ({
 
     return (
       <UserListWrapper setBackground={setBackground} onClick={handleClick}>
-        <UserNameWithStatusCircle />
+        <UserNameView user={onlineUser} />
         <RecentMsgWithNotificationBubble />
       </UserListWrapper>
     );

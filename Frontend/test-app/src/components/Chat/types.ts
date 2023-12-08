@@ -56,6 +56,7 @@ export type ChatUsersType = {
 
 export type ChatUsersProps = {
   users: ChatUsersType[];
+  onlineUsers: ChatUsersType[];
   setCurrentChatWith: Dispatch<
     React.SetStateAction<CurrentChatWithType | undefined>
   >;

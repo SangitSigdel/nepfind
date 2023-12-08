@@ -21,6 +21,8 @@ export const Chat = () => {
 
   const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
 
+  const [onlineUsers, setOnlineUsers] = useState<ChatUsersType[]>([]);
+
   const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
 
   const userName = Cookies.get("userName");
@@ -40,7 +42,8 @@ export const Chat = () => {
     chatMessages,
     setChatMessages,
     setCurrentChatWith,
-    setChatUsers
+    setChatUsers,
+    setOnlineUsers
   );
 
   useEffect(() => {
@@ -98,6 +101,7 @@ export const Chat = () => {
             <NewChatScreen
               chatMessages={chatMessages}
               users={chatUsers}
+              onlineUsers={onlineUsers}
               setChatUsers={setChatUsers}
               setCurrentChatWith={setCurrentChatWith}
               currentChatWith={currentChatWith}
