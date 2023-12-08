@@ -106,13 +106,13 @@ export const useChatHandlers = (
     userID: string;
   }) => {
     setChatUsers((prev) => {
-      let refreshUserStatus = prev.map((sotredUser) => {
-        if (sotredUser.user === user.username) {
-          return { ...sotredUser, status: "online" };
+      let setUsersStatusToOnline = prev.map((chatUser) => {
+        if (chatUser.user === user.username) {
+          return { ...chatUser, status: "online" };
         }
-        return sotredUser;
+        return chatUser;
       });
-      return refreshUserStatus;
+      return setUsersStatusToOnline;
     });
   };
 
@@ -121,13 +121,13 @@ export const useChatHandlers = (
     userID: string;
   }) => {
     setChatUsers((prev) => {
-      let refreshUserStatus = prev.map((sotredUser) => {
-        if (sotredUser.user === user.username) {
-          return { ...sotredUser, status: "offline" };
+      let setUsersStatusToOffline = prev.map((chatUser) => {
+        if (chatUser.user === user.username) {
+          return { ...chatUser, status: "offline" };
         }
-        return sotredUser;
+        return chatUser;
       });
-      return refreshUserStatus;
+      return setUsersStatusToOffline;
     });
   };
 
