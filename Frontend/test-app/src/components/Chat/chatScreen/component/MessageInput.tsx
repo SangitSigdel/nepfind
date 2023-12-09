@@ -43,14 +43,14 @@ export const MessageInput = ({
         autoFocus={true}
         fullWidth={true}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && e.ctrlKey) {
+          if (e.key === "Enter" && e.ctrlKey && message.length > 0) {
             sendAndResetMessage();
           }
         }}
       />
       <IconButton
         sx={{ color: theme.palette.bright.main }}
-        onClick={sendAndResetMessage}
+        onClick={() => message.length > 0 && sendAndResetMessage()}
       >
         <SendIcon sx={{ marginTop: "20px" }} />
       </IconButton>

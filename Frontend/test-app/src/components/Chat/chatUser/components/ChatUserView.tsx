@@ -52,7 +52,13 @@ export const ChatUserView = ({
           color: theme.palette.bright.light,
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            maxWidth: "20px",
+          }}
+        >
           <RecentChat>{onlineUser.recentMsg}</RecentChat>
           <Badge
             color="primary"

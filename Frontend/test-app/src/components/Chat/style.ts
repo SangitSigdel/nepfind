@@ -37,7 +37,7 @@ export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
 
 export const ChatHeaderWrapper = styled.div`
   background: ${(props) => props.theme.palette.primary.light};
-  padding: 20px;
+  padding: 22px;
   margin: 0;
   text-align: center;
   top: 0;
@@ -67,7 +67,7 @@ export const ChatUserWrapper = styled(Box)`
   flex-direction: column;
   overflow-y: auto;
   height: 100vh;
-  min-width: 20em;
+  width: 15em;
   overflow-x: hidden;
 `;
 
@@ -118,10 +118,10 @@ export const ChatListWrapper = styled.div`
 `;
 
 export const RecentChat = styled.p`
-  overflow: "hidden";
-  white-space: "nowrap";
-  text-overflow: "ellipsis";
-  max-width: "120px";
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
 `;
 
 export const InitialScreenTextWrapper = styled(Typography)`
