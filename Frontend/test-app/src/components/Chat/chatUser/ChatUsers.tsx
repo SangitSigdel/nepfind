@@ -28,7 +28,12 @@ export const NewChatScreen = ({
       <UserDisplayHeader>
         <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
         <Button
-          sx={{ color: "white", cursor: "pointer", borderRadius: "50px" }}
+          sx={{
+            color: "white",
+            cursor: "pointer",
+            borderRadius: "50px",
+            marginRight: "20px",
+          }}
           onClick={handleClick}
         >
           <PersonAddAlt1Icon />
