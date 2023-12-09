@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
+import { ChatUsersType, CurrentChatWithType } from "../../types";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { ChatUsersType } from "../../types";
 import React from "react";
 import { UserListWrapper } from "../../style";
 import { UserNameView } from "./UserNameView";
@@ -9,11 +9,15 @@ import { UserNameView } from "./UserNameView";
 interface OnlinUserViewProps {
   setDisplayOnlineUser: React.Dispatch<React.SetStateAction<boolean>>;
   onlineUsers: ChatUsersType[];
+  setCurrentChatWith: React.Dispatch<
+    React.SetStateAction<CurrentChatWithType | undefined>
+  >;
 }
 
 export const OnlineUserView: React.FC<OnlinUserViewProps> = ({
   setDisplayOnlineUser,
   onlineUsers,
+  setCurrentChatWith,
 }) => {
   return (
     <Box>
@@ -27,7 +31,15 @@ export const OnlineUserView: React.FC<OnlinUserViewProps> = ({
         return (
           <div>
             <Box key={index}>
-              <UserListWrapper>
+              <UserListWrapper
+                onClick={() => {
+                  setCurrentChatWith({
+                    userID: onlineUser.userId,
+                    username: onlineUser.user,
+                  });
+                  setDisplayOnlineUser(false);
+                }}
+              >
                 <UserNameView user={onlineUser} />
               </UserListWrapper>
             </Box>

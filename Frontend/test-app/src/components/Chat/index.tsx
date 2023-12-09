@@ -39,6 +39,7 @@ export const Chat = () => {
     currentChatWith,
     userName,
     chatUsers,
+    onlineUsers,
     chatMessages,
     setChatMessages,
     setCurrentChatWith,

@@ -23,6 +23,7 @@ export const useChatHandlers = (
   currentChatWith: CurrentChatWithType | undefined,
   userName: string | undefined,
   chatUsers: ChatUsersType[],
+  onlineUsers: ChatUsersType[],
   chatMessages: ChatMessagesType[],
   setChatMessages: Dispatch<React.SetStateAction<ChatMessagesType[]>>,
   setCurrentChatWith: React.Dispatch<
@@ -42,6 +43,13 @@ export const useChatHandlers = (
       fromUserName: user,
     });
     initilizeChats();
+    const shappedOnlineUser = onlineUsers.map((onlineUser) => {
+      return {
+        userID: onlineUser.userId,
+        username: onlineUser.user,
+      };
+    });
+    handleChatUsers(shappedOnlineUser);
   };
 
   const initilizeChats = useCallback(async () => {
@@ -188,6 +196,13 @@ export const useChatHandlers = (
       await refreshAuserChat(msgContent.from, setChatUsers);
 
       setChatMessages(newMessages.data.messages.chats);
+      const shappedOnlineUser = onlineUsers.map((onlineUser) => {
+        return {
+          userID: onlineUser.userId,
+          username: onlineUser.user,
+        };
+      });
+      handleChatUsers(shappedOnlineUser);
     },
     [currentChatWith, setChatMessages, setChatUsers]
   );

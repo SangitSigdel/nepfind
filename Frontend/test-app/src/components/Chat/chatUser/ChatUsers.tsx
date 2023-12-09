@@ -38,6 +38,7 @@ export const NewChatScreen = ({
         <OnlineUserView
           setDisplayOnlineUser={setDisplayOnlinUsers}
           onlineUsers={onlineUsers}
+          setCurrentChatWith={setCurrentChatWith}
         />
       ) : (
         <ChatUserView
