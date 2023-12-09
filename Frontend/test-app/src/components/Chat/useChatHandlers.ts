@@ -61,76 +61,79 @@ export const useChatHandlers = (
     !_.isEqual(chats, chatMessages) && setChatMessages(chats);
   }, [chatMessages, currentChatWith?.username, setChatMessages, userName]);
 
-  const handleChatUsers = async (
-    onlineUsers: {
-      userID: string;
-      username: string;
-    }[]
-  ) => {
-    const loggedInUser = Cookies.get("userName") as string;
-    // Set value for online users
+  const handleChatUsers = useCallback(
+    async (
+      onlineUsers: {
+        userID: string;
+        username: string;
+      }[]
+    ) => {
+      const loggedInUser = Cookies.get("userName") as string;
+      // Set value for online users
 
-    const shappedOnlineUsers: ChatUsersType[] = onlineUsers.map(
-      (onlineUser) => {
-        return {
-          user: onlineUser.username,
-          status: "online",
-          userId: onlineUser.userID,
-          unreadMsgs: 0,
-          recentMsg: "",
-        };
-      }
-    );
-
-    setOnlineusers(
-      shappedOnlineUsers.filter(
-        (onlineUser) => onlineUser.user !== loggedInUser
-      )
-    );
-
-    // Set value of all chats users
-
-    // Filtering loggedin user from the online user list
-    const filteredUser = onlineUsers.filter(
-      (user: { userID: string }) => user.userID !== socket.id
-    );
-    onlineUsers = filteredUser;
-
-    let userDataShappedAsChatUsers: ChatUsersType[] = [];
-
-    try {
-      const userData = await getUserDetails(loggedInUser);
-
-      userData.data.data.messages.map((msg, index) => {
-        userDataShappedAsChatUsers.push({
-          user: msg.user_id,
-          status: "offline",
-          userId: "",
-          unreadMsgs: msg.unread,
-          recentMsg: msg.chats[msg.chats.length - 1].message,
-        });
-      });
-
-      userDataShappedAsChatUsers = userDataShappedAsChatUsers.map((user) => {
-        const matchingOnlineUser = onlineUsers.find(
-          (onlineUser) => onlineUser.username === user.user
-        );
-        if (matchingOnlineUser) {
+      const shappedOnlineUsers: ChatUsersType[] = onlineUsers.map(
+        (onlineUser) => {
           return {
-            ...user,
+            user: onlineUser.username,
             status: "online",
-            userId: matchingOnlineUser.userID,
+            userId: onlineUser.userID,
+            unreadMsgs: 0,
+            recentMsg: "",
           };
         }
-        return user;
-      });
+      );
 
-      setChatUsers(userDataShappedAsChatUsers);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  };
+      setOnlineusers(
+        shappedOnlineUsers.filter(
+          (onlineUser) => onlineUser.user !== loggedInUser
+        )
+      );
+
+      // Set value of all chats users
+
+      // Filtering loggedin user from the online user list
+      const filteredUser = onlineUsers.filter(
+        (user: { userID: string }) => user.userID !== socket.id
+      );
+      onlineUsers = filteredUser;
+
+      let userDataShappedAsChatUsers: ChatUsersType[] = [];
+
+      try {
+        const userData = await getUserDetails(loggedInUser);
+
+        userData.data.data?.messages.map((msg, index) => {
+          userDataShappedAsChatUsers.push({
+            user: msg.user_id,
+            status: "offline",
+            userId: "",
+            unreadMsgs: msg.unread,
+            recentMsg: msg.chats[msg.chats.length - 1].message,
+          });
+        });
+
+        userDataShappedAsChatUsers = userDataShappedAsChatUsers.map((user) => {
+          const matchingOnlineUser = onlineUsers.find(
+            (onlineUser) => onlineUser.username === user.user
+          );
+          if (matchingOnlineUser) {
+            return {
+              ...user,
+              status: "online",
+              userId: matchingOnlineUser.userID,
+            };
+          }
+          return user;
+        });
+
+        setChatUsers(userDataShappedAsChatUsers);
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    [setChatUsers, setOnlineusers]
+  );
 
   const handleUserConnected = async (user: {
     username: string;
@@ -143,10 +146,13 @@ export const useChatHandlers = (
       unreadMsgs: 0,
       recentMsg: "",
     };
+
+    // Adds recently connected user to online list of user
     setOnlineusers((prev) => {
       return [...prev, newUser];
     });
 
+    // sets the online status of chat users if socket says new user connected
     setChatUsers((prev) => {
       let setUsersStatusToOnline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {
@@ -196,6 +202,7 @@ export const useChatHandlers = (
       await refreshAuserChat(msgContent.from, setChatUsers);
 
       setChatMessages(newMessages.data.messages.chats);
+
       const shappedOnlineUser = onlineUsers.map((onlineUser) => {
         return {
           userID: onlineUser.userId,
@@ -204,7 +211,13 @@ export const useChatHandlers = (
       });
       handleChatUsers(shappedOnlineUser);
     },
-    [currentChatWith, setChatMessages, setChatUsers]
+    [
+      currentChatWith?.username,
+      handleChatUsers,
+      onlineUsers,
+      setChatMessages,
+      setChatUsers,
+    ]
   );
 
   const handleConnectionError = useCallback(
