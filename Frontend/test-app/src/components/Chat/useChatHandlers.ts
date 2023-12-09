@@ -156,7 +156,7 @@ export const useChatHandlers = (
     setChatUsers((prev) => {
       let setUsersStatusToOnline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {
-          return { ...chatUser, status: "online" };
+          return { ...chatUser, status: "online", userId: user.userID };
         }
         return chatUser;
       });
