@@ -1,8 +1,3 @@
-import {
-  ChatMessagesType,
-  CurrentChatWithType,
-  ServerMessageContent,
-} from "./types";
 import React, { Dispatch } from "react";
 import {
   getChatMessages,
@@ -12,38 +7,31 @@ import {
   sendMessage,
 } from "../../utils/api";
 
+import { ChatContextType } from "./context/ChatContext";
 import { ChatUsersType } from "./types";
 import Cookies from "js-cookie";
+import { ServerMessageContent } from "./types";
 import _ from "lodash";
 import socket from "../../utils/sockets/socket";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const useChatHandlers = (
-  currentChatWith: CurrentChatWithType | undefined,
-  userName: string | undefined,
-  chatUsers: ChatUsersType[],
-  onlineUsers: ChatUsersType[],
-  chatMessages: ChatMessagesType[],
-  setChatMessages: Dispatch<React.SetStateAction<ChatMessagesType[]>>,
-  setCurrentChatWith: React.Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >,
-  setChatUsers: Dispatch<React.SetStateAction<ChatUsersType[]>>,
-  setOnlineusers: Dispatch<React.SetStateAction<ChatUsersType[]>>
+  chatContext: ChatContextType,
+  userName: string | undefined
 ) => {
   const navigate = useNavigate();
 
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
-    await sendMessage(user, currentChatWith?.username, content);
+    await sendMessage(user, chatContext.currentChatWith?.username, content);
     socket.emit("private message", {
       content: content,
-      to: currentChatWith,
+      to: chatContext.currentChatWith,
       fromUserName: user,
     });
     initilizeChats();
-    const shappedOnlineUser = onlineUsers.map((onlineUser) => {
+    const shappedOnlineUser = chatContext.onlineUsers.map((onlineUser) => {
       return {
         userID: onlineUser.userId,
         username: onlineUser.user,
@@ -55,11 +43,12 @@ export const useChatHandlers = (
   const initilizeChats = useCallback(async () => {
     const chatMessgaes = await getChatMessages(
       userName,
-      currentChatWith?.username
+      chatContext.currentChatWith?.username
     );
     const chats = chatMessgaes.data.messages.chats;
-    !_.isEqual(chats, chatMessages) && setChatMessages(chats);
-  }, [chatMessages, currentChatWith?.username, setChatMessages, userName]);
+    !_.isEqual(chats, chatContext.chatMessages) &&
+      chatContext.setChatMessages(chats);
+  }, [chatContext, userName]);
 
   const handleChatUsers = useCallback(
     async (
@@ -83,7 +72,7 @@ export const useChatHandlers = (
         }
       );
 
-      setOnlineusers(
+      chatContext.setOnlineUsers(
         shappedOnlineUsers.filter(
           (onlineUser) => onlineUser.user !== loggedInUser
         )
@@ -126,13 +115,13 @@ export const useChatHandlers = (
           return user;
         });
 
-        setChatUsers(userDataShappedAsChatUsers);
+        chatContext.setChatUsers(userDataShappedAsChatUsers);
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    [setChatUsers, setOnlineusers]
+    [chatContext]
   );
 
   const handleUserConnected = async (user: {
@@ -148,12 +137,12 @@ export const useChatHandlers = (
     };
 
     // Adds recently connected user to online list of user
-    setOnlineusers((prev) => {
+    chatContext.setOnlineUsers((prev) => {
       return [...prev, newUser];
     });
 
     // sets the online status of chat users if socket says new user connected
-    setChatUsers((prev) => {
+    chatContext.setChatUsers((prev) => {
       let setUsersStatusToOnline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {
           return { ...chatUser, status: "online", userId: user.userID };
@@ -168,14 +157,14 @@ export const useChatHandlers = (
     username: string;
     userID: string;
   }) => {
-    setOnlineusers((prev) => {
+    chatContext.setOnlineUsers((prev) => {
       const updatedList = prev.filter(
         (disconnectedUser) => disconnectedUser.user !== user.username
       );
       return updatedList;
     });
 
-    setChatUsers((prev) => {
+    chatContext.setChatUsers((prev) => {
       let setUsersStatusToOffline = prev.map((chatUser) => {
         if (chatUser.user === user.username) {
           return { ...chatUser, status: "offline" };
@@ -190,20 +179,20 @@ export const useChatHandlers = (
     async (msgContent: ServerMessageContent) => {
       const user = Cookies.get("userName");
 
-      if (currentChatWith?.username === msgContent.from) {
+      if (chatContext.currentChatWith?.username === msgContent.from) {
         await resetUserUnreadMessages(user, msgContent.from);
       }
 
       const newMessages = await getChatMessages(
         user,
-        currentChatWith?.username
+        chatContext.currentChatWith?.username
       );
 
-      await refreshAuserChat(msgContent.from, setChatUsers);
+      await refreshAuserChat(msgContent.from, chatContext.setChatUsers);
 
-      setChatMessages(newMessages.data.messages.chats);
+      chatContext.setChatMessages(newMessages.data.messages.chats);
 
-      const shappedOnlineUser = onlineUsers.map((onlineUser) => {
+      const shappedOnlineUser = chatContext.onlineUsers.map((onlineUser) => {
         return {
           userID: onlineUser.userId,
           username: onlineUser.user,
@@ -211,13 +200,7 @@ export const useChatHandlers = (
       });
       handleChatUsers(shappedOnlineUser);
     },
-    [
-      currentChatWith?.username,
-      handleChatUsers,
-      onlineUsers,
-      setChatMessages,
-      setChatUsers,
-    ]
+    [chatContext, handleChatUsers]
   );
 
   const handleConnectionError = useCallback(

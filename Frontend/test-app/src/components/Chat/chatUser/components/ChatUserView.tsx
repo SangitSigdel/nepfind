@@ -56,7 +56,7 @@ export const ChatUserView = ({
           style={{
             display: "flex",
             justifyContent: "space-between",
-            maxWidth: "20px",
+            maxWidth: "200px",
           }}
         >
           <RecentChat>{onlineUser.recentMsg}</RecentChat>

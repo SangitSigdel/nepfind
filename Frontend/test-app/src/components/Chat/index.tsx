@@ -1,7 +1,7 @@
-import { ChatMessagesType, ChatUsersType, CurrentChatWithType } from "./types";
-import React, { useState } from "react";
+import React, { useContext } from "react";
 
 import { Box } from "@mui/material";
+import ChatContext from "./context/ChatContext";
 import { ChatScreen } from "./chatScreen/ChatScreen";
 import { ChatWrapper } from "./style";
 import Cookies from "js-cookie";
@@ -17,13 +17,7 @@ export const Chat = () => {
 
   const theme = useTheme();
 
-  const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
-
-  const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
-
-  const [onlineUsers, setOnlineUsers] = useState<ChatUsersType[]>([]);
-
-  const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+  const chatContext = useContext(ChatContext);
 
   const userName = Cookies.get("userName");
 
@@ -35,23 +29,13 @@ export const Chat = () => {
     handleUserDiconnected,
     handlePrivateMessages,
     handleConnectionError,
-  } = useChatHandlers(
-    currentChatWith,
-    userName,
-    chatUsers,
-    onlineUsers,
-    chatMessages,
-    setChatMessages,
-    setCurrentChatWith,
-    setChatUsers,
-    setOnlineUsers
-  );
+  } = useChatHandlers(chatContext, userName);
 
   useEffect(() => {
     if (!userName) {
       navigate("/");
     } else {
-      currentChatWith && initilizeChats();
+      chatContext.currentChatWith && initilizeChats();
 
       socket.connect();
       socket.auth = { userName };
@@ -71,9 +55,6 @@ export const Chat = () => {
     };
   }, [
     navigate,
-    currentChatWith,
-    chatMessages,
-    chatUsers,
     userName,
     initilizeChats,
     handleChatUsers,
@@ -81,6 +62,7 @@ export const Chat = () => {
     handleUserDiconnected,
     handlePrivateMessages,
     handleConnectionError,
+    chatContext.currentChatWith,
   ]);
 
   return (
@@ -100,18 +82,18 @@ export const Chat = () => {
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
             <NewChatScreen
-              chatMessages={chatMessages}
-              users={chatUsers}
-              onlineUsers={onlineUsers}
-              setChatUsers={setChatUsers}
-              setCurrentChatWith={setCurrentChatWith}
-              currentChatWith={currentChatWith}
+              chatMessages={chatContext.chatMessages}
+              users={chatContext.chatUsers}
+              onlineUsers={chatContext.onlineUsers}
+              setChatUsers={chatContext.setChatUsers}
+              setCurrentChatWith={chatContext.setCurrentChatWith}
+              currentChatWith={chatContext.currentChatWith}
             />
           </Box>
           <ChatScreen
-            chatMessages={chatMessages}
-            setChatMessages={setChatMessages}
-            chatMessagesWith={currentChatWith}
+            chatMessages={chatContext.chatMessages}
+            setChatMessages={chatContext.setChatMessages}
+            chatMessagesWith={chatContext.currentChatWith}
             sendPrivateMessage={sendPrivateMessage}
           />
         </ChatWrapper>
