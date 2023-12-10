@@ -1,20 +1,10 @@
-import { ChatMessagesType, ChatUsersType, CurrentChatWithType } from "../types";
+import {
+  ChatContextType,
+  ChatMessagesType,
+  ChatUsersType,
+  CurrentChatWithType,
+} from "../types";
 import React, { ReactElement, createContext, useState } from "react";
-
-export type ChatContextType = {
-  chatMessages: ChatMessagesType[];
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessagesType[]>>;
-  chatUsers: ChatUsersType[];
-  setChatUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
-  onlineUsers: ChatUsersType[];
-  setOnlineUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
-  currentChatWith: CurrentChatWithType | undefined;
-  setCurrentChatWith: React.Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >;
-  displayOnlineUsers: boolean;
-  setDisplayOnlinUsers: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 const initialChatContextData = {
   chatMessages: [],
