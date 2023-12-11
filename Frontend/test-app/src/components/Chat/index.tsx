@@ -1,13 +1,13 @@
-import { ChatMessagesType, ChatUsersType, CurrentChatWithType } from "./types";
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { handleSocketOff, socketHandler } from "../../utils/sockets/socket";
 
 import { Box } from "@mui/material";
+import ChatContext from "./context/ChatContext";
 import { ChatScreen } from "./chatScreen/ChatScreen";
 import { ChatWrapper } from "./style";
 import Cookies from "js-cookie";
 import { NewChatScreen } from "./chatUser/ChatUsers";
-import socket from "../../utils/sockets/socket";
-import { useChatHandlers } from "./useChatHandlers";
+import { chatHandlers } from "./chatHandlers";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "styled-components";
@@ -17,71 +17,23 @@ export const Chat = () => {
 
   const theme = useTheme();
 
-  const [chatMessages, setChatMessages] = useState<ChatMessagesType[]>([]);
-
-  const [chatUsers, setChatUsers] = useState<ChatUsersType[]>([]);
-
-  const [onlineUsers, setOnlineUsers] = useState<ChatUsersType[]>([]);
-
-  const [currentChatWith, setCurrentChatWith] = useState<CurrentChatWithType>();
+  const chatContext = useContext(ChatContext);
 
   const userName = Cookies.get("userName");
 
-  const {
-    initilizeChats,
-    sendPrivateMessage,
-    handleChatUsers,
-    handleUserConnected,
-    handleUserDiconnected,
-    handlePrivateMessages,
-    handleConnectionError,
-  } = useChatHandlers(
-    currentChatWith,
-    userName,
-    chatUsers,
-    onlineUsers,
-    chatMessages,
-    setChatMessages,
-    setCurrentChatWith,
-    setChatUsers,
-    setOnlineUsers
-  );
+  const { initilizeChats } = chatHandlers(chatContext);
 
   useEffect(() => {
     if (!userName) {
       navigate("/");
     } else {
-      currentChatWith && initilizeChats();
-
-      socket.connect();
-      socket.auth = { userName };
-
-      socket.on("users", handleChatUsers);
-      socket.on("user connected", handleUserConnected);
-      socket.on("user disconnected", handleUserDiconnected);
-      socket.on("private message", handlePrivateMessages);
-      socket.on("connect_error", handleConnectionError);
+      chatContext.currentChatWith && initilizeChats();
+      socketHandler(chatContext);
     }
     return () => {
-      socket.off("connect_error");
-      socket.off("users");
-      socket.off("user connected");
-      socket.off("user disconnected");
-      socket.off("private message");
+      handleSocketOff();
     };
-  }, [
-    navigate,
-    currentChatWith,
-    chatMessages,
-    chatUsers,
-    userName,
-    initilizeChats,
-    handleChatUsers,
-    handleUserConnected,
-    handleUserDiconnected,
-    handlePrivateMessages,
-    handleConnectionError,
-  ]);
+  }, [navigate, userName, initilizeChats, chatContext]);
 
   return (
     <>
@@ -99,21 +51,9 @@ export const Chat = () => {
             style={{ background: theme.palette.primary.dark }}
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
-            <NewChatScreen
-              chatMessages={chatMessages}
-              users={chatUsers}
-              onlineUsers={onlineUsers}
-              setChatUsers={setChatUsers}
-              setCurrentChatWith={setCurrentChatWith}
-              currentChatWith={currentChatWith}
-            />
+            <NewChatScreen />
           </Box>
-          <ChatScreen
-            chatMessages={chatMessages}
-            setChatMessages={setChatMessages}
-            chatMessagesWith={currentChatWith}
-            sendPrivateMessage={sendPrivateMessage}
-          />
+          <ChatScreen />
         </ChatWrapper>
       </Box>
     </>
