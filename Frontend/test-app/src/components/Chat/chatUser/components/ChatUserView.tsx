@@ -18,7 +18,7 @@ export const ChatUserView = () => {
 
   const chatContext = useContext(ChatContext);
 
-  const chatView = (onlineUser: ChatUsersType, setBackground: boolean) => {
+  const chatView = (onlineUser: ChatUsersType, setbackground: boolean) => {
     const handleClick = async () => {
       await resetUserUnreadMessages(loggedInUser, onlineUser.user);
       await refreshAuserChat(onlineUser.user, chatContext.setChatUsers);
@@ -31,7 +31,7 @@ export const ChatUserView = () => {
     const RecentMsgWithNotificationBubble = () => (
       <CustomTypography
         variant="subtitle2"
-        unReadMessages={onlineUser.unreadMsgs > 0}
+        unreadmessages={onlineUser.unreadMsgs > 0}
         sx={{
           color: theme.palette.bright.light,
         }}
@@ -55,7 +55,7 @@ export const ChatUserView = () => {
     );
 
     return (
-      <UserListWrapper setBackground={setBackground} onClick={handleClick}>
+      <UserListWrapper setbackground={setbackground} onClick={handleClick}>
         <UserNameView user={onlineUser} />
         <RecentMsgWithNotificationBubble />
       </UserListWrapper>

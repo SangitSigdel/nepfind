@@ -12,12 +12,12 @@ export const UserNameView = ({ user }: { user: ChatUsersType }) => {
       }}
     >
       <CustomTypography
-        unReadMessages={user.unreadMsgs > 0 ? true : false}
+        unreadmessages={user.unreadMsgs > 0}
         variant="subtitle1"
       >
         {user.user}
       </CustomTypography>
-      <StatusCircle online={user.status === "online" ? true : false} />
+      <StatusCircle online={user.status === "online"} />
     </div>
   );
 };

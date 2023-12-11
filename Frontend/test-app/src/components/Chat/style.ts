@@ -71,12 +71,12 @@ export const ChatUserWrapper = styled(Box)`
   overflow-x: hidden;
 `;
 
-export const UserListWrapper = styled.div<{ setBackground?: boolean }>`
+export const UserListWrapper = styled.div<{ setbackground?: boolean }>`
   padding: 10px 20px;
   margin-right: 5px;
   margin-top: 5px;
   background: ${(props) =>
-    props.setBackground && props.theme.palette.primary.light};
+    props.setbackground && props.theme.palette.primary.light};
   border-bottom: 1px solid ${(props) => props.theme.palette.border.main};
   cursor: pointer;
 
@@ -85,13 +85,13 @@ export const UserListWrapper = styled.div<{ setBackground?: boolean }>`
   }
 `;
 
-export const CustomTypography = styled(Typography)<{ unReadMessages: boolean }>`
+export const CustomTypography = styled(Typography)<{ unreadmessages: boolean }>`
   color: ${(props) => props.theme.palette.bright.light};
   margin: 0;
   padding: 0;
 
   &.MuiTypography-root {
-    font-weight: ${(props) => props.unReadMessages && "bold"};
+    font-weight: ${(props) => props.unreadmessages && "bold"};
   }
 `;
 
