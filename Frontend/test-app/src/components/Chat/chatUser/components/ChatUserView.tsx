@@ -1,44 +1,28 @@
 import { Badge, Box } from "@mui/material";
-import { ChatUsersType, CurrentChatWithType } from "../../types";
-import {
-  CustomTypography,
-  RecentChat,
-  StatusCircle,
-  UserListWrapper,
-} from "../../style";
+import { CustomTypography, RecentChat, UserListWrapper } from "../../style";
+import React, { useContext } from "react";
 import {
   refreshAuserChat,
   resetUserUnreadMessages,
 } from "../../../../utils/api";
 
+import ChatContext from "../../context/ChatContext";
+import { ChatUsersType } from "../../types";
 import Cookies from "js-cookie";
-import React from "react";
 import { UserNameView } from "./UserNameView";
 import { useTheme } from "styled-components";
 
-type OnlineUserListProps = {
-  users: ChatUsersType[];
-  setChatUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
-  setCurrentChatWith: React.Dispatch<
-    React.SetStateAction<CurrentChatWithType | undefined>
-  >;
-  currentChatWith: CurrentChatWithType | undefined;
-};
-
-export const ChatUserView = ({
-  users,
-  setChatUsers,
-  setCurrentChatWith,
-  currentChatWith,
-}: OnlineUserListProps) => {
+export const ChatUserView = () => {
   const loggedInUser = Cookies.get("userName");
   const theme = useTheme();
+
+  const chatContext = useContext(ChatContext);
 
   const chatView = (onlineUser: ChatUsersType, setBackground: boolean) => {
     const handleClick = async () => {
       await resetUserUnreadMessages(loggedInUser, onlineUser.user);
-      await refreshAuserChat(onlineUser.user, setChatUsers);
-      setCurrentChatWith({
+      await refreshAuserChat(onlineUser.user, chatContext.setChatUsers);
+      chatContext.setCurrentChatWith({
         username: onlineUser.user,
         userID: onlineUser.userId,
       });
@@ -80,10 +64,10 @@ export const ChatUserView = ({
 
   return (
     <Box>
-      {users.map((onlineUser, index) => {
+      {chatContext.chatUsers.map((onlineUser, index) => {
         return (
           <Box key={index}>
-            {currentChatWith?.username === onlineUser.user
+            {chatContext.currentChatWith?.username === onlineUser.user
               ? chatView(onlineUser, true)
               : chatView(onlineUser, false)}
           </Box>

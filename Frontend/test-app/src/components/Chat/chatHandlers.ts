@@ -13,10 +13,9 @@ import { ServerMessageContent } from "./types";
 import _ from "lodash";
 import socket from "../../utils/sockets/socket";
 
-export const chatHandlers = (
-  chatContext: ChatContextType,
-  userName: string | undefined
-) => {
+export const chatHandlers = (chatContext: ChatContextType) => {
+  const userName = Cookies.get("userName");
+
   const sendPrivateMessage = async (content: string) => {
     const user = Cookies.get("userName");
     await sendMessage(user, chatContext.currentChatWith?.username, content);

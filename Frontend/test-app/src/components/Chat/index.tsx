@@ -21,10 +21,7 @@ export const Chat = () => {
 
   const userName = Cookies.get("userName");
 
-  const { initilizeChats, sendPrivateMessage } = chatHandlers(
-    chatContext,
-    userName
-  );
+  const { initilizeChats } = chatHandlers(chatContext);
 
   useEffect(() => {
     if (!userName) {
@@ -54,21 +51,9 @@ export const Chat = () => {
             style={{ background: theme.palette.primary.dark }}
             sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
           >
-            <NewChatScreen
-              chatMessages={chatContext.chatMessages}
-              users={chatContext.chatUsers}
-              onlineUsers={chatContext.onlineUsers}
-              setChatUsers={chatContext.setChatUsers}
-              setCurrentChatWith={chatContext.setCurrentChatWith}
-              currentChatWith={chatContext.currentChatWith}
-            />
+            <NewChatScreen />
           </Box>
-          <ChatScreen
-            chatMessages={chatContext.chatMessages}
-            setChatMessages={chatContext.setChatMessages}
-            chatMessagesWith={chatContext.currentChatWith}
-            sendPrivateMessage={sendPrivateMessage}
-          />
+          <ChatScreen />
         </ChatWrapper>
       </Box>
     </>

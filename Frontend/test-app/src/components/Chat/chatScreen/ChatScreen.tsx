@@ -1,24 +1,25 @@
+import { useContext, useState } from "react";
+
+import ChatContext from "../context/ChatContext";
 import { ChatHeader } from "./component/ChatHeader";
 import { ChatMessages } from "./component/ChatMessages";
-import { ChatScreenProps } from "../types";
 import { ChatScreenWrapper } from "../style";
 import { InitialScreen } from "./component/InitialScreen";
 import { MessageInput } from "./component/MessageInput";
-import { useState } from "react";
+import { chatHandlers } from "../chatHandlers";
 
-export const ChatScreen = ({
-  chatMessages,
-  chatMessagesWith,
-  sendPrivateMessage,
-}: ChatScreenProps) => {
+export const ChatScreen = () => {
   const [message, setMessage] = useState<string>("");
+
+  const chatContext = useContext(ChatContext);
+  const { sendPrivateMessage } = chatHandlers(chatContext);
 
   return (
     <ChatScreenWrapper>
-      {chatMessagesWith ? (
+      {chatContext.currentChatWith ? (
         <div>
-          <ChatHeader currentChatWith={chatMessagesWith.username} />
-          <ChatMessages chatMessages={chatMessages} />
+          <ChatHeader currentChatWith={chatContext.currentChatWith.username} />
+          <ChatMessages chatMessages={chatContext.chatMessages} />
           <MessageInput
             message={message}
             setMessage={setMessage}

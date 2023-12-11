@@ -19,7 +19,7 @@ export const socketHandler = (chatContext: ChatContextType) => {
     handleUserDiconnected,
     handlePrivateMessages,
     handleConnectionError,
-  } = chatHandlers(chatContext, userName);
+  } = chatHandlers(chatContext);
 
   socket.connect();
   socket.auth = { userName };

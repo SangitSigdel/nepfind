@@ -1,26 +1,20 @@
 import { ChatUserWrapper, CustomTypography, UserDisplayHeader } from "../style";
 
 import { Button } from "@mui/material";
+import ChatContext from "../context/ChatContext";
 import { ChatUserView } from "./components/ChatUserView";
-import { ChatUsersProps } from "../types";
 import Cookies from "js-cookie";
 import { OnlineUserView } from "./components/OnlineUserView";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import { useState } from "react";
+import { useContext } from "react";
 
-export const NewChatScreen = ({
-  users,
-  setChatUsers,
-  onlineUsers,
-  setCurrentChatWith,
-  currentChatWith,
-}: ChatUsersProps) => {
+export const NewChatScreen = () => {
   const loggedInUser = Cookies.get("userName");
 
-  const [displayOnlineUsers, setDisplayOnlinUsers] = useState<boolean>(false);
+  const chatContext = useContext(ChatContext);
 
   const handleClick = () => {
-    setDisplayOnlinUsers(true);
+    chatContext.setDisplayOnlinUsers(true);
   };
 
   return (
@@ -39,21 +33,7 @@ export const NewChatScreen = ({
           <PersonAddAlt1Icon />
         </Button>
       </UserDisplayHeader>
-      {displayOnlineUsers ? (
-        <OnlineUserView
-          setDisplayOnlineUser={setDisplayOnlinUsers}
-          onlineUsers={onlineUsers}
-          setCurrentChatWith={setCurrentChatWith}
-          setChatUsers={setChatUsers}
-        />
-      ) : (
-        <ChatUserView
-          users={users}
-          setChatUsers={setChatUsers}
-          setCurrentChatWith={setCurrentChatWith}
-          currentChatWith={currentChatWith}
-        />
-      )}
+      {chatContext.displayOnlineUsers ? <OnlineUserView /> : <ChatUserView />}
     </ChatUserWrapper>
   );
 };
