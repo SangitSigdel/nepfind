@@ -37,13 +37,14 @@ export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
 
 export const ChatHeaderWrapper = styled.div`
   background: ${(props) => props.theme.palette.primary.light};
+  color: ${(props) => props.theme.palette.bright.main};
   padding: 22px;
   margin: 0;
   text-align: center;
   top: 0;
   position: fixed;
-  width: 90vw;
-  color: ${(props) => props.theme.palette.bright.main};
+  width: 100vw;
+  color: "red";
 `;
 
 export const MessageInputFieldViewWrapper = styled(Box)`

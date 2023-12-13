@@ -1,6 +1,7 @@
 import { ChatHeaderWrapper } from "../../style";
 import React from "react";
 import { Typography } from "@mui/material";
+import theme from "../../../../utils/theme";
 
 export const ChatHeader = ({
   currentChatWith,

@@ -5,7 +5,7 @@ import React from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { useTheme } from "styled-components";
 
-type MessageInputProps = {
+export type MessageInputProps = {
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   sendPrivateMessage: (content: string) => void;
