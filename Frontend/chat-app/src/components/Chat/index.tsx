@@ -47,12 +47,7 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <Box
-            style={{ background: theme.palette.primary.dark }}
-            sx={{ borderRight: `.25px solid ${theme.palette.border.main}` }}
-          >
-            <NewChatScreen />
-          </Box>
+          <NewChatScreen />
           <ChatScreen />
         </ChatWrapper>
       </Box>

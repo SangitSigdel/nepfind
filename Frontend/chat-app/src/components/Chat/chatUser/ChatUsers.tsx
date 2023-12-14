@@ -1,6 +1,6 @@
+import { Box, Button } from "@mui/material";
 import { ChatUserWrapper, CustomTypography, UserDisplayHeader } from "../style";
 
-import { Button } from "@mui/material";
 import ChatContext from "../context/ChatContext";
 import { ChatUserView } from "./components/ChatUserView";
 import Cookies from "js-cookie";
@@ -18,22 +18,24 @@ export const NewChatScreen = () => {
   };
 
   return (
-    <ChatUserWrapper>
-      <UserDisplayHeader>
-        <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
-        <Button
-          sx={{
-            color: "white",
-            cursor: "pointer",
-            borderRadius: "50px",
-            marginRight: "20px",
-          }}
-          onClick={handleClick}
-        >
-          <PersonAddAlt1Icon />
-        </Button>
-      </UserDisplayHeader>
-      {chatContext.displayOnlineUsers ? <OnlineUserView /> : <ChatUserView />}
-    </ChatUserWrapper>
+    <Box>
+      <ChatUserWrapper>
+        <UserDisplayHeader>
+          <CustomTypography variant="h5">{loggedInUser}</CustomTypography>
+          <Button
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              borderRadius: "50px",
+              marginRight: "20px",
+            }}
+            onClick={handleClick}
+          >
+            <PersonAddAlt1Icon />
+          </Button>
+        </UserDisplayHeader>
+        {chatContext.displayOnlineUsers ? <OnlineUserView /> : <ChatUserView />}
+      </ChatUserWrapper>
+    </Box>
   );
 };

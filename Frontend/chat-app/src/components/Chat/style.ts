@@ -40,7 +40,6 @@ export const ChatHeaderWrapper = styled.div`
   color: ${(props) => props.theme.palette.bright.main};
   padding: 22px;
   margin: 0;
-  text-align: center;
   top: 0;
   position: fixed;
   width: 100vw;
@@ -64,6 +63,8 @@ export const MessageTextFieldWrapper = styled(Box)`
 `;
 
 export const ChatUserWrapper = styled(Box)`
+  background: ${(props) => props.theme.palette.primary.dark};
+  border-right: 0.25px solid ${(props) => props.theme.palette.border.main};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
