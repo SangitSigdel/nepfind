@@ -25,7 +25,7 @@ This project is a React and Node-based TypeScript application that leverages rea
 
 ### Testing
 
-- Unit tests are conducted using the Jest testing library
+- Unit tests are conducted using the Jest and supertest testing library
 
 ### Storybook
 
