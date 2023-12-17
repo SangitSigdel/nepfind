@@ -28,6 +28,7 @@ export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
   padding: 10px;
   color: ${(props) => props.theme.palette.bright.main};
   border-radius: 20px;
+  margin-top: 3px;
   background-color: ${(props) =>
     props.messageByUser
       ? props.theme.palette.chatBubble.sendMessageBubble

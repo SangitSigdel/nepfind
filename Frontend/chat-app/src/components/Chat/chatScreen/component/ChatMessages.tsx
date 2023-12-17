@@ -12,13 +12,14 @@ export const ChatMessages = ({
 }: {
   chatMessages: ChatMessagesType[];
 }) => {
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
   const scrollToBottom = () => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messageEndRef.current &&
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(scrollToBottom, [chatMessages]);
-
-  const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   const ChatMessagesList = () => (
     <ChatListWrapper>
