@@ -4,7 +4,6 @@ import { render, screen } from "@testing-library/react";
 
 import { ChatHeader } from "./ChatHeader";
 import { ThemeProvider } from "styled-components";
-import theme from "../../../../utils/theme";
 
 const customTheme = {
   palette: {
