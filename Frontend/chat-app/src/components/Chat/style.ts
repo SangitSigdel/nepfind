@@ -43,7 +43,6 @@ export const ChatHeaderWrapper = styled.div`
   top: 0;
   position: fixed;
   width: 100vw;
-  color: "red";
 `;
 
 export const MessageInputFieldViewWrapper = styled(Box)`
