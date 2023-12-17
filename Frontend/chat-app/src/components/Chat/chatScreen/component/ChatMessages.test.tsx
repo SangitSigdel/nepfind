@@ -5,6 +5,8 @@ import { render, screen } from "@testing-library/react";
 import { ChatMessages } from "./ChatMessages";
 import { ThemeProvider } from "styled-components";
 
+window.HTMLElement.prototype.scrollIntoView = function () {};
+
 const chatMessagesData = [
   {
     chat_id: 0,
@@ -58,7 +60,6 @@ const customTheme = {
 
 describe("ChatMessage Component", () => {
   test("chat messages must be rendered", () => {
-    window.HTMLElement.prototype.scrollIntoView = function () {};
     render(
       <ThemeProvider theme={customTheme}>
         <ChatMessages chatMessages={chatMessagesData} />
