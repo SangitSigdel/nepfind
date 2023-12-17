@@ -14,11 +14,10 @@ const Component = ({ currentChatWith }: { currentChatWith: string }) => {
 export default {
   component: Component,
   title: "ChatScreen/ChatHeader",
-  tags: ["autodocs"],
 } as Meta;
 
 export const Default = {
   args: {
-    currentChatWith: "sangit",
+    currentChatWith: "user1",
   },
 };

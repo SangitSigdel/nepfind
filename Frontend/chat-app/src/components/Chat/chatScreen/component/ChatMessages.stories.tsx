@@ -36,7 +36,6 @@ const Component = ({ chatMessages }: { chatMessages: ChatMessagesType[] }) => {
 export default {
   component: Component,
   title: "ChatScreen/ChatMessages",
-  tags: ["autodocs"],
 } as Meta;
 export const Default = {
   args: {

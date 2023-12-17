@@ -31,18 +31,18 @@ Default.args = {
     currentChatWith: "",
     chatUsers: [
       {
-        user: "sangit",
+        user: "user1",
         status: "online",
         userId: "abc",
         unreadMsgs: 0,
-        recentMsg: "Hello brother",
+        recentMsg: "test message1",
       },
       {
-        user: "saugat",
+        user: "user2",
         status: "offline",
         userId: "abcd",
         unreadMsgs: 1,
-        recentMsg: "Ok brother",
+        recentMsg: "test message 2",
       },
     ],
   },
