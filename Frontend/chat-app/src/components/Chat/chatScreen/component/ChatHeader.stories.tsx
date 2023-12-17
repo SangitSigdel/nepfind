@@ -1,4 +1,4 @@
-import { ChatHeader } from "../../chatScreen/component/ChatHeader";
+import { ChatHeader } from "./ChatHeader";
 import { Meta } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
 import theme from "../../../../utils/theme";

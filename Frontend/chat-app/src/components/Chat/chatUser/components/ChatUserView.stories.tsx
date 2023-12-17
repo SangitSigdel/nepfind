@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from "@storybook/react";
 
 import ChatContext from "../../context/ChatContext";
-import { ChatUserView } from "../../chatUser/components/ChatUserView";
+import { ChatUserView } from "./ChatUserView";
 import { ThemeProvider } from "styled-components";
 import theme from "../../../../utils/theme";
 

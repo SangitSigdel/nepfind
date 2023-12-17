@@ -1,12 +1,12 @@
-import ChatContext from "../../context/ChatContext";
-import { OnlineUserView } from "../../chatUser/components/OnlineUserView";
+import ChatContext from "../context/ChatContext";
+import { NewChatScreen } from "./ChatUsers";
 import { StoryFn } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
-import theme from "../../../../utils/theme";
+import theme from "../../../utils/theme";
 
 export default {
-  title: "ChatUser/OnlineUserView",
-  component: OnlineUserView,
+  title: "ChatUser/ChatUsers",
+  component: NewChatScreen,
 };
 
 const Template: StoryFn = (args) => {
@@ -14,7 +14,7 @@ const Template: StoryFn = (args) => {
     <div style={{ background: "#0c1317" }}>
       <ThemeProvider theme={theme}>
         <ChatContext.Provider value={args.chatContext}>
-          <OnlineUserView />
+          <NewChatScreen />
         </ChatContext.Provider>
       </ThemeProvider>
     </div>
@@ -25,23 +25,25 @@ export const Default = Template.bind({});
 
 Default.args = {
   chatContext: {
-    setChatUsers: () => {},
-    setCurrentChatWith: (username: "", userID: "") => {},
     setDisplayOnlinUsers: () => {},
-    onlineUsers: [
+    displayOnlineUsers: false,
+    setCurrentChatWith: () => {},
+    setChatUsers: () => {},
+    currentChatWith: "",
+    chatUsers: [
       {
-        user: "test",
+        user: "TestUser1",
         status: "online",
-        userId: "abcd",
+        userId: "abc",
         unreadMsgs: 0,
-        recentMsg: "test message",
+        recentMsg: "Check Message 1",
       },
       {
-        user: "test2",
+        user: "TestUser2",
         status: "offline",
-        userId: "abcd3",
+        userId: "abcd",
         unreadMsgs: 1,
-        recentMsg: "check message2",
+        recentMsg: "Check Message 2",
       },
     ],
   },

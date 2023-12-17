@@ -1,7 +1,7 @@
 import { ChatUsersType } from "../../types";
 import { StoryFn } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
-import { UserNameView } from "../../chatUser/components/UserNameView";
+import { UserNameView } from "./UserNameView";
 import theme from "../../../../utils/theme";
 
 export default {

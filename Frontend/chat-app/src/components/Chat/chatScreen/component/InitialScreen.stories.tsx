@@ -1,4 +1,4 @@
-import { InitialScreen } from "../../chatScreen/component/InitialScreen";
+import { InitialScreen } from "./InitialScreen";
 import { Meta } from "@storybook/react";
 
 const Component = () => {

@@ -1,7 +1,4 @@
-import {
-  MessageInput,
-  MessageInputProps,
-} from "../../chatScreen/component/MessageInput";
+import { MessageInput, MessageInputProps } from "./MessageInput";
 import { Meta, StoryFn } from "@storybook/react";
 
 import { ThemeProvider } from "styled-components";

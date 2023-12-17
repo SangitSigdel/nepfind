@@ -1,4 +1,4 @@
-import { ChatMessages } from "../../chatScreen/component/ChatMessages";
+import { ChatMessages } from "./ChatMessages";
 import { ChatMessagesType } from "../../types";
 import { Meta } from "@storybook/react";
 import { ThemeProvider } from "styled-components";

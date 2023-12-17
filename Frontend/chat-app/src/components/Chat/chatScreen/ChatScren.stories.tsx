@@ -1,8 +1,8 @@
-import ChatContext from "../../context/ChatContext";
-import { ChatScreen } from "../../chatScreen/ChatScreen";
+import ChatContext from "../context/ChatContext";
+import { ChatScreen } from "./ChatScreen";
 import { StoryFn } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
-import theme from "../../../../utils/theme";
+import theme from "../../../utils/theme";
 
 export default {
   title: "ChatScreen/ChatScreen",
@@ -47,6 +47,30 @@ WithChats.args = {
         chat_id: 1,
         message: "how are you",
         messageByUser: false,
+        seen: true,
+      },
+      {
+        chat_id: 0,
+        message: "hi",
+        messageByUser: true,
+        seen: false,
+      },
+      {
+        chat_id: 1,
+        message: "hello",
+        messageByUser: false,
+        seen: true,
+      },
+      {
+        chat_id: 0,
+        message: "test1",
+        messageByUser: true,
+        seen: false,
+      },
+      {
+        chat_id: 1,
+        message: "test2",
+        messageByUser: true,
         seen: true,
       },
     ],
