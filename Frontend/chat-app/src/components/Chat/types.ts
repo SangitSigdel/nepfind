@@ -82,7 +82,7 @@ export type ChatContextType = {
   setChatUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
   onlineUsers: ChatUsersType[];
   setOnlineUsers: React.Dispatch<React.SetStateAction<ChatUsersType[]>>;
-  currentChatWith: CurrentChatWithType | undefined;
+  currentChatWith?: CurrentChatWithType | undefined;
   setCurrentChatWith: React.Dispatch<
     React.SetStateAction<CurrentChatWithType | undefined>
   >;
