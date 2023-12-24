@@ -53,7 +53,7 @@ export const createUserChat = async (
   const chatData: ChatMessage = {
     chat_id: 0,
     message: chatMessage,
-    messageByUser: true,
+    messagebyuser: true,
     dateTime: new Date(),
     seen: false,
   };
@@ -65,7 +65,7 @@ export const createUserChat = async (
       (message) => message.user_id === set_user_id
     );
 
-    chatData.messageByUser = isMessageFromUser;
+    chatData.messagebyuser = isMessageFromUser;
 
     if (chat) {
       if (!isMessageFromUser) {

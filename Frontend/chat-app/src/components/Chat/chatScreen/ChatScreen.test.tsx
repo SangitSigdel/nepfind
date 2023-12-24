@@ -13,19 +13,19 @@ const customContext = {
     {
       chat_id: 0,
       message: "hello",
-      messageByUser: true,
+      messagebyuser: true,
       seen: false,
     },
     {
       chat_id: 1,
       message: "how are you",
-      messageByUser: false,
+      messagebyuser: false,
       seen: true,
     },
     {
       chat_id: 0,
       message: "hi",
-      messageByUser: true,
+      messagebyuser: true,
       seen: false,
     },
   ],

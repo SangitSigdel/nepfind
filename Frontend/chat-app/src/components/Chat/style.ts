@@ -23,14 +23,14 @@ export const ChatScreenContainer = styled(Container)`
   margin: 0 auto;
 `;
 
-export const MessagesWrapper = styled.div<{ messageByUser: boolean }>`
-  align-self: ${(props) => (!props.messageByUser ? "flex-end" : "flex-start")};
+export const MessagesWrapper = styled.div<{ messagebyuser: boolean }>`
+  align-self: ${(props) => (!props.messagebyuser ? "flex-end" : "flex-start")};
   padding: 10px;
   color: ${(props) => props.theme.palette.bright.main};
   border-radius: 20px;
   margin-top: 3px;
   background-color: ${(props) =>
-    props.messageByUser
+    props.messagebyuser
       ? props.theme.palette.chatBubble.sendMessageBubble
       : props.theme.palette.chatBubble.recieveMessageBubble};
   max-width: 20rem;

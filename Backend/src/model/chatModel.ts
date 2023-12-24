@@ -3,7 +3,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 export interface ChatMessage {
   chat_id: number;
   message: string;
-  messageByUser: boolean;
+  messagebyuser: boolean;
   dateTime: Date;
   seen: boolean;
 }
@@ -24,7 +24,7 @@ export interface IUser extends Document {
 const chatMessageSchema: Schema<ChatMessage> = new Schema({
   chat_id: { type: Number },
   message: String,
-  messageByUser: Boolean,
+  messagebyuser: Boolean,
   dateTime: Date,
   seen: { type: Boolean, default: false },
 });

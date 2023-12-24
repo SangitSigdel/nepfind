@@ -11,37 +11,37 @@ const chatMessagesData = [
   {
     chat_id: 0,
     message: "hello world",
-    messageByUser: true,
+    messagebyuser: true,
     seen: false,
   },
   {
     chat_id: 1,
     message: "hello world1",
-    messageByUser: false,
+    messagebyuser: false,
     seen: false,
   },
   {
     chat_id: 2,
     message: "hello world2",
-    messageByUser: true,
+    messagebyuser: true,
     seen: true,
   },
   {
     chat_id: 3,
     message: "hello world3",
-    messageByUser: true,
+    messagebyuser: true,
     seen: false,
   },
   {
     chat_id: 4,
     message: "hello world4",
-    messageByUser: false,
+    messagebyuser: false,
     seen: false,
   },
   {
     chat_id: 5,
     message: "hello world5",
-    messageByUser: true,
+    messagebyuser: true,
     seen: true,
   },
 ];
