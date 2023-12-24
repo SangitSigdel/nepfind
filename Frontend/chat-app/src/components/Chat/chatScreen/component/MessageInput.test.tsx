@@ -33,10 +33,10 @@ describe("MessageInput Component", () => {
   test("should render message box and send icon", () => {
     renderComponenet();
     const messageInputElement = screen.getByRole("textbox");
-    const sendButton = screen.getByRole("button");
+    const sendButtonElement = screen.getByRole("button");
 
     expect(messageInputElement).toBeInTheDocument();
-    expect(sendButton).toBeInTheDocument();
+    expect(sendButtonElement).toBeInTheDocument();
   });
 
   test("should setMessage state on user input", async () => {
