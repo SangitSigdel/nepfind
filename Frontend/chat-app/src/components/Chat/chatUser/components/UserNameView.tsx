@@ -17,7 +17,10 @@ export const UserNameView = ({ user }: { user: ChatUsersType }) => {
       >
         {user.user}
       </CustomTypography>
-      <StatusCircle online={user.status === "online"} />
+      <StatusCircle
+        data-testid="statusCircle"
+        online={user.status === "online"}
+      />
     </div>
   );
 };

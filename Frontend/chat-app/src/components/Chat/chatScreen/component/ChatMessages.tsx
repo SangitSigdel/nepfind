@@ -24,7 +24,7 @@ export const ChatMessages = ({
   const ChatMessagesList = () => (
     <ChatListWrapper>
       {chatMessages?.map((chat, index) => (
-        <MessagesWrapper messageByUser={chat.messageByUser} key={index}>
+        <MessagesWrapper messagebyuser={chat.messagebyuser} key={index}>
           {chat.message}
           <div ref={messageEndRef} />
         </MessagesWrapper>

@@ -3,7 +3,7 @@ import { Dispatch } from "react";
 export type ChatMessagesType = {
   chat_id: number;
   message: string;
-  messageByUser: boolean;
+  messagebyuser: boolean;
   dateTime?: string;
   _id?: string;
   seen: boolean;
@@ -41,7 +41,7 @@ export interface MessagesEntity {
 export interface ChatsEntity {
   chat_id: number;
   message: string;
-  messageByUser: boolean;
+  messagebyuser: boolean;
   dateTime: string;
   _id: string;
 }
