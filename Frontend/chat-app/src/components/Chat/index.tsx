@@ -4,9 +4,9 @@ import { handleSocketOff, socketHandler } from "../../utils/sockets/socket";
 import { Box } from "@mui/material";
 import ChatContext from "./context/ChatContext";
 import { ChatScreen } from "./chatScreen/ChatScreen";
+import { ChatUsers } from "./chatUser/ChatUsers";
 import { ChatWrapper } from "./style";
 import Cookies from "js-cookie";
-import { NewChatScreen } from "./chatUser/ChatUsers";
 import { chatHandlers } from "./chatHandlers";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -47,7 +47,7 @@ export const Chat = () => {
         }}
       >
         <ChatWrapper>
-          <NewChatScreen />
+          <ChatUsers />
           <ChatScreen />
         </ChatWrapper>
       </Box>
