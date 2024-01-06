@@ -1,12 +1,12 @@
 import ChatContext from "../context/ChatContext";
-import { NewChatScreen } from "./ChatUsers";
+import { ChatUsers } from "./ChatUsers";
 import { StoryFn } from "@storybook/react";
 import { ThemeProvider } from "styled-components";
 import theme from "../../../utils/theme";
 
 export default {
   title: "ChatUser/ChatUsers",
-  component: NewChatScreen,
+  component: ChatUsers,
 };
 
 const Template: StoryFn = (args) => {
@@ -14,7 +14,7 @@ const Template: StoryFn = (args) => {
     <div style={{ background: "#0c1317" }}>
       <ThemeProvider theme={theme}>
         <ChatContext.Provider value={args.chatContext}>
-          <NewChatScreen />
+          <ChatUsers />
         </ChatContext.Provider>
       </ThemeProvider>
     </div>

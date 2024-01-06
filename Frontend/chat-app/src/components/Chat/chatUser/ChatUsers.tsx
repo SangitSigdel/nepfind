@@ -8,7 +8,7 @@ import { OnlineUserView } from "./components/OnlineUserView";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { useContext } from "react";
 
-export const NewChatScreen = () => {
+export const ChatUsers = () => {
   const loggedInUser = Cookies.get("userName");
 
   const chatContext = useContext(ChatContext);
@@ -29,6 +29,7 @@ export const NewChatScreen = () => {
               borderRadius: "50px",
               marginRight: "20px",
             }}
+            data-testid="btnViewOnlineUser"
             onClick={handleClick}
           >
             <PersonAddAlt1Icon />
