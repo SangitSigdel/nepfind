@@ -29,16 +29,13 @@ export const ChatUsers = () => {
               borderRadius: "50px",
               marginRight: "20px",
             }}
+            data-testid="btnViewOnlineUser"
             onClick={handleClick}
           >
             <PersonAddAlt1Icon />
           </Button>
         </UserDisplayHeader>
-        {chatContext.displayOnlineUsers ? (
-          <OnlineUserView data-testid="onlineUserView" />
-        ) : (
-          <ChatUserView data-testid="chatUserView" />
-        )}
+        {chatContext.displayOnlineUsers ? <OnlineUserView /> : <ChatUserView />}
       </ChatUserWrapper>
     </Box>
   );

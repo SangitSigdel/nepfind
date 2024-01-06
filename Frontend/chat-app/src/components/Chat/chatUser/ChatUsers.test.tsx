@@ -5,6 +5,7 @@ import { render, screen } from "@testing-library/react";
 import ChatContext from "../context/ChatContext";
 import { ChatUsers } from "./ChatUsers";
 import Cookies from "js-cookie";
+import React from "react";
 import { ThemeProvider } from "styled-components";
 import user from "@testing-library/user-event";
 
@@ -16,12 +17,27 @@ const mockContextValue = {
   chatMessages: [],
   setChatMessages: () => {},
   setChatUsers: () => {},
-  onlineUsers: [],
+  onlineUsers: [
+    {
+      user: "testUser3",
+      status: "online",
+      userId: "testUser3",
+      unreadMsgs: 1,
+      recentMsg: "test unread message",
+    },
+    {
+      user: "testUser4",
+      status: "online",
+      userId: "testUser4",
+      unreadMsgs: 0,
+      recentMsg: "test2 unread message",
+    },
+  ],
   setOnlineUsers: () => {},
   currentChatWith: undefined,
   setCurrentChatWith: () => {},
-  displayOnlineUsers: true,
-  setDisplayOnlinUsers: () => {},
+  displayOnlineUsers: false,
+  setDisplayOnlinUsers: jest.fn(),
 
   chatUsers: [
     {
@@ -60,11 +76,16 @@ const customTheme = {
 const renderComponent = () =>
   render(
     <ThemeProvider theme={customTheme}>
-      <ChatUsers />
+      <ChatContext.Provider value={mockContextValue}>
+        <ChatUsers />
+      </ChatContext.Provider>
     </ThemeProvider>
   );
 
 describe("ChatUser component", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   test("should render loggedIn userName", () => {
     const mockUsername = "TestUser";
     (Cookies.get as jest.Mock).mockReturnValue(mockUsername);
@@ -74,12 +95,35 @@ describe("ChatUser component", () => {
     const loggedInUserElement = screen.getByRole("heading", { level: 5 });
 
     expect(loggedInUserElement).toBeInTheDocument();
+    expect(loggedInUserElement).toHaveTextContent("TestUser");
   });
 
   test("should have a personadd icon button", () => {
     renderComponent();
-    const personAddIconElement = screen.getByRole("button");
-
+    const personAddIconElement = screen.getByTestId("btnViewOnlineUser");
     expect(personAddIconElement).toBeInTheDocument();
+  });
+
+  test("initially should display chat users", () => {
+    renderComponent();
+    mockContextValue.chatUsers.forEach((user) => {
+      const userElement = screen.getByText(user.user);
+      expect(userElement).toBeInTheDocument();
+    });
+  });
+
+  test("should display online users when clicked person add icon", async () => {
+    renderComponent();
+    user.setup();
+    const personAddIconElemnent = screen.getByTestId("btnViewOnlineUser");
+
+    await user.click(personAddIconElemnent);
+
+    expect(mockContextValue.setDisplayOnlinUsers).toHaveBeenCalledWith(true);
+
+    mockContextValue.onlineUsers.forEach(async (onlineuser) => {
+      const onlineUserElement = await screen.findByText(onlineuser.user);
+      expect(onlineUserElement).toBeInTheDocument();
+    });
   });
 });
